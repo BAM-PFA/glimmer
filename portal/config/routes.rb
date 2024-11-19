@@ -1,14 +1,37 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'errors/not_found'
+  get 'errors/internal_server_error'
+  match "/404", :to => "errors#not_found", :via => :all
+  match "/500", :to => "errors#internal_server_error", :via => :all
+  concern :range_searchable, BlacklightRangeLimit::Routes::RangeSearchable.new
+  mount Blacklight::Engine => '/'
+  mount BlacklightAdvancedSearch::Engine => '/'
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  root to: "catalog#index"
+  concern :searchable, Blacklight::Routes::Searchable.new
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
+    concerns :searchable
+    concerns :range_searchable
+
+  end
+ devise_for :users
+  concern :exportable, Blacklight::Routes::Exportable.new
+
+  resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
+    concerns :exportable
+  end
+
+  get '/*ark_tag/:naan/:ark' => 'catalog#decode_ark', constraints: { ark_tag:'ark:' }
+  get '/add_gallery_items' => "gallery#add_gallery_items"
+
+  resources :bookmarks do
+    concerns :exportable
+
+    collection do
+      delete 'clear'
+    end
+  end
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
