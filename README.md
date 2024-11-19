@@ -1,24 +1,23 @@
-# README
+## Customizations to Blacklight for UC Berkeley Museums
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repo contains a customized Blacklight application. It is basically a fork of the initial UCB museum [radiance](https://github.com/cspace-deployment/radiance) portals that were customized by John Lowe, upgraded to Blacklight 8 and Rails 7.
 
-Things you may want to cover:
+Blacklight is a Ruby on Rails application. Refer to the Blacklight project documention for details about how to maintain and deploy applications of this sort:
 
-* Ruby version
+http://projectblacklight.org/
 
-* System dependencies
+Blacklight version 8.x
 
-* Configuration
+Rails 7.x
 
-* Database creation
+Ruby 3.3.x
 
-* Database initialization
+Note: UCB utilities copied from **radiance** might need to have some filepaths edited to reflect the change in directory structure [?]
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
+#### test install steps
 
-* Deployment instructions
-
-* ...
+ * `rails new glimmer`
+ * add blacklight dependencies and UCB customizations to GEMFILE 
+ * copy UCB customization directory tree from radiance repo ("extras") to the `ucb_extras` folder
+ * copy all the installer and update tools to the `ucb_utils` folder

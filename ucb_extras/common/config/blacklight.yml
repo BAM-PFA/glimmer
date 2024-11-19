@@ -1,0 +1,24 @@
+# = jetty_path key
+# each environment can have a jetty_path with absolute or relative
+# (to app root) path to a jetty/solr install. This is used
+# by the rake tasks that start up solr automatically for testing
+#
+# jetty_path is not used by a running Blacklight application
+# at all. In general you do NOT need to deploy solr in Jetty, you can deploy it
+# however you want.  
+# jetty_path is only required for rake tasks that need to know
+# how to start up solr, generally for automated testing. 
+
+production:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/#TENANT#-public" %>
+  # url: <%= ENV['SOLR_URL'] || "https://webapps.cspace.berkeley.edu/solr/#TENANT#-public" %>
+  GLOBAL_ALERTS: <%= true %>
+development:
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/#TENANT#-public" %>
+  # url: <%= ENV['SOLR_URL'] || "https://webapps-qa.cspace.berkeley.edu/solr/#TENANT#-public" %>
+  GLOBAL_ALERTS: <%= true %>
+test: &test
+  adapter: solr
+  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV['TEST_JETTY_PORT'] || 8983}/solr/#TENANT#-public" %>
