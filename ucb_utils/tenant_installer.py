@@ -13,11 +13,12 @@ if len(sys.argv) <=1 or sys.argv[1] not in tenant_list:
     sys.exit(1)
 else:
     tenant = sys.argv[1]
-app_path = pathlib.Path('../portal/').resolve()
+app_path = pathlib.Path('portal/').resolve()
 
 # first copy over common files
-os.chdir('../ucb_extras/common')
+os.chdir('ucb_extras/common')
 common_dir = pathlib.Path('.')
+# print(common_dir)
 common_files = sorted(common_dir.glob('**/*.*'))
 # print(common_files)
 for file_path in common_files:
@@ -25,7 +26,8 @@ for file_path in common_files:
     common_file_resolved = file_path.resolve()
     print(common_file_resolved)
     dest_file = app_path.joinpath(file_path).resolve()
-    print(dest_file)
+    dest_file.parent.mkdir(parents=True,exist_ok=True)
+    pathlib.Path(dest_file).touch(exist_ok=True)
     shutil.copyfile(common_file_resolved,dest_file)
 
     tmp = str(dest_file)+".tmp"
@@ -46,6 +48,6 @@ for file_path in common_files:
     tmp.unlink()
 
 # copy over tenant files
-tenant_path = pathlib.Path('../'+tenant)
+tenant_path = pathlib.Path('../' + tenant)
 os.chdir(tenant_path)
 shutil.copytree(tenant_path,app_path,dirs_exist_ok=True)
