@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   get 'errors/not_found'
   get 'errors/internal_server_error'
   match "/404", :to => "errors#not_found", :via => :all
@@ -15,7 +16,7 @@ Rails.application.routes.draw do
     concerns :range_searchable
 
   end
- # devise_for :users
+  devise_for :users
   concern :exportable, Blacklight::Routes::Exportable.new
 
   resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog' do
