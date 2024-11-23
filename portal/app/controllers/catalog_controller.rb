@@ -5,16 +5,7 @@ class CatalogController < ApplicationController
 
   include Blacklight::Catalog
 
-  # If you'd like to handle errors returned by Solr in a certain way,
-  # you can use Rails rescue_from with a method you define in this controller,
-  # uncomment:
-  #
-  # rescue_from Blacklight::Exceptions::InvalidRequest, with: :my_handling_method
-
   configure_blacklight do |config|
-    ## Specify the style of markup to be generated (may be 4 or 5)
-    # config.bootstrap_version = 5
-    #
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
     #
@@ -45,26 +36,16 @@ class CatalogController < ApplicationController
 
     # solr field configuration for search results/index views
     config.index.title_field = 'title_tsim'
-    # config.index.display_type_field = 'format'
-    # config.index.thumbnail_field = 'thumbnail_path_ss'
+    #config.index.display_type_field = 'format'
+    #config.index.thumbnail_field = 'thumbnail_path_ss'
 
-    # The presenter is the view-model class for the page
-    # config.index.document_presenter_class = MyApp::IndexPresenter
-
-    # Some components can be configured
-    # config.index.document_component = MyApp::SearchResultComponent
-    # config.index.constraints_component = MyApp::ConstraintsComponent
-    # config.index.search_bar_component = MyApp::SearchBarComponent
-    # config.index.search_header_component = MyApp::SearchHeaderComponent
-    # config.index.document_actions.delete(:bookmark)
-
-    config.add_results_document_tool(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+    config.add_results_document_tool(:bookmark, partial: 'bookmark_control', if: :render_bookmarks_control?)
 
     config.add_results_collection_tool(:sort_widget)
     config.add_results_collection_tool(:per_page_widget)
     config.add_results_collection_tool(:view_type_group)
 
-    config.add_show_tools_partial(:bookmark, component: Blacklight::Document::BookmarkComponent, if: :render_bookmarks_control?)
+    config.add_show_tools_partial(:bookmark, partial: 'bookmark_control', if: :render_bookmarks_control?)
     config.add_show_tools_partial(:email, callback: :email_action, validator: :validate_email_params)
     config.add_show_tools_partial(:sms, if: :render_sms_action?, callback: :sms_action, validator: :validate_sms_params)
     config.add_show_tools_partial(:citation)
@@ -73,17 +54,9 @@ class CatalogController < ApplicationController
     config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
 
     # solr field configuration for document/show views
-    # config.show.title_field = 'title_tsim'
-    # config.show.display_type_field = 'format'
-    # config.show.thumbnail_field = 'thumbnail_path_ss'
-    #
-    # The presenter is a view-model class for the page
-    # config.show.document_presenter_class = MyApp::ShowPresenter
-    #
-    # These components can be configured
-    # config.show.document_component = MyApp::DocumentComponent
-    # config.show.sidebar_component = MyApp::SidebarComponent
-    # config.show.embed_component = MyApp::EmbedComponent
+    #config.show.title_field = 'title_tsim'
+    #config.show.display_type_field = 'format'
+    #config.show.thumbnail_field = 'thumbnail_path_ss'
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
