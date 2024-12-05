@@ -8,4 +8,3 @@
 //= require bootstrap
 //= require blacklight/blacklight
 
-
