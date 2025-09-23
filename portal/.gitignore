@@ -12,11 +12,11 @@
 /db/*.sqlite3-*
 
 # Ignore files in directories populated during install with /extras/common and /extras/TENANT
-# app/**
-# config/**
-# lib/**
-# public/**
-# spec/**
+app/**
+config/**
+lib/**
+public/**
+spec/**
 
 # Ignore all logfiles and tempfiles.
 /log/*

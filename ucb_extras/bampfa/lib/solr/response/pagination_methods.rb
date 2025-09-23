@@ -15,12 +15,12 @@ module Blacklight::Solr::Response::PaginationMethods
     total
   end
 
-	def cursor_mark
+  def cursor_mark
     params['cursorMark']
   end
 
   def next_cursor_mark
     self['nextCursorMark'] unless self['nextCursorMark'] == params['cursorMark']
   end
-	
+
 end

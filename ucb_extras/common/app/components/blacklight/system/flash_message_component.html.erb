@@ -1,0 +1,11 @@
+<div class="alert alert-dismissable d-flex align-items-center justify-content-between <%= @classes %>">
+  <%= message %>
+  <% unless @type == :sr_alert %>
+    <%= tag.button button_contents,
+      type: "button",
+      class: "btn btn-close",
+      data: { dismiss: "alert", bs_dismiss: "alert" },
+      aria: { label: "Close" }
+    %>
+  <% end %>
+</div>

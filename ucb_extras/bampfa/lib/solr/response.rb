@@ -33,9 +33,9 @@ class Blacklight::Solr::Response < ActiveSupport::HashWithIndifferentAccess
     self['responseHeader'] || {}
   end
 
-	def nextCursorMark
-		self['nextCursorMark'] || ''
-	end
+  def nextCursorMark
+    self['nextCursorMark'] || ''
+  end
 
   def params
     header['params'] || request_params
@@ -43,7 +43,7 @@ class Blacklight::Solr::Response < ActiveSupport::HashWithIndifferentAccess
 
   def start
     # params[:start].to_i
-		(params[:_start_] || params[:start]).to_i
+    (params[:_start_] || params[:start]).to_i
   end
 
   def rows

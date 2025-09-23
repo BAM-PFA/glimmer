@@ -13,7 +13,7 @@ module Blacklight::Solr::Response::Response
     response[:start].to_s.to_i
   end
 
-	def nextCursorMark
+  def nextCursorMark
     response[:nextCursorMark].to_s
   end
 

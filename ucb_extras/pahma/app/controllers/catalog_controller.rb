@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 class CatalogController < ApplicationController
   include BlacklightAdvancedSearch::Controller
-
   include Blacklight::Catalog
   include BlacklightRangeLimit::ControllerOverride
+
+  # blacklight_advanced_search 5.x changes the URL query param format for advanced 'inclusive' facet selections, from the advanced form.
+  # If you'd like to keep old-style possibly bookmarked URLs working, by redirecting to new format, add this to your CatalogController:
+  before_action BlacklightAdvancedSearch::RedirectLegacyParamsFilter, :only => :index
 
   configure_blacklight do |config|
     # default advanced config values
@@ -13,9 +16,20 @@ class CatalogController < ApplicationController
     config.advanced_search[:query_parser] ||= 'edismax'
     config.advanced_search[:form_solr_parameters] ||= {}
 
+    config.bootstrap_version = 4
+
     config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
     config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
-    config.view.slideshow(document_component: Blacklight::Gallery::SlideshowComponent)
+    config.view.slideshow(
+      document_component: Blacklight::Gallery::SlideshowComponent,
+      preview_component: Gallery::SlideshowPreviewComponent
+    )
+    config.index.constraints_component = ConstraintsComponent
+    config.index.dropdown_component = System::DropdownComponent
+    config.index.search_bar_component = SearchBarComponent
+    config.index.title_component = DocumentTitleComponent
+    config.index.thumbnail_presenter = ThumbnailPresenter
+
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 
@@ -367,9 +381,9 @@ class CatalogController < ApplicationController
     #config.add_show_field 'd3_md5_ss', helper_method: 'render_x3d_directly', label: '3D'
 
     # facets
-    config.add_facet_field 'objname_s', label: 'Object name', limit: true, index_range: true
+    config.add_facet_field 'objname_s', label: 'Object name', limit: true, index_range: true, single: true
     config.add_facet_field 'objobjectclasstree_ss', label: 'Object class', limit: true, index_range: true
-    config.add_facet_field 'objtype_s', label: 'Object type', limit: true, index_range: true
+    config.add_facet_field 'objtype_s', label: 'Object type', limit: true, index_range: true, single: true
     config.add_facet_field 'media_available_ss', label: 'Media available'
     config.add_facet_field 'objfcptree_ss', label: 'Collection place', limit: true, index_range: true
 
@@ -385,13 +399,13 @@ class CatalogController < ApplicationController
     config.add_facet_field 'objcollector_ss', label: 'Collector', limit: true, index_range: true
     config.add_facet_field 'anonymousdonor_ss', label: 'Donor', limit: true, index_range: true
     config.add_facet_field 'objculturetree_ss', label: 'Culture or time period', limit: true, index_range: true
-    config.add_facet_field 'objmaker_ss', label: 'Maker or artist', limit: true, index_range: true
+    config.add_facet_field 'objmaker_ss', label: 'Maker or artist', limit: true, index_range: true, single: true
     config.add_facet_field 'objmaterials_ss', label: 'Materials', limit: true, index_range: true
 
     config.add_facet_field 'taxon_ss', label: 'Taxon', limit: true, index_range: true
     config.add_facet_field 'objpersondepicted_ss', label: 'Person depicted', limit: true, index_range: true
     config.add_facet_field 'objplacedepicted_ss', label: 'Place depicted', limit: true, index_range: true
-    config.add_facet_field 'objculturedepicted_ss', label: 'Culture depicted', limit: true, index_range: true
+    config.add_facet_field 'objculturedepicted_ss', label: 'Culture depicted', limit: true, index_range: true, single: true
 
     #config.add_facet_field 'hasimages_s', label: 'Photographed'
     #config.add_facet_field 'imagetype_ss', label: 'Image type'
@@ -399,7 +413,7 @@ class CatalogController < ApplicationController
 
     # subject to further review (and in some cases, implementation)
     config.add_facet_field 'objaccno_ss', label: 'Accession number', limit: true, index_range: true
-    config.add_facet_field 'objpp_ss', label: 'Production place', limit: true, index_range: true
+    config.add_facet_field 'objpp_ss', label: 'Production place', limit: true, index_range: true, single: true
     ##config.add_facet_field 'objproddate_begin_i', label: 'Production year', range: true, index_range: true
 
     config.add_facet_field("objaccdate_begin_is") do |field|

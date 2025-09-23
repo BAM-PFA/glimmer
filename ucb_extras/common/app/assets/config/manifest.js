@@ -3,8 +3,11 @@
 //= link_tree ../../javascript .js
 //= link_tree ../../../vendor/javascript .js
 //= link blacklight/manifest.js
+//= link blacklight-gallery/index.js
 //= link blacklight-gallery/masonry.js
+//= link masonry.min.js
 //= link blacklight-gallery/slideshow.js
+//= link imagesloaded.pkgd.js
 //= link openseadragon-rails/dom.js
 //= link openseadragon-rails/index.js
 //= link openseadragon-rails/jquery.js

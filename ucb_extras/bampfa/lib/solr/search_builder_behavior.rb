@@ -160,14 +160,14 @@ module Blacklight::Solr
 
       solr_params[:rows] = rows
 
-			unless solr_params[:start] == 0
-				unless blacklight_params[:cursorMark].nil?
-					solr_params[:cursorMark] = blacklight_params[:cursorMark]
-					solr_params[:_start_] = rows * page
-				else
-					solr_params[:start] = start
-				end
-			end
+      unless solr_params[:start] == 0
+        unless blacklight_params[:cursorMark].nil?
+          solr_params[:cursorMark] = blacklight_params[:cursorMark]
+          solr_params[:_start_] = rows * page
+        else
+          solr_params[:start] = start
+        end
+      end
 
     end
 

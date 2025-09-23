@@ -14,7 +14,6 @@ Rails.application.routes.draw do
     concerns :range_searchable
   end
 
-  end
   devise_for :users
   concern :exportable, Blacklight::Routes::Exportable.new
 
