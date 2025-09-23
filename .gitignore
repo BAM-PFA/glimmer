@@ -49,3 +49,4 @@ __py*
 */*.orig
 */rerun.txt
 */pickle-email-*.html
+.tool-versions

@@ -2,12 +2,17 @@ Rails.application.routes.draw do
 
   concern :range_searchable, BlacklightRangeLimit::Routes::RangeSearchable.new
   mount Blacklight::Engine => '/'
+  mount BlacklightAdvancedSearch::Engine => '/'
+
+  get '/' => 'catalog#index'
+
   root to: "catalog#index"
   concern :searchable, Blacklight::Routes::Searchable.new
 
-  resource :catalog, only: [:index], as: 'catalog', path: '/catalog', controller: 'catalog' do
+  resource :catalog, only: [], controller: 'catalog' do
     concerns :searchable
     concerns :range_searchable
+  end
 
   end
   devise_for :users
@@ -24,6 +29,5 @@ Rails.application.routes.draw do
       delete 'clear'
     end
   end
-  get '/add_gallery_items' => "gallery#add_gallery_items"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
