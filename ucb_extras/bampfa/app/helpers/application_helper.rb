@@ -1,122 +1,151 @@
+require 'cgi/util'
+
 module ApplicationHelper
+  include ERB::Util
+
+  def bookmark_control_label document, counter, total
+    label = "#{document['title_s']}, accession number #{document['idnumber_s']}"
+    if counter && counter.to_i > 0
+      label += ". Search result #{counter}"
+      if total && total.to_i > 0
+        label += " of #{total}"
+      end
+    end
+    label.html_safe
+  end
+
+  def document_link_label document, label
+    "#{label}, accession number #{document['idnumber_s']}".html_safe
+  end
 
   def get_random_documents(query: '*', limit: 12)
     params = {
       :q => query,
-			:rows => limit,
+      :rows => limit,
       :sort => 'random'
     }
     builder = Blacklight::SearchService.new(config: blacklight_config, user_params: params)
     response = builder.search_results
-		docs = response[:response][:docs].collect { |x| x.slice(:id,:title_txt,:artistcalc_txt,:datemade_s, :blob_ss)}
-		return docs
-	end
+    docs = response[:response][:docs].collect { |x| x.slice(:id, :title_txt, :artistcalc_txt, :datemade_s, :blob_ss, :materials_s, :idnumber_s, :itemclass_s)}
+    return docs
+  end
 
-	def generate_image_gallery
-		docs = get_random_documents(query: 'blob_ss:[* TO *]')
-		return format_image_gallery_results(docs)
-	end
+  def generate_image_gallery
+    docs = get_random_documents(query: 'blob_ss:[* TO *]')
+    return format_image_gallery_results(docs)
+  end
 
-	def generate_artist_preview(artist)#,limit=4)
-		# artist should already include parsed artist names
-		# this should return format_artist_preview()
-		searchable = extract_artist_names(artist)
-		searchable = searchable.split(" OR ")
-		random_string = SecureRandom.uuid
-		query = ""
-		searchable.each do |x|
-			query = query + "#{x}"
-		end
+  def generate_artist_preview(artist)#,limit=4)
+    # artist should already include parsed artist names
+    # this should return format_artist_preview()
+    searchable = extract_artist_names(html_escape(artist))
+    searchable = searchable.split(" OR ")
+    random_string = SecureRandom.uuid
+    query = ""
+    searchable.each do |x|
+      query = query + "#{x}"
+    end
 
-		docs = get_random_documents(query: query, limit: 4)
-		docs.collect do |doc|
-			content_tag(:a, href: "/catalog/#{doc[:id]}") do
-				content_tag(:div, class: 'show-preview-item') do
-					unless doc[:title_txt].nil?
-						title = doc[:title_txt][0]
-					else
-						title = "[No title given]"
-					end
-					unless doc[:artistcalc_txt].nil?
-						artist = doc[:artistcalc_txt][0]
-					else
-						artist = "[No artist given]"
-					end
-					artist_tag = content_tag(:span, artist, class: "gallery-caption-artist")
-					unless doc[:datemade_s].nil?
-						datemade = doc[:datemade_s]
-					else
-						datemade = "[No date given]"
-					end
-					unless doc[:blob_ss].nil?
-						image_tag = content_tag(:img, '',
-		          src: render_csid(doc[:blob_ss][0], 'Medium'),
-		          class: 'thumbclass')
-					else
-						image_tag = content_tag(:span,'Image not available',class: 'no-preview-image')
-					end
-					image_tag +
-					content_tag(:h4) do
-						artist_tag +
-						content_tag(:span, title, class: "gallery-caption-title") +
-						content_tag(:span, "("+datemade+")", class: "gallery-caption-date")
-					end
-				end
-			end
-		end.join.html_safe
-	end
+    docs = get_random_documents(query: query, limit: 4)
+    if docs.blank?
+      return content_tag(:div, 'No related works found.').html_safe
+    else
+      return docs.collect do |doc|
+        content_tag(:a, href: "/catalog/#{doc[:id]}") do
+          content_tag(:div, class: 'show-preview-item') do
+            unless doc[:title_txt].nil?
+              title = doc[:title_txt][0]
+            else
+              title = "[No title given]"
+            end
+            unless doc[:artistcalc_txt].nil?
+              artist = doc[:artistcalc_txt][0]
+            else
+              artist = "[No artist given]"
+            end
+            artist_tag = content_tag(:span, artist, class: "gallery-caption-artist")
+            unless doc[:datemade_s].nil?
+              datemade = doc[:datemade_s]
+            else
+              datemade = "[No date given]"
+            end
+            unless doc[:blob_ss].nil?
+              image_tag = content_tag(:img, '',
+                src: render_csid(doc[:blob_ss][0], 'Medium'),
+                alt: render_alt_text(doc[:blob_ss][0], doc),
+                class: 'thumbclass')
+            else
+              image_tag = content_tag(:span,'Image not available',class: 'no-preview-image')
+            end
+            image_tag +
+            content_tag(:div) do
+              artist_tag +
+              content_tag(:span, title, class: "gallery-caption-title") +
+              content_tag(:span, "("+datemade+")", class: "gallery-caption-date")
+            end
+          end
+        end
+      end.join.html_safe
+    end
+  end
 
-	def extract_artist_names(artist)
-		searchable = artist.tr(",","") # first remove commas
-		matches = searchable.scan(/[^;]+(?=;?)/) # find the names in between optional semi-colons
-		if matches.length != 0
-			matches = matches.each{|m| m.lstrip!}
-			matches.map!{|m| m.tr(" ","+").insert(0,'"').insert(-1,'"')} # add quotes for the OR search
-			searchable = matches.join(" OR ")
-		end
-		return searchable
-	end
+  def extract_artist_names(artist_html)
+    artist = CGI.unescapeHTML(artist_html)
+    searchable = artist.tr(",","") # first remove commas
+    matches = searchable.scan(/[^;]+(?=;?)/) # find the names in between optional semi-colons
+    if matches.length != 0
+      matches = matches.each{|m| m.lstrip!}
+      matches.map!{|m| m.tr(" ","+").insert(0,'"').insert(-1,'"')} # add quotes for the OR search
+      searchable = matches.join(" OR ")
+    end
+    return searchable
+  end
 
-	def make_artist_search_link(artist)
-		searchable = extract_artist_names(artist)
-		return "/catalog/?&op=OR&search_field=artistcalc_s&q=#{searchable}"
-	end
+  def make_artist_search_link(artist)
+    searchable = extract_artist_names(artist)
+    return "/catalog/?&op=OR&search_field=artistcalc_s&q=#{searchable}"
+  end
 
-	def format_image_gallery_results(docs)
-		docs.collect do |doc|
-			content_tag(:div, class: 'gallery-item') do
-				unless doc[:title_txt].nil?
-					title = doc[:title_txt][0]
-				else
-					title = "[No title given]"
-				end
-				unless doc[:artistcalc_txt].nil?
-					artist = doc[:artistcalc_txt][0]
-					artist_link = make_artist_search_link(artist)
-					artist_tag = content_tag(:span, class: "gallery-caption-artist") do
-						"by ".html_safe +
-						content_tag(:a, artist, href: artist_link)
-					end
-				else
-					artist_tag = content_tag(:span, "[No artist given]", class: "gallery-caption-artist")
-				end
-				unless doc[:datemade_s].nil?
-					datemade = doc[:datemade_s]
-				else
-					datemade = "[No date given]"
-				end
-				content_tag(:a, content_tag(:img, '',
-          src: render_csid(doc[:blob_ss][0], 'Medium'),
-          class: 'thumbclass'),
-					href: "/catalog/#{doc[:id]}") +
-				content_tag(:h4) do
-					content_tag(:span, title, class: "gallery-caption-title") +
-					content_tag(:span, "("+datemade+")", class: "gallery-caption-date") +
-					artist_tag
-				end
-			end
-		end.join.html_safe
-	end
+  def format_image_gallery_results(docs)
+    docs.collect do |doc|
+      content_tag(:div, class: 'gallery-item') do
+        unless doc[:title_txt].nil?
+          title = doc[:title_txt][0]
+        else
+          title = "[No title given]"
+        end
+        unless doc[:artistcalc_txt].nil?
+          artist = doc[:artistcalc_txt][0]
+          artist_link = make_artist_search_link(artist)
+          artist_tag = content_tag(:span, class: "gallery-caption-artist") do
+            "by ".html_safe +
+            content_tag(:a, artist, href: artist_link)
+          end
+        else
+          artist_tag = content_tag(:span, "[No artist given]", class: "gallery-caption-artist")
+        end
+        unless doc[:datemade_s].nil?
+          datemade = doc[:datemade_s]
+        else
+          datemade = "[No date given]"
+        end
+        content_tag(:a,
+          content_tag(:img, '',
+            src: render_csid(doc[:blob_ss][0], 'Medium'),
+            alt: render_alt_text(doc[:blob_ss][0], doc),
+            class: 'thumbclass'
+          ),
+          href: "/catalog/#{doc[:id]}",
+          class: 'd-inline-block'
+        ) +
+        content_tag(:div) do
+          content_tag(:span, title, class: "gallery-caption-title") +
+          content_tag(:span, "("+datemade+")", class: "gallery-caption-date") +
+          artist_tag
+        end
+      end
+    end.join.html_safe
+  end
 
   def render_csid csid, derivative
     "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
@@ -124,7 +153,7 @@ module ApplicationHelper
 
   def render_status options = {}
     options[:value].collect do |status|
-      content_tag(:span, status, style: 'color: red;')
+      content_tag(:span, status, class: 'text-danger')
     end.join(', ').html_safe
   end
 
@@ -154,11 +183,14 @@ module ApplicationHelper
   def render_doc_link options = {}
     # return a link to a search for documents for a film
     content_tag(:div) do
+      film_title = options[:document][:film_title_ss].first
+      film_year = if options[:document][:film_year_ss] then options[:document][:film_year_ss].first else '' end
       options[:value].collect do |film_id|
-        content_tag(:a, 'Click for documents related to this film',
+        content_tag(:a, 'Documents related to this film',
           href: "/?q=#{film_id}&search_field=film_id_ss",
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass',
+          'aria-label': "Documents related to the film \"#{film_title}\", #{film_year}")
       end.join.html_safe
     end
   end
@@ -191,18 +223,36 @@ module ApplicationHelper
     render partial: '/shared/pdfs', locals: { csid: pdf_csid, restricted: restricted }
   end
 
+  def render_alt_text blob_csid, document
+    prefix = document[:itemclass_s] || 'BAMPFA object'
+    total_pages = document[:blob_ss] ? document[:blob_ss].length : 1
+    if total_pages > 1
+      page_number = document[:blob_ss].find_index(blob_csid)
+      if page_number.is_a? Integer
+        prefix += " #{page_number + 1} of #{total_pages}"
+      end
+    end
+    title = unless document[:title_txt].nil? then "titled #{document[:title_txt][0]}" else 'no title available' end
+    materials = document[:materials_s] || 'of unknown materials'
+    object_number = unless document[:idnumber_s].nil? then "accession number #{document[:idnumber_s]}" else 'no accession number available' end
+    html_escape("#{prefix} #{title}, #{materials}, #{object_number}.")
+  end
+
   def render_media options = {}
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
-          src: render_csid(blob_csid, 'Medium'),
-          class: 'thumbclass'),
+        content_tag(:a,
+          content_tag(:img, '',
+            src: render_csid(blob_csid, 'Medium'),
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
           href: "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{blob_csid}/derivatives/OriginalJpeg/content",
           # href: "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{blob_csid}/content",
           target: 'original',
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass d-inline-block')
       end.join.html_safe
     end
   end
@@ -211,10 +261,14 @@ module ApplicationHelper
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
+        content_tag(:div,
+          content_tag(:img, '',
             src: render_csid(blob_csid, 'Medium'),
-            class: 'thumbclass'),
-          style: 'padding: 3px;')
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
+        class: 'd-inline-block',
+        style: 'padding: 3px;')
       end.join.html_safe
     end
   end
@@ -222,17 +276,18 @@ module ApplicationHelper
   def render_restricted_media options = {}
     # return a list of cards or images
     content_tag(:div) do
-        if current_user
-          options[:value].collect do |blob_csid|
-            content_tag(:img, '',
-                src: render_csid(blob_csid, 'Medium'),
-                class: 'thumbclass')
-          end.join.html_safe
-        else content_tag(:img, '',
-                src: '../kuchar.jpg',
-                class: 'thumbclass',
-                alt: 'log in to view images')
-        end
+      if current_user
+        options[:value].collect do |blob_csid|
+          content_tag(:img, '',
+              src: render_csid(blob_csid, 'Medium'),
+              alt: render_alt_text(blob_csid, options),
+              class: 'thumbclass')
+        end.join.html_safe
+      else content_tag(:img, '',
+              src: '../kuchar.jpg',
+              class: 'thumbclass',
+              alt: 'log in to view images')
+      end
     end
   end
 
@@ -312,10 +367,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{x3d_csid}/content",
-            id: 'x3d',
-            type: 'model/x3d+xml')),
-        style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{x3d_csid}/content",
+              id: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_csid, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end
@@ -330,10 +387,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://cspace-prod-02.ist.berkeley.edu/bampfa_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
-            class: 'x3d',
-            type: 'model/x3d+xml')),
-          style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://cspace-prod-02.ist.berkeley.edu/bampfa_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
+              class: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_md5, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end
@@ -353,5 +412,4 @@ module ApplicationHelper
       link_to "ark:/21549/" + ark, "https://n2t.net/ark:/21549/" + ark
     end.join.html_safe
   end
-
 end

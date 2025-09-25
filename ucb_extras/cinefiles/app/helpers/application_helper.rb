@@ -1,4 +1,34 @@
+
 module ApplicationHelper
+
+  def bookmark_control_label document, counter, total
+    label = "#{document['common_doctype_s'] || 'object'}"
+    if document['common_title_ss']
+      label += " titled #{document['common_title_ss'].join(', ')}"
+    end
+    if counter && counter.to_i > 0
+      label += ". Search result #{counter}"
+      if total && total.to_i > 0
+        label += " of #{total}"
+      end
+    end
+    label.html_safe
+  end
+
+  def document_link_label document, label
+    description = ''
+    if 'document' == document['common_doctype_s'] then
+      date = unless document['pubdate_s'].blank? then " published #{document['pubdate_s']}" else '' end
+      source = unless document['source_s'].blank? then " in #{document['source_s']}" else '' end
+      author = unless document['author_ss'].blank? then " by #{document['author_ss'][0]}" else '' end
+      description = ", #{document['doctype_s']}#{date}#{source}#{author}"
+    else
+      year = unless document['film_year_i'].blank? then " (#{document['film_year_i']})" else '' end
+      director = unless document['film_director_ss'].blank? then ", directed by #{document['film_director_ss'][0]}" else ', film' end
+      description = "#{year}#{director}"
+    end
+    "#{label}#{description}".html_safe
+  end
 
   def render_csid csid, derivative
     "https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
@@ -6,7 +36,7 @@ module ApplicationHelper
 
   def render_status options = {}
     options[:value].collect do |status|
-      content_tag(:span, status, style: 'color: red;')
+      content_tag(:span, status, class: 'text-danger')
     end.join(', ').html_safe
   end
 
@@ -36,11 +66,14 @@ module ApplicationHelper
   def render_doc_link options = {}
     # return a link to a search for documents for a film
     content_tag(:div) do
+      film_title = options[:document][:film_title_ss].first
+      film_year = if options[:document][:film_year_ss] then options[:document][:film_year_ss].first else '' end
       options[:value].collect do |film_id|
-        content_tag(:a, 'Click for documents related to this film',
+        content_tag(:a, 'Documents related to this film',
           href: "/?q=#{film_id}&search_field=film_id_ss",
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass',
+          'aria-label': "Documents related to the film \"#{film_title}\", #{film_year}")
       end.join.html_safe
     end
   end
@@ -73,18 +106,40 @@ module ApplicationHelper
     render partial: '/shared/pdfs', locals: { csid: pdf_csid, restricted: restricted }
   end
 
+  def render_alt_text(blob_csid, options)
+    document = options[:document]
+    prefix = document[:doctype_s] || 'Document'
+    total_pages = document[:blob_ss] ? document[:blob_ss].length : 1
+    if total_pages > 1
+      page_number = document[:blob_ss].find_index(blob_csid)
+      if page_number.is_a? Integer
+        if document[:common_doctype_s] == 'document'
+          prefix += ' page'
+        end
+        prefix += " #{page_number + 1} of #{total_pages}"
+      end
+    end
+    document_title = unless document[:doctitle_ss].nil? then "titled #{document[:doctitle_ss][0]}" else 'no title available' end
+    source = unless document[:source_s].nil? then ", source: #{document[:source_s]}" else '' end
+    h("#{prefix} #{document_title}#{source}")
+  end
+
   def render_media options = {}
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
-          src: render_csid(blob_csid, 'Medium'),
-          class: 'thumbclass'),
+        content_tag(:a,
+          content_tag(:img, '',
+            src: render_csid(blob_csid, 'Medium'),
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
           href: "https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/#{blob_csid}/derivatives/OriginalJpeg/content",
           # href: "https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/#{blob_csid}/content",
           target: 'original',
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass d-inline-block'
+        )
       end.join.html_safe
     end
   end
@@ -93,9 +148,13 @@ module ApplicationHelper
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
+        content_tag(:div,
+          content_tag(:img, '',
             src: render_csid(blob_csid, 'Medium'),
-            class: 'thumbclass'),
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
+          class: 'd-inline-block',
           style: 'padding: 3px;')
       end.join.html_safe
     end
@@ -108,6 +167,7 @@ module ApplicationHelper
           options[:value].collect do |blob_csid|
             content_tag(:img, '',
                 src: render_csid(blob_csid, 'Medium'),
+                alt: render_alt_text(blob_csid, options),
                 class: 'thumbclass')
           end.join.html_safe
         else content_tag(:img, '',
@@ -194,10 +254,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/#{x3d_csid}/content",
-            id: 'x3d',
-            type: 'model/x3d+xml')),
-        style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/#{x3d_csid}/content",
+              id: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_csid, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end
@@ -212,10 +274,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://cspace-prod-02.ist.berkeley.edu/cinefiles_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
-            class: 'x3d',
-            type: 'model/x3d+xml')),
-          style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://cspace-prod-02.ist.berkeley.edu/cinefiles_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
+              class: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_md5, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end

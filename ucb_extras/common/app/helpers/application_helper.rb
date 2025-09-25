@@ -1,4 +1,22 @@
+require 'cgi/util'
+
 module ApplicationHelper
+  include ERB::Util
+
+  def bookmark_control_label document, counter, total
+    label = "#{document[blacklight_config['index']['title_field']]}, accession number #{document['idnumber_s']}"
+    if counter && counter.to_i > 0
+      label += ". Search result #{counter}"
+      if total && total.to_i > 0
+        label += " of #{total}"
+      end
+    end
+    label.html_safe
+  end
+
+  def document_link_label document, label
+    "#{label}, accession number #{document['idnumber_s']}".html_safe
+  end
 
   def render_csid csid, derivative
     "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
@@ -6,7 +24,7 @@ module ApplicationHelper
 
   def render_status options = {}
     options[:value].collect do |status|
-      content_tag(:span, status, style: 'color: red;')
+      content_tag(:span, status, class: 'text-danger')
     end.join(', ').html_safe
   end
 
@@ -36,11 +54,14 @@ module ApplicationHelper
   def render_doc_link options = {}
     # return a link to a search for documents for a film
     content_tag(:div) do
+      film_title = options[:document][:film_title_ss].first
+      film_year = if options[:document][:film_year_ss] then options[:document][:film_year_ss].first else '' end
       options[:value].collect do |film_id|
-        content_tag(:a, 'Click for documents related to this film',
+        content_tag(:a, 'Documents related to this film',
           href: "/?q=#{film_id}&search_field=film_id_ss",
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass',
+          'aria-label': "Documents related to the film \"#{film_title}\", #{film_year}")
       end.join.html_safe
     end
   end
@@ -73,18 +94,38 @@ module ApplicationHelper
     render partial: '/shared/pdfs', locals: { csid: pdf_csid, restricted: restricted }
   end
 
+  def render_alt_text blob_csid, document
+    prefix = document[:itemclass_s] || '#TENANT# object'
+    total_pages = document[:blob_ss] ? document[:blob_ss].length : 1
+    if total_pages > 1
+      page_number = document[:blob_ss].find_index(blob_csid)
+      if page_number.is_a? Integer
+        prefix += " #{page_number + 1} of #{total_pages}"
+      end
+    end
+    title_field = blacklight_config['index']['title_field']
+    title = unless document[title_field].nil? then "titled #{document[title_field][0]}" else 'no title available' end
+    materials = document[:materials_s] || 'of unknown materials'
+    object_number = unless document[:idnumber_s].nil? then "accession number #{document[:idnumber_s]}" else 'no accession number available' end
+    html_escape("#{prefix} #{title}, #{materials}, #{object_number}.")
+  end
+
   def render_media options = {}
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
-          src: render_csid(blob_csid, 'Medium'),
-          class: 'thumbclass'),
+        content_tag(:a,
+          content_tag(:img, '',
+            src: render_csid(blob_csid, 'Medium'),
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
           href: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{blob_csid}/derivatives/OriginalJpeg/content",
           # href: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{blob_csid}/content",
           target: 'original',
           style: 'padding: 3px;',
-          class: 'hrefclass')
+          class: 'hrefclass d-inline-block'
+        )
       end.join.html_safe
     end
   end
@@ -93,9 +134,13 @@ module ApplicationHelper
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
-        content_tag(:a, content_tag(:img, '',
+        content_tag(:div,
+          content_tag(:img, '',
             src: render_csid(blob_csid, 'Medium'),
-            class: 'thumbclass'),
+            alt: render_alt_text(blob_csid, options),
+            class: 'thumbclass'
+          ),
+          class: 'd-inline-block',
           style: 'padding: 3px;')
       end.join.html_safe
     end
@@ -195,10 +240,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{x3d_csid}/content",
-            id: 'x3d',
-            type: 'model/x3d+xml')),
-        style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{x3d_csid}/content",
+              id: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_csid, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end
@@ -213,10 +260,12 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://cspace-prod-02.ist.berkeley.edu/#TENANT#_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
-            class: 'x3d',
-            type: 'model/x3d+xml')),
-          style: 'margin-bottom: 6px; height: 660px; width: 660px;')
+              url: "https://cspace-prod-02.ist.berkeley.edu/#TENANT#_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
+              class: 'x3d',
+              type: 'model/x3d+xml')),
+          aria: {label: render_alt_text(x3d_md5, options)},
+          role: 'img',
+          class: 'x3d-object')
       end.join.html_safe
     end
   end

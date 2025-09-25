@@ -30,6 +30,9 @@ for file_path in common_files:
     pathlib.Path(dest_file).touch(exist_ok=True)
     shutil.copyfile(common_file_resolved,dest_file)
 
+    if file_path.suffix in['.jpg', '.png', '.py', '.svg', '.ttf']:
+        continue
+
     tmp = str(dest_file)+".tmp"
     tmp_lines = []
     placeholder = "#TENANT#"

@@ -2,17 +2,15 @@
 class SearchBuilder < Blacklight::SearchBuilder
   include Blacklight::Solr::SearchBuilderBehavior
   include BlacklightAdvancedSearch::AdvancedSearchBuilder
-  self.default_processor_chain += [:add_advanced_parse_q_to_solr, :add_advanced_search_to_solr]
   include BlacklightRangeLimit::RangeLimitBuilder
+  self.default_processor_chain += [:add_advanced_parse_q_to_solr, :add_advanced_search_to_solr]
 
+
+  ##
   # @example Adding a new step to the processor chain
-  self.default_processor_chain += [:add_random_sort]
+  #   self.default_processor_chain += [:add_custom_data_to_query]
   #
-  def add_random_sort(solr_parameters)
-		if search_state.params_for_search['sort']&. == 'random'
-			require 'securerandom'
-			random_string = SecureRandom.uuid
-	    solr_parameters[:sort] = "random_%s asc" % random_string
-		end
-  end
+  #   def add_custom_data_to_query(solr_parameters)
+  #     solr_parameters[:custom] = blacklight_params[:user_value]
+  #   end
 end

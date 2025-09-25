@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 class CatalogController < ApplicationController
   include BlacklightAdvancedSearch::Controller
-
   include Blacklight::Catalog
   include BlacklightRangeLimit::ControllerOverride
+
+  # blacklight_advanced_search 5.x changes the URL query param format for advanced 'inclusive' facet selections, from the advanced form.
+  # If you'd like to keep old-style possibly bookmarked URLs working, by redirecting to new format, add this to your CatalogController:
+  before_action BlacklightAdvancedSearch::RedirectLegacyParamsFilter, :only => :index
 
   configure_blacklight do |config|
     # default advanced config values
@@ -13,10 +16,18 @@ class CatalogController < ApplicationController
     config.advanced_search[:query_parser] ||= 'edismax'
     config.advanced_search[:form_solr_parameters] ||= {}
 
+    config.bootstrap_version = 4
+
     # only Show and Index displays for Cinefiles. The other 3 are disabled
     # config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
     # config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
     # config.view.slideshow(document_component: Blacklight::Gallery::SlideshowComponent)
+    config.index.constraints_component = ConstraintsComponent
+    config.index.dropdown_component = System::DropdownComponent
+    config.index.search_bar_component = SearchBarComponent
+    config.index.title_component = DocumentTitleComponent
+    config.index.thumbnail_presenter = ThumbnailPresenter
+
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 
@@ -199,19 +210,19 @@ class CatalogController < ApplicationController
     #
 
     # Document record fields
-    config.add_facet_field 'doctype_s', label: 'Document: type', limit: true
-    config.add_facet_field 'doclanguage_ss', label: 'Document: language', limit: true
-    # config.add_facet_field 'pubdatescalar_s', label: 'Document: publication date', limit: true
+    config.add_facet_field 'doctype_s', label: 'Document type', limit: true, single: true
+    config.add_facet_field 'doclanguage_ss', label: 'Document language', limit: true
+    # config.add_facet_field 'pubdatescalar_s', label: 'Document publication date', limit: true
     config.add_facet_field("pubdate_i") do |field|
       field.include_in_advanced_search = false
-      field.label = 'Document: publication year'
+      field.label = 'Document publication year'
       field.range = true
       field.index_range = true
     end
-    config.add_facet_field 'author_ss', label: 'Document: author', limit: true
+    config.add_facet_field 'author_ss', label: 'Document author', limit: true
     config.add_facet_field 'director_ss', label: 'Document: director as subject', limit: true
     config.add_facet_field 'filmtitle_ss', label: 'Document: film title', limit: true
-    # config.add_facet_field 'has_ss', label: 'Document: content details', limit: true
+    # config.add_facet_field 'has_ss', label: 'Document content details', limit: true
     config.add_facet_field 'country_ss', label: 'Document: film country of production', limit: true
     config.add_facet_field 'filmyear_ss', label: 'Document: film production year', limit: true
     config.add_facet_field 'filmlanguage_ss', label: 'Document: film language', limit: true
@@ -237,7 +248,7 @@ class CatalogController < ApplicationController
     # config.add_facet_field 'code_s', label: 'Access code', limit: true
 
     # Common fields
-    config.add_facet_field 'common_doctype_s', label: 'Record type', limit: true
+    config.add_facet_field 'common_doctype_s', label: 'Record type', limit: true, single: true
 
     #
     # SEARCH DROPDOWN & ADVANCED SEARCH

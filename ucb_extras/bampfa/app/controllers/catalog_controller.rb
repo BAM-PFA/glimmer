@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 class CatalogController < ApplicationController
   include BlacklightAdvancedSearch::Controller
-
   include Blacklight::Catalog
   include BlacklightRangeLimit::ControllerOverride
+
+  # blacklight_advanced_search 5.x changes the URL query param format for advanced 'inclusive' facet selections, from the advanced form.
+  # If you'd like to keep old-style possibly bookmarked URLs working, by redirecting to new format, add this to your CatalogController:
+  before_action BlacklightAdvancedSearch::RedirectLegacyParamsFilter, :only => :index
 
   configure_blacklight do |config|
     # default advanced config values
@@ -13,9 +16,20 @@ class CatalogController < ApplicationController
     config.advanced_search[:query_parser] ||= 'edismax'
     config.advanced_search[:form_solr_parameters] ||= {}
 
+    config.bootstrap_version = 4
+
     config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
     config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
-    config.view.slideshow(document_component: Blacklight::Gallery::SlideshowComponent)
+    config.view.slideshow(
+      document_component: Blacklight::Gallery::SlideshowComponent,
+      preview_component: Gallery::SlideshowPreviewComponent
+    )
+    config.index.constraints_component = ConstraintsComponent
+    config.index.dropdown_component = System::DropdownComponent
+    config.index.search_bar_component = SearchBarComponent
+    config.index.title_component = DocumentTitleComponent
+    config.index.thumbnail_presenter = ThumbnailPresenter
+
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 
@@ -209,11 +223,14 @@ class CatalogController < ApplicationController
       field.index_range = true
     end
     # config.add_facet_field 'measurement_s', label: 'Dimensions', limit: true
-		config.add_facet_field 'status_s', label: 'Status', limit: true
-    config.add_facet_field 'Has image', query: {
-			has_image: { label: 'Yes', fq: 'blob_ss:[* TO *]' },
-			no_image: { label: 'No', fq: '-(blob_ss:[* TO *])' }
-		}
+    config.add_facet_field 'status_s', label: 'Status', limit: true
+    config.add_facet_field('Has image') do |field|
+      field.include_in_advanced_search = false
+      field.query = {
+        has_image: { label: 'Yes', fq: 'blob_ss:[* TO *]' },
+        no_image: { label: 'No', fq: '-(blob_ss:[* TO *])' }
+      }
+    end
 
     # SEARCH FIELDS
     config.add_search_field 'idnumber_s', label: 'Accession Number'
@@ -236,7 +253,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'datesactive_s', label: 'Dates Active'
     config.add_show_field 'measurement_s', label: 'Dimensions'
     config.add_show_field 'materials_s', label: 'Materials'
-	config.add_show_field 'idnumber_s', label: 'Accession Number'
+    config.add_show_field 'idnumber_s', label: 'Accession Number'
     config.add_show_field 'fullbampfacreditline_s', label: 'Full BAMPFA credit line'
     config.add_show_field 'copyrightcredit_s', label: 'Copyright credit'
     config.add_show_field 'century_s', label: 'Century'
