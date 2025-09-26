@@ -18,20 +18,28 @@ class CatalogController < ApplicationController
 
     config.bootstrap_version = 4
 
-    config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
-    config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
+    config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::GalleryComponent)
+    config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::MasonryComponent)
     config.view.slideshow(
       document_component: Blacklight::Gallery::SlideshowComponent,
-      preview_component: Gallery::SlideshowPreviewComponent
+      icon: Blacklight::Gallery::Icons::SlideshowComponent,
+      preview_component: Gallery::SlideshowPreviewComponent,
     )
     config.index.constraints_component = ConstraintsComponent
+    config.index.document_component = DocumentComponent
     config.index.dropdown_component = System::DropdownComponent
     config.index.search_bar_component = SearchBarComponent
     config.index.title_component = DocumentTitleComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
 
-    config.show.metadata_component = DocumentMetadataComponent
-    config.show.show_tools_component = Blacklight::Document::ShowToolsComponent
+    config.add_results_document_tool(:bookmark, component: Document::BookmarkComponent, if: :render_bookmarks_control?)
+
+    config.add_results_collection_tool(:sort_widget)
+    config.add_results_collection_tool(:per_page_widget)
+    config.add_results_collection_tool(:view_type_group)
+
+    config.show.document_component = DocumentComponent
+    config.show.show_tools_component = Document::ShowToolsComponent
     config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
@@ -40,6 +48,17 @@ class CatalogController < ApplicationController
     config.show.document_actions.delete(:citation)
     config.show.document_actions.delete(:sms)
     config.show.document_actions.delete(:email)
+
+    config.add_show_tools_partial(:bookmark,  component: Document::BookmarkComponent, if: :render_bookmarks_control?)
+    config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
+    config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
+
+    # solr path which will be added to solr base url before the other solr params.
+    #config.solr_path = 'select'
+    config.document_solr_path = 'select'
+
+    # items to show per page, each number in the array represent another option to choose from.
+    #config.per_page = [10,20,50,100]
 
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
@@ -66,29 +85,8 @@ class CatalogController < ApplicationController
         'q.fl': '*,score'
     }
 
-    # solr path which will be added to solr base url before the other solr params.
-    #config.solr_path = 'select'
-    config.document_solr_path = 'select'
-
-    # items to show per page, each number in the array represent another option to choose from.
-    #config.per_page = [10,20,50,100]
-
     #config.index.display_type_field = 'format'
     config.index.thumbnail_field = 'blob_ss'
-
-    config.add_results_document_tool(:bookmark, partial: 'bookmark_control', if: :render_bookmarks_control?)
-
-    config.add_results_collection_tool(:sort_widget)
-    config.add_results_collection_tool(:per_page_widget)
-    config.add_results_collection_tool(:view_type_group)
-
-    config.add_show_tools_partial(:bookmark, partial: 'bookmark_control', if: :render_bookmarks_control?)
-    # config.add_show_tools_partial(:email, callback: :email_action, validator: :validate_email_params)
-    # config.add_show_tools_partial(:sms, if: :render_sms_action?, callback: :sms_action, validator: :validate_sms_params)
-    # config.add_show_tools_partial(:citation)
-
-    config.add_nav_action(:bookmark, partial: 'blacklight/nav/bookmark', if: :render_bookmarks_control?)
-    config.add_nav_action(:search_history, partial: 'blacklight/nav/search_history')
 
     # solr field configuration for document/show views
     #config.show.title_field = 'title_tsim'

@@ -7,9 +7,9 @@ module ApplicationHelper
       label += " titled #{document['common_title_ss'].join(', ')}"
     end
     if counter && counter.to_i > 0
-      label += ". Search result #{counter}"
+      label += ". Search result #{number_with_delimiter counter}"
       if total && total.to_i > 0
-        label += " of #{total}"
+        label += " of #{number_with_delimiter total}"
       end
     end
     label.html_safe

@@ -10,10 +10,11 @@ module Document
     # @param [Boolean] checked
     # @param [Object] bookmark_path the rails route to use for bookmarks
     def initialize(document:, action: nil, options: nil, checked: nil, bookmark_path: nil, **kwargs)
-      @counter = options && options['counter']
-      @total = options && options['total']
-
-      super(document: document, action: action, checked: checked, bookmark_path: bookmark_path, **kwargs)
+      @document = document
+      @checked = checked
+      @bookmark_path = bookmark_path
+      @counter = options && options[:counter]
+      @total = options && options[:total]
     end
 
     def label
