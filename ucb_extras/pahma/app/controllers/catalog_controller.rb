@@ -18,11 +18,12 @@ class CatalogController < ApplicationController
 
     config.bootstrap_version = 4
 
-    config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
-    config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
+    config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::GalleryComponent)
+    config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::MasonryComponent)
     config.view.slideshow(
       document_component: Blacklight::Gallery::SlideshowComponent,
-      preview_component: Gallery::SlideshowPreviewComponent
+      icon: Blacklight::Gallery::Icons::SlideshowComponent,
+      preview_component: Gallery::SlideshowPreviewComponent,
     )
     config.index.constraints_component = ConstraintsComponent
     config.index.dropdown_component = System::DropdownComponent
@@ -30,6 +31,9 @@ class CatalogController < ApplicationController
     config.index.title_component = DocumentTitleComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
 
+    config.show.metadata_component = DocumentMetadataComponent
+    config.show.show_tools_component = Blacklight::Document::ShowToolsComponent
+    config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 

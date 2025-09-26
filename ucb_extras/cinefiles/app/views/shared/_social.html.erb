@@ -2,32 +2,31 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@bampfa"/>
 <% if @document %>
-  <% doc_presenter = index_presenter(@document) %>
-  <% if not doc_presenter.document['doctitle_txt'].nil?  %>
-		<% doc_title = doc_presenter.document['doctitle_txt'].join(', ') %>
-    <meta property="og:title"       content="<%= doc_title %>" />
-    <% unless doc_presenter.document['filmtitle_ss'].nil? %>
-      <meta property="og:description"   content="<%= doc_presenter.document['filmtitle_ss'].join(', ') %>" />
+  <% if not @document['doctitle_txt'].nil?  %>
+		<% doc_title = @document['doctitle_txt'].join(', ') %>
+    <meta property="og:title"     content="<%= doc_title %>" />
+    <% unless @document['filmtitle_ss'].nil? %>
+      <meta property="og:description"   content="<%= @document['filmtitle_ss'].join(', ') %>" />
     <% end %>
-    <% unless doc_presenter.document['blob_ss'].nil? %>
-      <meta property="og:image"       content="https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/<%= doc_presenter.document['blob_ss'].join('')[0...23] %>/derivatives/Medium/content"/>
+    <% unless @document['blob_ss'].nil? %>
+      <meta property="og:image"   content="https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/<%= @document['blob_ss'].join('')[0...23] %>/derivatives/Medium/content"/>
       <meta property="twitter:image:alt" content="Image from <%= doc_title %>"/>
     <% end %>
   <% else %>
     <!-- In case of film records... an edge case, but ~what an edge case~ -->
-    <% unless doc_presenter.document['common_title_ss'].nil? %>
-      <meta property="og:title"     content="<%= doc_presenter.document['common_title_ss'].join(', ') %>" />
+    <% unless @document['common_title_ss'].nil? %>
+      <meta property="og:title"   content="<%= @document['common_title_ss'].join(', ') %>" />
     <% end %>
-    <% unless doc_presenter.document['film_director_ss'].nil? %>
-      <meta property="og:description" content="<%= doc_presenter.document['film_director_ss'].join(', ') %>" />
+    <% unless @document['film_director_ss'].nil? %>
+      <meta property="og:description" content="<%= @document['film_director_ss'].join(', ') %>" />
     <% end %>
   <% end %>
-  <meta property="og:url"         content="https://cinefiles.bampfa.berkeley.edu/catalog/<%= doc_presenter.document['id'] %>" />
+  <meta property="og:url"         content="https://cinefiles.bampfa.berkeley.edu/catalog/<%= @document['id'] %>" />
   <meta property="og:type"        content="article" />
 <% else %>
   <meta property="og:url"         content="https://cinefiles.bampfa.berkeley.edu/"/>
   <meta property="og:title"       content="CineFiles" />
-  <meta property="og:creator" content="UC Berkeley Art Museum and Pacific Film Archive" />
+  <meta property="og:creator"     content="UC Berkeley Art Museum and Pacific Film Archive" />
   <meta property="og:description" content="CineFiles is a free online database of film documentation and ephemera" />
   <meta property="og:image"       content="https://cinefiles.bampfa.berkeley.edu/site_image.jpg" />
   <meta property="twitter:image:alt" content="Three frames of film from Bruce Baillie's All My Life"/>

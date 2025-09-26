@@ -2,20 +2,19 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@hearstmuseum">
 <% if @document %>
-  <% doc_presenter = index_presenter(@document) %>
   <!-- <meta property="fb:app_id" content="foo"> -->
-  <meta property="og:url"         content="https://portal.hearstmuseum.berkeley.edu/catalog/<%= doc_presenter.document['id'] %>" />
+  <meta property="og:url"         content="https://portal.hearstmuseum.berkeley.edu/catalog/<%= @document['id'] %>" />
   <meta property="og:type"        content="article" />
-  <meta property="og:title"       content="<%= doc_presenter.document['objname_s'] %>" />
-  <meta property="og:description" content="<%= doc_presenter.document['objdescr_s'] %>" />
-  <% unless doc_presenter.document['objmaker_ss'].nil? %>
-    <meta property="og:creator"   content="<%= doc_presenter.document['objmaker_ss'].join(', ') %>" />
+  <meta property="og:title"       content="<%= @document['objname_s'] %>" />
+  <meta property="og:description" content="<%= @document['objdescr_s'] %>" />
+  <% unless @document['objmaker_ss'].nil? %>
+    <meta property="og:creator"   content="<%= @document['objmaker_ss'].join(', ') %>" />
   <% end %>
-  <% unless doc_presenter.document['blob_ss'].nil? %>
-    <meta property="og:image"     content="https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/<%= doc_presenter.document['blob_ss'].join('')[0...23] %>/derivatives/Medium/content"/>
-	<meta property="twitter:image:alt" content="Image for museum number <%= doc_presenter.document['objmusno_s'] %>"/>
+  <% unless @document['blob_ss'].nil? %>
+    <meta property="og:image"     content="https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/<%= @document['blob_ss'].join('')[0...23] %>/derivatives/Medium/content"/>
+	<meta property="twitter:image:alt" content="Image for museum number <%= @document['objmusno_s'] %>"/>
   <% else %>
-	<meta property="og:image"     content="/stockton_curve_sm.jpg" />
+	<meta property="og:image"       content="/stockton_curve_sm.jpg" />
 	<meta property="twitter:image:alt" content="'Stockton Curve', by Ishi"/>
   <% end %>
 <% else %>
