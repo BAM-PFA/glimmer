@@ -30,6 +30,9 @@ class CatalogController < ApplicationController
     config.index.title_component = DocumentTitleComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
 
+    config.show.metadata_component = DocumentMetadataComponent
+    config.show.show_tools_component = Blacklight::Document::ShowToolsComponent
+    config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 

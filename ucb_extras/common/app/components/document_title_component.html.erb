@@ -1,17 +1,16 @@
-<div class="documentHeader row">
-  <%= content_tag @as, class: @classes do %>
-    <% before_titles.each do |t| %>
-      <%= t %>
+<div class="clearfix">
+  <div class="d-inline-block pr-4 w-md-75">
+    <%= content_tag @as, class: @classes do %>
+      <% before_titles.each do |t| %>
+        <%= t %>
+      <% end %>
+      <%= counter -%><%= title -%>
+      <% after_titles.each do |t| %>
+        <%= t %>
+      <% end %>
     <% end %>
-
-    <%= counter -%><%= title -%>
-
-    <% after_titles.each do |t| %>
-      <%= t %>
-    <% end %>
-  <% end %>
-
-  <% actions.each do |action| %>
-    <%= action %>
-  <% end %>
+  </div>
+  <div class="float-md-right w-md-25">
+    <%= render 'show_tools' %>
+  </div>
 </div>

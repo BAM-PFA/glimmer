@@ -18,16 +18,16 @@ class CatalogController < ApplicationController
 
     config.bootstrap_version = 4
 
-    # only Show and Index displays for Cinefiles. The other 3 are disabled
-    # config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent)
-    # config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent)
-    # config.view.slideshow(document_component: Blacklight::Gallery::SlideshowComponent)
+    # only Show and Index displays for Cinefiles. The blacklight-gallery views are not enabled.
     config.index.constraints_component = ConstraintsComponent
     config.index.dropdown_component = System::DropdownComponent
     config.index.search_bar_component = SearchBarComponent
     config.index.title_component = DocumentTitleComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
 
+    config.show.metadata_component = DocumentMetadataComponent
+    config.show.show_tools_component = Blacklight::Document::ShowToolsComponent
+    config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 

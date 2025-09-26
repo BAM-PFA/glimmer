@@ -15,7 +15,7 @@ module ComponentHelper
     actions = filter_partials(blacklight_config.view_config(document_index_view_type).document_actions, { document: document }).map { |_k, v| v }
     options = {
       counter: counter,
-      total: @response.total_count
+      total: if search_session then search_session['total'] else @response.total_count end
     }
     render(component.new(document: document, actions: actions, classes: wrapping_class, options: options))
   end
