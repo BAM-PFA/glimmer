@@ -6,9 +6,9 @@ module ApplicationHelper
   def bookmark_control_label document, counter, total
     label = "#{document['title_s']}, accession number #{document['idnumber_s']}"
     if counter && counter.to_i > 0
-      label += ". Search result #{counter}"
+      label += ". Search result #{number_with_delimiter counter}"
       if total && total.to_i > 0
-        label += " of #{total}"
+        label += " of #{number_with_delimiter total}"
       end
     end
     label.html_safe
@@ -26,7 +26,7 @@ module ApplicationHelper
     }
     builder = Blacklight::SearchService.new(config: blacklight_config, user_params: params)
     response = builder.search_results
-    docs = response[:response][:docs].collect { |x| x.slice(:id, :title_txt, :artistcalc_txt, :datemade_s, :blob_ss, :materials_s, :idnumber_s, :itemclass_s)}
+    docs = response[0][:response][:docs].collect { |x| x.slice(:id, :title_txt, :artistcalc_txt, :datemade_s, :blob_ss, :materials_s, :idnumber_s, :itemclass_s)}
     return docs
   end
 
