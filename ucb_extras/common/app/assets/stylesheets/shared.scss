@@ -51,6 +51,16 @@ main:focus {
   margin-bottom: 0.125rem;
   vertical-align: middle;
 }
+.btn.btn-close {
+  line-height: .9;
+  padding: 0.25rem 0.5rem;
+  .blacklight-icons-remove {
+    font-size: 1.5rem;
+    font-weight: 700;
+    opacity: .5;
+    text-shadow: 0 1px 0 #fff;
+  }
+}
 .btn.remove {
   padding: 0.375rem 0.5rem
 }
@@ -241,6 +251,9 @@ main:focus {
   --bl-facet-limit-body-padding: 16px;
   margin-bottom: 5px;
 }
+.input-group .btn:focus {
+  z-index: 3;
+}
 .input-group-sm > .input-group-append > .btn {
   height: calc(1.5em + 0.5rem + 2px);
 }
@@ -259,7 +272,7 @@ main:focus {
 .navbar-search {
   .search-query-form {
     margin: 0.25rem 0;
-    padding-right: 0;
+    padding: 0;
     .input-group-append, .search-btn {
       height: calc(1.5em + 0.75rem + 2px);
     }
@@ -299,8 +312,11 @@ main:focus {
 .search-widgets .view-type .blacklight-icons svg {
   display: inline-block;
 }
-.sidenav .facet-limit .card-body {
-  padding: 1rem 0.5rem;
+.sidenav {
+  --bl-facets-smallish-margin-bottom: 0;
+  .facet-limit .card-body {
+    padding: 1rem 0.5rem;
+  }
 }
 .site-footer a:hover:not([aria-disabled]) {
   text-decoration: underline;
