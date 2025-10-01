@@ -23,7 +23,7 @@
     <% end %>
   </div>
 
-  <div id="<%= @panel_id %>" class="facets-collapse collapse">
+  <div id="<%= @panel_id %>" class="facets-collapse collapse<%= ' show' unless should_collapse_facets? %>">
     <%= body %>
   </div>
 <% end %>

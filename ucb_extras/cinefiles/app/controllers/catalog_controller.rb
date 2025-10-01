@@ -22,6 +22,7 @@ class CatalogController < ApplicationController
     config.index.constraints_component = ConstraintsComponent
     config.index.document_component = DocumentComponent
     config.index.dropdown_component = System::DropdownComponent
+    config.index.facet_group_component = Response::FacetGroupComponent
     config.index.search_bar_component = SearchBarComponent
     config.index.title_component = DocumentTitleComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
