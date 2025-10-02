@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UrlHelper
   include Blacklight::UrlHelperBehavior
 
@@ -12,17 +14,6 @@ module UrlHelper
     end
     uri.query = URI.encode_www_form(query)
     uri.to_s
-  end
-
-  # Search History and Saved Searches display
-  def link_to_previous_search(params, accessible_label = '')
-    Deprecation.silence(SearchHistoryConstraintsHelper) do
-      link_to(
-        render_search_to_s(params, accessible_label),
-        search_action_path(params),
-        class: 'd-block'
-      )
-    end
   end
 
   # Uses the catalog_path route to create a link to the show page for an item.
@@ -62,5 +53,11 @@ module UrlHelper
         }
       )
     end
+  end
+
+  # Search History and Saved Searches display
+  def link_to_previous_search(params, accessible_label = '')
+    search_state = controller.search_state_class.new(params, blacklight_config, self)
+    link_to(render(ConstraintsComponent.for_search_history(search_state: search_state)), search_action_path(params))
   end
 end
