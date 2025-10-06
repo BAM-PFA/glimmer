@@ -15,6 +15,13 @@ else:
     tenant = sys.argv[1]
 app_path = pathlib.Path('portal/').resolve()
 
+# start with clean directories
+os.system('rm -rf portal/app/*')
+os.system('rm -rf portal/config/*')
+os.system('rm -rf portal/lib/*')
+os.system('rm -rf portal/public/*')
+os.system('rm -rf portal/spec/*')
+
 # first copy over common files
 os.chdir('ucb_extras/common')
 common_dir = pathlib.Path('.')
@@ -26,9 +33,9 @@ for file_path in common_files:
     common_file_resolved = file_path.resolve()
     print(common_file_resolved)
     dest_file = app_path.joinpath(file_path).resolve()
-    dest_file.parent.mkdir(parents=True,exist_ok=True)
+    dest_file.parent.mkdir(parents=True, exist_ok=True)
     pathlib.Path(dest_file).touch(exist_ok=True)
-    shutil.copyfile(common_file_resolved,dest_file)
+    shutil.copyfile(common_file_resolved, dest_file)
 
     if file_path.suffix in['.jpg', '.png', '.py', '.svg', '.ttf']:
         continue
