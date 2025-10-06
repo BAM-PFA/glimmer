@@ -26,7 +26,7 @@ module ApplicationHelper
     }
     builder = Blacklight::SearchService.new(config: blacklight_config, user_params: params)
     response = builder.search_results
-    docs = response[0][:response][:docs].collect { |x| x.slice(:id, :title_txt, :artistcalc_txt, :datemade_s, :blob_ss, :materials_s, :idnumber_s, :itemclass_s)}
+    docs = response[:response][:docs].collect { |x| x.slice(:id, :title_txt, :artistcalc_txt, :datemade_s, :blob_ss, :materials_s, :idnumber_s, :itemclass_s)}
     return docs
   end
 
