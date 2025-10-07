@@ -4,7 +4,7 @@
 # be treated as quasi-plain text
 class SearchHistoryConstraintLayoutComponent < ConstraintLayoutComponent
   def call
-    label = tag.dt(t('blacklight.search.filters.label', label: @label || 'Any Field'), class: 'filter-name col-6 col-md-5 col-lg-4')
+    label = render_label @label
     value = render_filter_values @value, @label
 
     safe_join([label, value].compact)
@@ -12,6 +12,10 @@ class SearchHistoryConstraintLayoutComponent < ConstraintLayoutComponent
 
   def render?
     true
+  end
+
+  def render_label label
+    tag.dt(t('blacklight.search.filters.label', label: @label || 'Any Field'), class: 'filter-name col-6 col-md-5 col-lg-4')
   end
 
   def render_filter_values value, key

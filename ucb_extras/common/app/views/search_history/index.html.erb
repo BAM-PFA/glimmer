@@ -18,13 +18,19 @@
     <%= t('blacklight.search_history.recent') %><span class="sr-only">, most recent first</span>
   </h2>
   <ul aria-labelledby="search-history-section-heading" class="search-history pl-0">
-    <% @searches.each_with_index do |search,index| %>
-      <li id="document_<%= index + 1 %>">
-        <%= link_to_previous_search(
-            search_state.reset(search.query_params).to_hash,
-            accessible_label = "recent search #{index + 1} of #{@searches.length}: "
-        ) %>
-      </li>
+    <% index = 0 %>
+    <% @searches.each do |search| %>
+      <% historical_search_state = search_state.reset(search.query_params) %>
+      <% params = historical_search_state.to_hash %>
+      <% unless search_has_invalid_constraints?(historical_search_state, params) %>
+        <% index += 1 %>
+        <li id="document_<%= index %>">
+          <%= link_to_previous_search(
+              params,
+              accessible_label = "recent search #{index} of #{@searches.length}: "
+          ) %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 <% end %>

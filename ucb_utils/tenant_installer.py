@@ -61,3 +61,4 @@ for file_path in common_files:
 tenant_path = pathlib.Path('../' + tenant)
 os.chdir(tenant_path)
 shutil.copytree(tenant_path,app_path,dirs_exist_ok=True)
+print(f'Installed {tenant}')
