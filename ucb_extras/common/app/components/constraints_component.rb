@@ -2,6 +2,17 @@
 
 class ConstraintsComponent < Blacklight::ConstraintsComponent
 
+  def self.for_advanced_search(**kwargs)
+    new(tag: :dl,
+      render_headers: false,
+      id: nil,
+      classes: 'query row mx-0',
+      query_constraint_component: AdvancedSearchConstraintLayoutComponent,
+      facet_constraint_component_options: { layout: AdvancedSearchConstraintLayoutComponent },
+      start_over_component: nil,
+      **kwargs)
+  end
+
   def self.for_search_history(**kwargs)
     new(tag: :dl,
         render_headers: false,
@@ -30,7 +41,7 @@ class ConstraintsComponent < Blacklight::ConstraintsComponent
   end
 
   def query_constraints
-    if @search_state.query_param.present? || is_for_search_history?
+    if @search_state.query_param.present? || (!@search_state.has_constraints? && is_for_search_history?)
       render(
         @query_constraint_component.new(
           search_state: @search_state,
@@ -56,6 +67,19 @@ class ConstraintsComponent < Blacklight::ConstraintsComponent
   end
 
   private
+
+  def clause_presenters
+    return to_enum(:clause_presenters) unless block_given?
+
+    @search_state.clause_params.each do |key, clause|
+      field_config = helpers.blacklight_config.search_fields[clause[:field]]
+      if clause['query'].present?
+        yield Blacklight::ClausePresenter.new(key, clause, field_config, helpers)
+      else
+        next
+      end
+    end
+  end
 
   def is_for_search_history?
     @query_constraint_component.name == 'SearchHistoryConstraintLayoutComponent'
