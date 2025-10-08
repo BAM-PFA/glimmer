@@ -13,7 +13,7 @@ fi
 
 TENANT=$1
 
-cd ~/projects/radiance/
+cd ~/projects/glimmer/
 
 # tidy up repo
 git clean -fd
