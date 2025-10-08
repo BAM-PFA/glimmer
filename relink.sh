@@ -21,7 +21,7 @@ if [ $# -ne 3 ]; then
     usage
 fi
 
-if ! grep -q " $3 " <<< " prod dev"; then
+if ! grep -q " $3 " <<< " prod dev "; then
     usage
 fi
 
