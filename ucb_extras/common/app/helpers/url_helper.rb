@@ -59,7 +59,7 @@ module UrlHelper
   def link_to_previous_search(params, accessible_label = '')
     search_state = controller.search_state_class.new(params, blacklight_config, self)
     link_to(
-      render(ConstraintsComponent.for_search_history(search_state: search_state)),
+      tag.span(accessible_label, class: 'sr-only') + render(ConstraintsComponent.for_search_history(search_state: search_state)),
       search_action_path(params),
       class: 'd-block'
     )
