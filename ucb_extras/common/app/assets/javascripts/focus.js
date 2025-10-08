@@ -35,11 +35,11 @@ const onClickBookmarkCheckbox = (e, $thumbnailContainer) => {
 }
 
 const setBookmarkCheckboxHandlers = () => {
-  const $bookmarkForms = $(Blacklight.doBookmarkToggleBehavior.selector)
+  const $bookmarkForms = $('form.bookmark-toggle')
   $bookmarkForms.toArray().forEach(el => {
-    const document_id = el.getAttribute('data-doc-id')
-    const $checkbox = $(`#toggle-bookmark_${document_id}`)
-    const $document = $(`[data-document-id="${document_id}"]`).first()
+    $form = $(el)
+    const $checkbox = $form.find('input.toggle-bookmark')
+    const $document = $form.closest('[data-document-id]')
     const $thumbnailContainer = $document.find('.thumbnail-container').first()
 
     $checkbox.on('click', e => onClickBookmarkCheckbox(e, $thumbnailContainer))

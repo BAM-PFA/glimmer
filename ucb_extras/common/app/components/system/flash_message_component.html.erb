@@ -3,7 +3,8 @@
   <% unless @type == :sr_alert %>
     <%= tag.button button_contents,
       type: "button",
-      class: "btn btn-close",
+      autofocus: true,
+      class: "btn btn-close rounded-circle",
       data: { dismiss: "alert", bs_dismiss: "alert" },
       aria: { label: "Close" }
     %>
