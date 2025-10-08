@@ -1,37 +1,39 @@
 <% @page_title = t('blacklight.search_history.page_title', :application_name => application_name) %>
 
 <div id="content" class="col-md-12">
-<h1 class="page-heading"><%= t('blacklight.search_history.title') %></h1>
-<% if @searches.blank? %>
-  <h2 class="section-heading"><%= t('blacklight.search_history.no_history') %></h2>
-<% else %>
-  <%= link_to t('blacklight.search_history.clear.action_title'),
-              blacklight.clear_search_history_path,
-              method: :delete,
-              data: {
-                confirm: t('blacklight.search_history.clear.action_confirm'), # for rails-ujs
-                turbo_confirm: t('blacklight.search_history.clear.action_confirm'),
-                turbo_method: :delete
-              },
-              class: 'btn btn-danger float-md-right float-md-end' %>
-  <h2 id="search-history-section-heading" class="section-heading clearfix">
-    <%= t('blacklight.search_history.recent') %><span class="sr-only">, most recent first</span>
-  </h2>
-  <ul aria-labelledby="search-history-section-heading" class="search-history pl-0">
-    <% index = 0 %>
-    <% @searches.each do |search| %>
-      <% historical_search_state = search_state.reset(search.query_params) %>
-      <% params = historical_search_state.to_hash %>
-      <% unless search_has_invalid_constraints?(historical_search_state, params) %>
-        <% index += 1 %>
-        <li id="document_<%= index %>">
-          <%= link_to_previous_search(
-              params,
-              accessible_label = "recent search #{index} of #{@searches.length}: "
-          ) %>
-        </li>
+  <h1 class="page-heading"><%= t('blacklight.search_history.title') %></h1>
+  <% if @searches.blank? %>
+    <h2 class="section-heading"><%= t('blacklight.search_history.no_history') %></h2>
+  <% else %>
+    <div class="d-flex flex-row-reverse flex-wrap align-items-center mb-2">
+      <%= link_to t('blacklight.search_history.clear.action_title'),
+                  blacklight.clear_search_history_path,
+                  method: :delete,
+                  data: {
+                    confirm: t('blacklight.search_history.clear.action_confirm'), # for rails-ujs
+                    turbo_confirm: t('blacklight.search_history.clear.action_confirm'),
+                    turbo_method: :delete
+                  },
+                  class: 'btn btn-danger ml-auto' %>
+      <h2 id="search-history-section-heading" class="section-heading mr-auto mb-0">
+        <%= t('blacklight.search_history.recent') %><span class="sr-only">, most recent first</span>
+      </h2>
+    </div>
+    <ul aria-labelledby="search-history-section-heading" class="search-history pl-0">
+      <% index = 0 %>
+      <% @searches.each do |search| %>
+        <% historical_search_state = search_state.reset(search.query_params) %>
+        <% params = historical_search_state.to_hash %>
+        <% unless search_has_invalid_constraints?(historical_search_state, params) %>
+          <% index += 1 %>
+          <li id="document_<%= index %>">
+            <%= link_to_previous_search(
+                params,
+                accessible_label = "recent search #{index} of #{@searches.length}: "
+            ) %>
+          </li>
+        <% end %>
       <% end %>
-    <% end %>
-  </ul>
-<% end %>
+    </ul>
+  <% end %>
 </div>
