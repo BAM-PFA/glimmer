@@ -15,11 +15,11 @@ class SearchHistoryConstraintLayoutComponent < ConstraintLayoutComponent
   end
 
   def render_label label
-    tag.dt(t('blacklight.search.filters.label', label: @label || 'Any Field'), class: 'filter-name col-6 col-md-5 col-lg-4')
+    tag.dt(t('blacklight.search.filters.label', label: @label || 'Any Field'), class: 'filter-name col-6 col-lg-5 col-xl-4')
   end
 
   def render_filter_values value, key
-    tag.dd(render_filter_value(value, key), class: 'filter-values col-6 col-md-7 col-lg-8 mb-0')
+    tag.dd(render_filter_value(value, key), class: 'filter-values col-6 col-lg-7 col-xl-8 mb-0')
   end
 
   ##
