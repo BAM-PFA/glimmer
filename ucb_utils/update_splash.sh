@@ -28,4 +28,4 @@ cp portal/public/*.jpg ~/projects/search_${TENANT}/public/
 cp portal/public/*.png ~/projects/search_${TENANT}/public/
 
 # restart blacklight for ${TENANT}
-touch ~/projects/search_${TENANT}/tmp/restart.txt
+~/projects/search_${TENANT}/bin/rails restart
