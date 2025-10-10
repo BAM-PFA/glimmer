@@ -76,12 +76,10 @@ const onSlideshowModalWillHide = () => {
   toggleBackgroundElementsDisabled(false, 'slideshow-modal')
 }
 
-const onSlideshowLoaded = () => {
+const initSlideshowModal = () => {
   const modalEl = document.getElementById('slideshow-modal')
   if (modalEl) {
     const slideshow = new Slideshow(modalEl)
     $(modalEl).on('shown.bs.modal', () => onSlideshowModalShown(slideshow))
   }
 }
-
-Blacklight.onLoad(onSlideshowLoaded)

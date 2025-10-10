@@ -6,8 +6,3 @@ import 'blacklight-gallery'
 
 import "openseadragon"
 import "openseadragon-rails"
-
-Blacklight.onLoad(function() {
-  $('.documents-masonry').BlacklightMasonry();
-  $('.documents-slideshow').slideshow();
-});

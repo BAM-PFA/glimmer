@@ -17,7 +17,8 @@ class CatalogController < ApplicationController
 
     config.bootstrap_version = 4
 
-    # only Show and Index displays for Cinefiles. The blacklight-gallery views are not enabled.
+    # only List view for Cinefiles. The blacklight-gallery views are not enabled.
+    config.view.list.icon = Blacklight::Icons::ListComponent
     config.index.constraints_component = ConstraintsComponent
     config.index.document_component = DocumentComponent
     config.index.dropdown_component = System::DropdownComponent

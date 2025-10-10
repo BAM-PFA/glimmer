@@ -17,6 +17,7 @@ class CatalogController < ApplicationController
 
     config.bootstrap_version = 4
 
+    config.view.list.icon = Blacklight::Icons::ListComponent
     config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::GalleryComponent)
     config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::MasonryComponent)
     config.view.slideshow(

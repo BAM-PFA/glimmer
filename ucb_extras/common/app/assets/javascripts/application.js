@@ -13,6 +13,7 @@
 //= require blacklight_gallery/blacklight-gallery
 //= require blacklight_range_limit
 
+
 // Depended on by modal and slideshow_modal
 //= require focus
 
@@ -26,4 +27,7 @@
 Blacklight.onLoad(function() {
   $('.documents-masonry').BlacklightMasonry();
   $('.documents-slideshow').slideshow();
+  initFocusManagement()
+  $('body').on('loaded.blacklight.blacklight-modal', initModal)
+  initSlideshowModal()
 });

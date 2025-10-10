@@ -72,9 +72,7 @@ const putFocusOnTarget = () => {
   }
 }
 
-const manageFocus = () => {
+const initFocusManagement = () => {
   putFocusOnTarget()
   setBookmarkCheckboxHandlers()
 }
-
-Blacklight.onLoad(manageFocus)

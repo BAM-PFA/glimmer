@@ -15,10 +15,10 @@ module Blacklight
       end
 
       def icon
-        return render(@view.icon.new) if @view.icon.is_a?(Class)
+        return render(@view.icon.new(aria_hidden: true)) if @view.icon.is_a?(Class)
         return render(@view.icon) if @view.icon.is_a?(ViewComponent::Base)
 
-        helpers.blacklight_icon(@view.icon || @key)
+        helpers.blacklight_icon(@view.icon || @key, aria_hidden: true)
       end
 
       def label

@@ -87,8 +87,11 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   width: 100%;
 }
 .documents-gallery, .documents-masonry {
-  .document .documentHeader .document-title-heading {
-    flex: 0 0 100%;
+  .document .document-heading > div {
+    width: 100% !important;
+    .document-title-heading, .index-document-functions {
+      padding: 0 !important;
+    }
     .document-counter {
       clip: rect(0, 0, 0, 0);
       display: block;
@@ -111,13 +114,6 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
     max-width: 15em;
   }
 }
-.documents-gallery .document .documentHeader,
-.documents-list .document .documentHeader {
-  align-items: baseline;
-  .index-document-functions {
-    margin-bottom: 0.5rem;
-  }
-}
 .documents-list .document {
   margin-top: 0;
   padding: 1rem 0;
@@ -136,16 +132,8 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
     min-width: 24em;
     width: 100%;
   }
-  .document-metadata, .documentHeader {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  .document-title-heading {
-    align-content: center;
-    display: flex;
-    .document-counter {
-      margin-right: 0.5rem;
-    }
+  .document-heading .document-title-heading .document-counter {
+    margin-right: 0.5rem;
   }
 }
 .documents-list, .show-document {
@@ -169,12 +157,9 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
       background-color: rgba(0, 0, 0, 0.8) !important;
       scrollbar-width: none;
       width: 100%;
-      .document-title {
+      .document-heading {
         margin-left: -15px;
         margin-right: -15px;
-        > div {
-          width: 100% !important;
-        }
       }
     }
     .caption-area:first-child {
@@ -377,14 +362,20 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
           width: 2em;
         }
       }
-      .slideshow-inner .item .frame {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        min-height: 65vh;
-        > a {
-          margin: 0.5em;
+      .slideshow-inner .item {
+        display: none;
+        &.active {
+          display: inherit;
+        }
+        .frame {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          min-height: 65vh;
+          > a {
+            margin: 0.5em;
+          }
         }
       }
     }
