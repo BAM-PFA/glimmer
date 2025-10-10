@@ -150,11 +150,7 @@ const onModalWillHide = modalTitle => {
   putFocus(modalTrigger[0])
 }
 
-const onModalInitialized = e => {
+const initModal = e => {
   e.target.removeAttribute('aria-hidden')
   $(e.target).on('shown.bs.modal', onModalShown)
 }
-
-Blacklight.onLoad(() => {
-  $('body').on('loaded.blacklight.blacklight-modal', onModalInitialized)
-})
