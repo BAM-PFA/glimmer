@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class FacetFieldPaginationComponent < Blacklight::FacetFieldPaginationComponent
-  def initialize(facet_field:, button_classes: %w[btn btn-outline-secondary])
+  def initialize(facet_field:, button_classes: %w[btn btn-outline-secondary], html_id: 'facet-pagination')
     @facet_field = facet_field
     @button_classes = button_classes.join(' ')
+    @html_id = html_id
   end
 
   def sort_facet_url(sort)

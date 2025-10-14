@@ -5,10 +5,10 @@
         params: {
           **@facet_field.search_state.to_h,
           sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.prev_page} loaded"),
-          focus_target: ERB::Util.url_encode(['#facet-pagination-prev-link', '#facet-pagination-next-link'])
+          focus_target: ERB::Util.url_encode(["##{@html_id}-prev-link", "##{@html_id}-next-link"])
         },
         param_name: param_name,
-        id: 'facet-pagination-prev-link',
+        id: "#{@html_id}-prev-link",
         class: 'btn btn-link',
         data: { blacklight_modal: "preserve" }) do
   %>
@@ -25,10 +25,10 @@
         params: {
           **@facet_field.search_state.to_h,
           sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.next_page} loaded"),
-          focus_target: ERB::Util.url_encode(['#facet-pagination-next-link', '#facet-pagination-prev-link'])
+          focus_target: ERB::Util.url_encode(["##{@html_id}-next-link", "##{@html_id}-prev-link"])
         },
         param_name: param_name,
-        id: 'facet-pagination-next-link',
+        id: "#{@html_id}-next-link",
         class: 'btn btn-link',
         data: { blacklight_modal: "preserve" }) do
   %>
@@ -45,7 +45,7 @@
     <%= link_to(
           t('blacklight.search.facets.sort.index').html_safe,
           '#',
-          id: 'facet-pagination-sort-count-link',
+          id: "#{@html_id}-sort-count-link",
           onclick: 'return false;',
           aria: {current: 'page'},
           class: "sort_change az #{@button_classes} active",
@@ -56,9 +56,9 @@
           {
             **sort_facet_url('count'),
             sr_alert: 'Sorted numerically, page 1 loaded',
-            focus_target: '#facet-pagination-sort-count-link'
+            focus_target: "##{@html_id}-sort-count-link"
           },
-          id: 'facet-pagination-sort-index-link',
+          id: "#{@html_id}-sort-index-link",
           class: "sort_change numeric #{@button_classes}",
           data: { blacklight_modal: "preserve" },
     ) %>
@@ -68,16 +68,16 @@
           {
             **sort_facet_url('index'),
             sr_alert: 'Sorted A to Z, page 1 loaded',
-            focus_target: '#facet-pagination-sort-index-link'
+            focus_target: "##{@html_id}-sort-index-link"
           },
-          id: 'facet-pagination-sort-count-link',
+          id: "#{@html_id}-sort-count-link",
           class: "sort_change az #{@button_classes}",
           data: { blacklight_modal: "preserve" }
     ) %>
     <%= link_to(
           t('blacklight.search.facets.sort.count').html_safe,
           '#',
-          id: 'facet-pagination-sort-index-link',
+          id: "#{@html_id}-sort-index-link",
           onclick: 'return false;',
           aria: {current: 'page'},
           class: "sort_change numeric #{@button_classes} active",

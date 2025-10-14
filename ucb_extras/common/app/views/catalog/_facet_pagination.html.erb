@@ -1,1 +1,4 @@
-<%= render(FacetFieldPaginationComponent.new(facet_field: facet_field_presenter(@facet, @display_facet))) %>
+<%= render(FacetFieldPaginationComponent.new(
+      facet_field: facet_field_presenter(@facet, @display_facet),
+      html_id: local_assigns[:html_id] || 'facet-pagination'
+)) %>
