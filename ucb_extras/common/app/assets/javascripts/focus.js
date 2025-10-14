@@ -72,7 +72,7 @@ const putFocusOnTarget = () => {
   }
 }
 
-const initFocusManagement = () => {
+const FocusManagement = () => {
   putFocusOnTarget()
   setBookmarkCheckboxHandlers()
 }

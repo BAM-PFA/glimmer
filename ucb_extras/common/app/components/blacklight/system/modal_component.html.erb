@@ -19,6 +19,9 @@
     >
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
+
+    <%= render '/shared/flash_msg' %>
+    <%= render 'shared/focus_mgmt' %>
   </div>
 
   <%= body || (capture do %>
