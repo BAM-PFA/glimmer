@@ -18,7 +18,7 @@
 
   <% component.with_footer do %>
     <div class="facet-pagination bottom d-flex flex-wrap w-100 justify-content-between">
-      <%= render :partial=>'facet_pagination' %>
+      <%= render :partial=>'facet_pagination', :locals=>{html_id: 'facet-pagination-bottom'} %>
     </div>
   <% end %>
 <% end %>
