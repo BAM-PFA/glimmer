@@ -94,6 +94,11 @@ const toggleBackgroundElementsDisabled = (disable, modalId) => {
    * Any of these siblings' descendants that can receive focus must also be disabled. */
   const bodyEl = $('body')[0]
   const backgroundElements = Array.from(bodyEl.children)
+  if (disable) {
+    bodyEl.classList.add('modal-open')
+  } else {
+    bodyEl.classList.remove('modal-open')
+  }
   backgroundElements.forEach(el => {
     if (['NAV', 'DIV', 'MAIN', 'FOOTER'].includes(el.tagName.toUpperCase()) && ![modalId || 'blacklight-modal'].includes(el.id)) {
       if (disable) {
@@ -123,7 +128,7 @@ const toggleBackgroundElementsDisabled = (disable, modalId) => {
   })
 }
 
-const onModalShown = e => {
+const onModalShow = e => {
   /* When the modal is open, content outside the modal should not be accessible via
    * keyboard or assistive technology. */
   const modalEl = e.target
@@ -131,26 +136,38 @@ const onModalShown = e => {
   const focusTrap = new FocusTrap(modalEl)
 
   focusTrap.focusFirstDescendant()
-  focusTrap.activate()
+  setTimeout(focusTrap.activate, 1000)
+
   toggleBackgroundElementsDisabled(true)
 
-  $(modalEl).on('hide.bs.modal', () => {
-    onModalWillHide(modalTitle)
+  const onClose = e => {
+    onModalHide(modalTitle)
     focusTrap.deactivate()
-    $(modalEl).off('shown.bs.modal')
-  })
+  }
+  modalEl.addEventListener('hide.blacklight.blacklight-modal', onClose, {once: true})
 }
 
-const onModalWillHide = modalTitle => {
+const onModalHide = modalTitle => {
   /* 1. Return the elements outside the modal to their original state.
-   * 2. Return focus to the element that triggered the modal. */
+  * 2. Return focus to the element that triggered the modal. */
   const selector = `:contains("${modalTitle}")`
-  const modalTrigger = $(`${Blacklight.modal.triggerLinkSelector}${selector}, ${Blacklight.modal.triggerFormSelector}${selector}`)
+  const modalTrigger = $(`${Blacklight.Modal.triggerLinkSelector}${selector}, ${Blacklight.Modal.triggerFormSelector}${selector}`)
   toggleBackgroundElementsDisabled(false)
   putFocus(modalTrigger[0])
 }
 
-const initModal = e => {
-  e.target.removeAttribute('aria-hidden')
-  $(e.target).on('shown.bs.modal', onModalShown)
+const onModalLoaded = (e) => {
+  const modal = e.target
+  modal.removeAttribute('aria-hidden')
+  putFocusOnTarget()
 }
+
+const ModalAccessibility = () => {
+  const modal = document.getElementById('blacklight-modal')
+  // The 'loaded.blacklight.blacklight-modal' event fires before the modal opens
+  // and whenever the content inside the modal changes.
+  modal.addEventListener('loaded.blacklight.blacklight-modal', onModalLoaded)
+  // The 'show.blacklight.blacklight-modal' event fires when the modal opens.
+  modal.addEventListener('show.blacklight.blacklight-modal', onModalShow)
+}
+

@@ -34,6 +34,7 @@ class CatalogController < ApplicationController
     config.add_results_collection_tool(:view_type_group)
 
     config.show.document_component = DocumentComponent
+    config.show.metadata_component = DocumentMetadataComponent
     config.show.show_tools_component = Document::ShowToolsComponent
     config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm

@@ -14,8 +14,11 @@ en:
         present: 'In Bookmarks<span class="sr-only">: %{label}</span>'
       facets:
         count: '%{number}<span class="sr-only"> objects</span>'
+        more_html: more <span class="sr-only visually-hidden">%{field_name} options</span><span aria-hidden="true"> »</span>
         selected:
           remove: 'Remove constraint %{label}: %{value}'
+        sort:
+          index: <span aria-hidden="true">A-Z Sort</span><span class="sr-only">A to Z sort</span>
       filters:
         label: '%{label}'
       form:

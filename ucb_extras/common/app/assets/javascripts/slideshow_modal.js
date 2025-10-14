@@ -76,7 +76,7 @@ const onSlideshowModalWillHide = () => {
   toggleBackgroundElementsDisabled(false, 'slideshow-modal')
 }
 
-const initSlideshowModal = () => {
+const SlideshowModalAccessibility = () => {
   const modalEl = document.getElementById('slideshow-modal')
   if (modalEl) {
     const slideshow = new Slideshow(modalEl)

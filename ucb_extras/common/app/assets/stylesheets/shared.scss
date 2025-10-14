@@ -30,7 +30,7 @@ a:focus,
 button:focus,
 input:focus,
 select:focus,
-*[tabindex="0"]:focus,
+*[tabindex="0"]:not([id^="focus-trap"]):focus,
 *[tabindex="-1"]:focus {
   box-shadow: 0 0 0 5px white !important;
   outline-color: var(--dark) !important;
@@ -45,7 +45,7 @@ select.form-control:focus,
 .navbar.navbar-search input:focus,
 .toggle-bookmark input:focus,
 a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
-*[tabindex="0"]:focus,
+*[tabindex="0"]:not([id^="focus-trap"]):focus,
 *[tabindex="-1"]:focus {
   outline-color: var(--primary) !important;
 }

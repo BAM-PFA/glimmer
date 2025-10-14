@@ -82,7 +82,7 @@ module Blacklight
             id: "remove-facet-#{@label_for_id}-#{@value_for_id}",
             rel: "nofollow"
           ) do
-            render(Blacklight::Icons::RemoveComponent.new) +
+            render(Blacklight::Icons::RemoveComponent.new(aria_hidden: true)) +
               tag.span(helpers.t(:'blacklight.search.facets.selected.remove', label: @facet_item.facet_config.label, value: label), class: 'sr-only visually-hidden')
           end
       end + render_facet_count(classes: ["selected"])

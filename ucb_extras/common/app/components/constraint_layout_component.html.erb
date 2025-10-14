@@ -17,7 +17,7 @@
         class: 'btn btn-outline-secondary remove',
         id: "remove-constraint-#{@index}",
     ) do %>
-      <%= render Blacklight::Icons::RemoveComponent.new %>
+      <%= render Blacklight::Icons::RemoveComponent.new(aria_hidden: true) %>
       <span class="sr-only visually-hidden"><%= remove_aria_label %></span>
     <% end %>
   <% end %>

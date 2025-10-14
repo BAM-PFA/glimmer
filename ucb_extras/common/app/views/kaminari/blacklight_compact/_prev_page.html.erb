@@ -6,15 +6,26 @@
     per_page:      number of items to fetch per page
     remote:        data-remote
 -%>
-<% next_focus_target = %>
-<%= link_to_unless current_page.first?,
-  raw(t 'views.pagination_compact.previous'),
-  with_screen_reader_alert(
-    url,
-    sr_alert="page #{number_with_delimiter(current_page - 1, {delimiter: ','})} loaded",
-    focus_target=['#pagination-compact-prev', '#pagination-compact-next']
-  ),
-  :id => 'pagination-compact-prev',
-  :rel => 'prev',
-  :remote => remote
-%>
+<% if current_page.first? %>
+  <%= link_to raw(t 'views.pagination_compact.previous'),
+    '#',
+    :rel => 'prev',
+    :onclick => 'return false;',
+    :class => 'btn-link disabled',
+    disabled: true,
+    aria: {
+      current: 'page'
+    }
+  %>
+<% else %>
+  <%= link_to raw(t 'views.pagination_compact.previous'),
+        with_screen_reader_alert(
+          url,
+          sr_alert="page #{number_with_delimiter(current_page - 1, {delimiter: ','})} loaded",
+          focus_target=['#pagination-compact-prev', '#pagination-compact-next']
+        ),
+        :id => 'pagination-compact-prev',
+        :rel => 'prev',
+        :remote => remote
+  %>
+<% end %>

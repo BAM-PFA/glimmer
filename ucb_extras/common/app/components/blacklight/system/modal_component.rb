@@ -3,8 +3,6 @@
 module Blacklight
   module System
     class ModalComponent < Blacklight::Component
-      include Blacklight::ContentAreasShim
-
       renders_one :prefix
       renders_one :header
       renders_one :title

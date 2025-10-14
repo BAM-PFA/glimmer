@@ -1,0 +1,87 @@
+<div class="prev_next_links btn-group">
+  <%= helpers.link_to_previous_page(
+        @facet_field.paginator,
+        raw(t('views.pagination.previous')),
+        params: {
+          **@facet_field.search_state.to_h,
+          sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.prev_page} loaded"),
+          focus_target: ERB::Util.url_encode(['#facet-pagination-prev-link', '#facet-pagination-next-link'])
+        },
+        param_name: param_name,
+        id: 'facet-pagination-prev-link',
+        class: 'btn btn-link',
+        data: { blacklight_modal: "preserve" }) do
+  %>
+    <%= content_tag :a,
+          raw(t('views.pagination.previous')),
+          class: 'disabled btn btn-link text-decoration-none',
+          aria: { disabled: true }
+    %>
+  <% end %>
+
+  <%= helpers.link_to_next_page(
+        @facet_field.paginator,
+        raw(t('views.pagination.next')),
+        params: {
+          **@facet_field.search_state.to_h,
+          sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.next_page} loaded"),
+          focus_target: ERB::Util.url_encode(['#facet-pagination-next-link', '#facet-pagination-prev-link'])
+        },
+        param_name: param_name,
+        id: 'facet-pagination-next-link',
+        class: 'btn btn-link',
+        data: { blacklight_modal: "preserve" }) do
+  %>
+    <%= content_tag :a,
+          raw(t('views.pagination.next')),
+          class: 'disabled btn btn-link text-decoration-none',
+          aria: { disabled: true }
+    %>
+  <% end %>
+</div>
+
+<div class="sort-options btn-group">
+  <% if @facet_field.paginator.sort == 'index' %>
+    <%= link_to(
+          t('blacklight.search.facets.sort.index').html_safe,
+          '#',
+          id: 'facet-pagination-sort-count-link',
+          onclick: 'return false;',
+          aria: {current: 'page'},
+          class: "sort_change az #{@button_classes} active",
+          disabled: true
+    ) %>
+    <%= link_to(
+          t('blacklight.search.facets.sort.count').html_safe,
+          {
+            **sort_facet_url('count'),
+            sr_alert: 'Sorted numerically, page 1 loaded',
+            focus_target: '#facet-pagination-sort-count-link'
+          },
+          id: 'facet-pagination-sort-index-link',
+          class: "sort_change numeric #{@button_classes}",
+          data: { blacklight_modal: "preserve" },
+    ) %>
+  <% else %>
+    <%= link_to(
+          t('blacklight.search.facets.sort.index').html_safe,
+          {
+            **sort_facet_url('index'),
+            sr_alert: 'Sorted A to Z, page 1 loaded',
+            focus_target: '#facet-pagination-sort-index-link'
+          },
+          id: 'facet-pagination-sort-count-link',
+          class: "sort_change az #{@button_classes}",
+          data: { blacklight_modal: "preserve" }
+    ) %>
+    <%= link_to(
+          t('blacklight.search.facets.sort.count').html_safe,
+          '#',
+          id: 'facet-pagination-sort-index-link',
+          onclick: 'return false;',
+          aria: {current: 'page'},
+          class: "sort_change numeric #{@button_classes} active",
+          disabled: true
+    ) %>
+  <% end %>
+</div>

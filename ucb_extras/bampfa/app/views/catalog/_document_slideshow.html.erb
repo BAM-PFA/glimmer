@@ -21,7 +21,11 @@
         data-bs-slide="prev"
         aria-controls="slideshow-inner"
       >
-        <%= render Blacklight::Gallery::Icons::ChevronLeftComponent.new additional_options: { label_context: 'previous_image' } %>
+        <%= render Blacklight::Gallery::Icons::ChevronLeftComponent.new(
+              aria_hidden: true,
+              additional_options: { label_context: 'previous_image' }
+        ) %>
+        <span class="sr-only visually-hidden">previous image</span>
       </a>
       <a
         class="right carousel-control next"
@@ -30,7 +34,11 @@
         data-bs-slide="next"
         aria-controls="slideshow-inner"
       >
-        <%= render Blacklight::Gallery::Icons::ChevronRightComponent.new additional_options: { label_context: 'next_image' } %>
+        <%= render Blacklight::Gallery::Icons::ChevronRightComponent.new(
+              aria_hidden: true,
+              additional_options: { label_context: 'next_image' }
+        ) %>
+        <span class="sr-only visually-hidden">next image</span>
       </a>
 
       <div class="controls text-center">
@@ -40,7 +48,7 @@
           aria-controls="slideshow-inner"
           aria-label="<%= t('blacklight_gallery.catalog.slideshow.pause') %>"
         >
-          <%= render Blacklight::Gallery::Icons::PauseSlideshowComponent.new %>
+          <%= render Blacklight::Gallery::Icons::PauseSlideshowComponent.new aria_hidden: true %>
         </button>
         <button
           class="btn btn-sm btn-link"
@@ -48,7 +56,7 @@
           aria-controls="slideshow-inner"
           aria-label="<%= t('blacklight_gallery.catalog.slideshow.start') %>"
         >
-          <%= render Blacklight::Gallery::Icons::StartSlideshowComponent.new %>
+          <%= render Blacklight::Gallery::Icons::StartSlideshowComponent.new aria_hidden: true %>
         </button>
       </div>
     </div>
