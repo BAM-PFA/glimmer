@@ -87,7 +87,7 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   width: 100%;
 }
 .documents-gallery, .documents-masonry {
-  .document .document-heading > div {
+  .document .document-title > div {
     width: 100% !important;
     .document-title-heading, .index-document-functions {
       padding: 0 !important;
@@ -119,8 +119,8 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   padding: 1rem 0;
   .document-thumbnail {
     float: unset;
-    margin-bottom: 48px;
-    padding-left: 0;
+    margin-bottom: 16px;
+    padding-left: 15px;
     img {
       max-height: 15em;
       max-width: 15em;
@@ -130,20 +130,27 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
     clear: right;
     margin-bottom: 0;
     min-width: 24em;
+    padding-left: 15px;
     width: 100%;
-  }
-  .document-heading .document-title-heading .document-counter {
-    margin-right: 0.5rem;
-  }
-}
-.documents-list, .show-document {
-  .document .document-metadata {
-    dd .thumbclass {
-      max-height: 12.5rem;
-      max-width: 12.5rem;
+    dd {
+      flex: 0 0 66%;
+      max-width: 66%;
+      width: 66%;
     }
     dt {
-      min-width: 6em;
+      flex: 0 0 33%;
+      max-width: 33%;
+      padding-right: 0;
+      text-align: left;
+      width: 33%;
+    }
+  }
+  .document-title .document-title-heading {
+    .document-counter {
+      margin-right: 0.5rem;
+    }
+    a {
+      display: inline;
     }
   }
 }
@@ -157,7 +164,7 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
       background-color: rgba(0, 0, 0, 0.8) !important;
       scrollbar-width: none;
       width: 100%;
-      .document-heading {
+      .document-title {
         margin-left: -15px;
         margin-right: -15px;
       }
@@ -303,8 +310,16 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
 .search-widgets, .sort-pagination {
   flex-wrap: wrap;
 }
-.search-widgets .view-type .blacklight-icons svg {
-  display: inline-block;
+.search-widgets {
+  > * {
+    margin-bottom: 0.2em;
+  }
+  .view-type .blacklight-icons svg {
+    display: inline-block;
+  }
+}
+.sort-pagination {
+  padding-bottom: 0.8em;
 }
 .sidenav {
   --bl-facets-smallish-margin-bottom: 0;
@@ -320,6 +335,10 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   margin-bottom: 0px;
   margin-left: -10px;
   padding-left: 0px;
+}
+.skip-links {
+  position: absolute;
+  z-index: 1;
 }
 .slideshow-modal {
   .btn, .close {
@@ -417,11 +436,13 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   .documents-list .document {
     .document-thumbnail {
       float: right;
-      padding-left: 48px;
+      padding-left: 24px;
+      width: 33%;
     }
     .document-metadata {
       clear: unset;
-      width: revert;
+      padding-left: 0px;
+      width: 66%;
     }
   }
   .w-md-25 {
@@ -474,8 +495,8 @@ main:focus {
   outline-offset: -6px !important;
 }
 p a:not(.btn):not([aria-disabled]) {
-  font-weight: bold;
   text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
   &:hover {
     text-decoration: underline;
   }

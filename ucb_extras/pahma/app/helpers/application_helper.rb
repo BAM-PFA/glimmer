@@ -1,10 +1,7 @@
-require 'cgi/util'
-
 module ApplicationHelper
-  include ERB::Util
 
   def bookmark_control_label document, counter, total
-    label = "#{document[blacklight_config['index']['title_field']]}, accession number #{document['idnumber_s']}"
+    label = "#{document[blacklight_config['index']['title_field']]}, museum number #{document['objmusno_s']}"
     if counter && counter.to_i > 0
       label += ". Search result #{number_with_delimiter counter}"
       if total && total.to_i > 0
@@ -15,11 +12,11 @@ module ApplicationHelper
   end
 
   def document_link_label document, label
-    "#{label}, accession number #{document['idnumber_s']}".html_safe
+    "#{label}, museum number #{document['objmusno_s']}".html_safe
   end
 
   def render_csid csid, derivative
-    "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
+    "https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
   end
 
   def render_status options = {}
@@ -54,14 +51,11 @@ module ApplicationHelper
   def render_doc_link options = {}
     # return a link to a search for documents for a film
     content_tag(:div) do
-      film_title = options[:document][:film_title_ss].first
-      film_year = if options[:document][:film_year_ss] then options[:document][:film_year_ss].first else '' end
       options[:value].collect do |film_id|
-        content_tag(:a, 'Documents related to this film',
+        content_tag(:a, 'Click for documents related to this film',
           href: "/?q=#{film_id}&search_field=film_id_ss",
           style: 'padding: 3px;',
-          class: 'hrefclass',
-          'aria-label': "Documents related to the film \"#{film_title}\", #{film_year}")
+          class: 'hrefclass')
       end.join.html_safe
     end
   end
@@ -94,38 +88,45 @@ module ApplicationHelper
     render partial: '/shared/pdfs', locals: { csid: pdf_csid, restricted: restricted }
   end
 
-  def render_alt_text blob_csid, document
-    prefix = document[:itemclass_s] || '#TENANT# object'
-    total_pages = document[:blob_ss] ? document[:blob_ss].length : 1
-    if total_pages > 1
-      page_number = document[:blob_ss].find_index(blob_csid)
-      if page_number.is_a? Integer
-        prefix += " #{page_number + 1} of #{total_pages}"
+  def render_alt_text(blob_csid, options, is_external_link=false)
+    document = options[:document]
+    unless options[:field] == 'card_ss'
+      prefix = 'Hearst Museum object'
+      total_pages = document[:blob_ss] ? document[:blob_ss].length : 1
+      if total_pages > 1
+        page_number = document[:blob_ss].find_index(blob_csid)
+        if page_number.is_a? Integer
+          prefix += " #{page_number + 1} of #{total_pages}"
+        end
       end
+    else
+      prefix = 'Documentation associated with Hearst Museum object'
     end
-    title_field = blacklight_config['index']['title_field']
-    title = unless document[title_field].nil? then "titled #{document[title_field][0]}" else 'no title available' end
-    materials = document[:materials_s] || 'of unknown materials'
-    object_number = unless document[:idnumber_s].nil? then "accession number #{document[:idnumber_s]}" else 'no accession number available' end
-    html_escape("#{prefix} #{title}, #{materials}, #{object_number}.")
+    brief_description = unless document[:objdescr_txt].nil? then "described as #{document[:objdescr_txt][0]}" else 'no description available.' end
+    if document[:restrictions_ss] && document[:restrictions_ss].include?('notpublic') && !document[:restrictions_ss].include?('public')
+      brief_description += ' Notice: Image restricted due to its potentially sensitive nature. Contact Museum to request access.'
+    end
+    object_name = unless document[:objname_txt].nil? then "titled #{document[:objname_txt][0]}" else 'no title available' end
+    object_number = unless document[:objmusno_txt].nil? then "museum number #{document[:objmusno_txt][0]}" else 'no object museum number available' end
+    link_description = if is_external_link then '(opens in new tab)' else '' end
+    "#{prefix} #{object_name}, #{object_number}, #{brief_description} #{link_description}".html_safe
   end
 
-  def render_media options = {}
+  def render_media(options)
     # return a list of cards or images
     content_tag(:div) do
       options[:value].collect do |blob_csid|
         content_tag(:a,
           content_tag(:img, '',
             src: render_csid(blob_csid, 'Medium'),
-            alt: render_alt_text(blob_csid, options),
+            alt: render_alt_text(blob_csid, options, is_external_link=true),
             class: 'thumbclass'
           ),
-          href: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{blob_csid}/derivatives/OriginalJpeg/content",
-          # href: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{blob_csid}/content",
+          href: "https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/#{blob_csid}/derivatives/OriginalJpeg/content",
+          # href: "https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/#{blob_csid}/content",
           target: 'original',
-          style: 'padding: 3px;',
-          class: 'hrefclass d-inline-block'
-        )
+          style: 'padding: 4px;',
+          class: 'hrefclass d-inline-block')
       end.join.html_safe
     end
   end
@@ -141,7 +142,7 @@ module ApplicationHelper
             class: 'thumbclass'
           ),
           class: 'd-inline-block',
-          style: 'padding: 3px;')
+          style: 'padding: 4px;')
       end.join.html_safe
     end
   end
@@ -153,6 +154,7 @@ module ApplicationHelper
           options[:value].collect do |blob_csid|
             content_tag(:img, '',
                 src: render_csid(blob_csid, 'Medium'),
+                alt: render_alt_text(blob_csid, options),
                 class: 'thumbclass')
           end.join.html_safe
         else content_tag(:img, '',
@@ -206,7 +208,7 @@ module ApplicationHelper
         l2 = audio_md5[2..3]
         content_tag(:audio,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 audio in MPEG format.",
-            src: "https://cspace-prod-02.ist.berkeley.edu/#TENANT#_nuxeo/data/#{l1}/#{l2}/#{audio_md5}",
+            src: "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/#{l1}/#{l2}/#{audio_md5}",
             id: 'audio_md5',
             type: 'audio/mpeg'),
           controls: 'controls',
@@ -224,7 +226,7 @@ module ApplicationHelper
         l2 = video_md5[2..3]
         content_tag(:video,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264.",
-            src: "https://cspace-prod-02.ist.berkeley.edu/#TENANT#_nuxeo/data/#{l1}/#{l2}/#{video_md5}",
+            src: "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/#{l1}/#{l2}/#{video_md5}",
             id: 'video_md5',
             type: 'video/mp4'),
           controls: 'controls',
@@ -240,9 +242,9 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-              url: "https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/#{x3d_csid}/content",
-              id: 'x3d',
-              type: 'model/x3d+xml')),
+            url: "https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/#{x3d_csid}/content",
+            id: 'x3d',
+            type: 'model/x3d+xml')),
           aria: {label: render_alt_text(x3d_csid, options)},
           role: 'img',
           class: 'x3d-object')
@@ -260,9 +262,9 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-              url: "https://cspace-prod-02.ist.berkeley.edu/#TENANT#_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
-              class: 'x3d',
-              type: 'model/x3d+xml')),
+            url: "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
+            class: 'x3d',
+            type: 'model/x3d+xml')),
           aria: {label: render_alt_text(x3d_md5, options)},
           role: 'img',
           class: 'x3d-object')
@@ -282,8 +284,15 @@ module ApplicationHelper
       else
         'x' + CGI.escape(musno).gsub('%', '@').gsub('.', '@2E').downcase
       end
+      link_text = 'ark:/21549/' + ark
 
-      link_to "ark:/21549/" + ark, "https://n2t.net/ark:/21549/" + ark
+      link_to(
+        link_text,
+        'https://n2t.net/' + link_text,
+        aria: {
+          label: 'permalink: ' + link_text
+        }
+      )
     end.join.html_safe
   end
 
