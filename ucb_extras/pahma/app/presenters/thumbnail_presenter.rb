@@ -40,6 +40,20 @@ class ThumbnailPresenter < Blacklight::ThumbnailPresenter
     view_context.link_to_document document, value, url_options
   end
 
+  def render_thumbnail_alt_text()
+    prefix  = 'Hearst Museum object'
+    if document[:card_ss] && document[:card_ss].include?(thumbnail_value_from_document)
+      prefix = 'Documentation associated with Hearst Museum object'
+    end
+    brief_description = unless document[:objdescr_txt].nil? then "described as #{document[:objdescr_txt][0]}" else 'no description available.' end
+    if document[:restrictions_ss] && document[:restrictions_ss].include?('notpublic') && !document[:restrictions_ss].include?('public')
+      brief_description += ' Notice: Image restricted due to its potentially sensitive nature. Contact Museum to request access.'
+    end
+    object_name = unless document[:objname_txt].nil? then "titled #{document[:objname_txt][0]}" else 'no title available' end
+    object_number = unless document[:objmusno_txt].nil? then "museum number #{document[:objmusno_txt][0]}" else 'no object museum number available' end
+    "#{prefix} #{object_name}, #{object_number}, #{brief_description}".html_safe
+  end
+
   private
 
   delegate :thumbnail_field, :thumbnail_method, :default_thumbnail, to: :view_config
@@ -49,7 +63,8 @@ class ThumbnailPresenter < Blacklight::ThumbnailPresenter
     value = if thumbnail_method
               view_context.send(thumbnail_method, document, image_options)
             elsif thumbnail_field
-              image_url = 'https://webapps.cspace.berkeley.edu/#TENANT#/imageserver/blobs/' + thumbnail_value_from_document + '/derivatives/Medium/content'
+              image_options['alt'] = render_thumbnail_alt_text
+              image_url = 'https://webapps.cspace.berkeley.edu/pahma/imageserver/blobs/' + thumbnail_value_from_document + '/derivatives/Medium/content'
               # image_options[:width] = '200px'
               view_context.image_tag image_url, image_options if image_url.present?
             end

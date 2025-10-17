@@ -24,7 +24,7 @@ class CatalogController < ApplicationController
     config.view.gallery(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::GalleryComponent)
     config.view.masonry(document_component: Blacklight::Gallery::DocumentComponent, icon: Blacklight::Gallery::Icons::MasonryComponent)
     config.view.slideshow(
-      document_component: Blacklight::Gallery::SlideshowComponent,
+      document_component: Gallery::SlideshowComponent,
       icon: Blacklight::Gallery::Icons::SlideshowComponent,
       preview_component: Gallery::SlideshowPreviewComponent,
     )

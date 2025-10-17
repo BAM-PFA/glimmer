@@ -38,16 +38,14 @@ module UrlHelper
             else # String
               field_or_opts
             end
-    Deprecation.silence(Blacklight::UrlHelperBehavior) do
-      link_to(
-        label,
-        search_state.url_for_document(doc),
-        {
-          **document_link_params(doc, opts),
-          aria: {label: document_link_label(doc, label)}
-        }
-      )
-    end
+    link_to(
+      label,
+      search_state.url_for_document(doc),
+      {
+        **document_link_params(doc, opts),
+        aria: {label: document_link_label(doc, label)}
+      }
+    )
   end
 
   # Search History and Saved Searches display
