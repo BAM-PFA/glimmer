@@ -24,7 +24,7 @@
     <div class="card-body">
       <%= body %>
 
-      <% if @facet_field.modal_path %>
+      <% if @facet_field.modal_path && !@facet_field.in_advanced_search? %>
         <div class="more_facets pt-2">
           <%= link_to t("more_#{@facet_field.key}_html", scope: 'blacklight.search.facets', default: :more_html, field_name: @facet_field.label),
             @facet_field.modal_path,
