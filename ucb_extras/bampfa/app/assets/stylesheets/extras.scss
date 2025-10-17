@@ -1,3 +1,15 @@
+.documents-list .document .document-metadata {
+  line-height: 1.2rem;
+  dd {
+    font-family: RobotoLight, Helvetica, Arial, sans-serif;
+    font-weight: normal;
+  }
+  dt {
+    color: black;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+  }
+}
 .show-document .document {
   margin-bottom: 20px;
 }
@@ -99,7 +111,7 @@
   font-weight: normal;
 }
 
-div {
+body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
@@ -172,11 +184,6 @@ h3.index_title > a {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: 900;
   font-size: 3em;
-}
-
-.index-metadata-container {
-  margin-bottom: 20px;
-  line-height: 1.375rem;
 }
 
 .form-control {

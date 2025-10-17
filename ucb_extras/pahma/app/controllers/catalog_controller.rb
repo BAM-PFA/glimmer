@@ -15,6 +15,9 @@ class CatalogController < ApplicationController
     # config.advanced_search[:qt] ||= 'advanced'
     config.advanced_search[:query_parser] ||= 'edismax'
 
+    config.skip_link_component = SkipLinkComponent
+    config.skip_link_item_component = SkipLinkItemComponent
+
     config.bootstrap_version = 4
 
     config.view.list.icon = Blacklight::Icons::ListComponent
@@ -40,7 +43,6 @@ class CatalogController < ApplicationController
     config.add_results_collection_tool(:view_type_group)
 
     config.show.document_component = DocumentComponent
-    config.show.metadata_component = DocumentMetadataComponent
     config.show.show_tools_component = Document::ShowToolsComponent
     config.show.title_component = DocumentTitleComponent
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm

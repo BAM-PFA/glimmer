@@ -17,6 +17,19 @@ class AdvancedSearchFormComponent < Blacklight::AdvancedSearchFormComponent
     )
   end
 
+  def sort_fields_select
+    options = sort_fields.values.map { |field_config| [helpers.sort_field_label(field_config.key), field_config.key] }
+    return unless options.any?
+
+    select_tag(
+      :sort,
+      options_for_select(options, params[:sort]),
+      autocomplete: 'off',
+      class: "form-select custom-select sort-select w-auto",
+      aria: { labelledby: 'advanced-search-sort-label' }
+    )
+  end
+
   private
 
   def initialize_search_field_controls
@@ -27,7 +40,7 @@ class AdvancedSearchFormComponent < Blacklight::AdvancedSearchFormComponent
             f.label(:query, field.display_label('search'), class: 'col-12') +
               content_tag(:div, class: 'col-lg-9') do
                 f.hidden_field(:field, value: field.key) +
-                  f.text_field(:query, value: query_for_search_clause(field.key), class: 'form-control')
+                  f.text_field(:query, value: query_for_search_clause(field.key), autocomplete: 'on', class: 'form-control')
               end
           end
         end

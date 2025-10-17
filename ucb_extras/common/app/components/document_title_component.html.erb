@@ -1,4 +1,4 @@
-<div class="document-title clearfix">
+<%= content_tag 'div', class: "document-title #{unless @document[:blob_ss].nil? then 'clearfix' else '' end}" do %>
   <div class="d-inline-block pr-4 w-md-75">
     <%= content_tag @as, class: @classes do %>
       <% before_titles.each do |t| %>
@@ -18,4 +18,4 @@
       <%= action %>
     <% end %>
   </div>
-</div>
+<% end %>
