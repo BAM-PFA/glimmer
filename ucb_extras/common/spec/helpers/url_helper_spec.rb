@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe UrlHelper do
+RSpec.describe UrlHelper do
   around { |test| Deprecation.silence(described_class) { test.call } }
 
   let(:blacklight_config) do
@@ -13,6 +13,21 @@ describe UrlHelper do
   end
 
   let(:parameter_class) { ActionController::Parameters }
+
+  before do
+    allow(controller).to receive_messages(
+      respond_to?: :search_state_class,
+      controller_name: 'test',
+      search_state_class: Blacklight::SearchState
+    )
+    allow(helper).to receive(:search_action_path) do |*args|
+      search_catalog_url(*args)
+    end
+
+    allow(helper).to receive_messages(blacklight_config: blacklight_config)
+    allow(helper).to receive_messages(current_search_session: nil)
+    allow(helper).to receive(:search_session).and_return({})
+  end
 
   describe "#with_screen_reader_alert" do
     let(:url) { 'test.berkeley.edu' }
@@ -46,11 +61,6 @@ describe UrlHelper do
   end
 
   describe "#link_to_previous_search" do
-    before do
-      allow(helper).to receive(:url_for).with({:action=>"catalog", :q=>'search query'}).and_return('/catalog?q=search%2520query')
-      allow(helper).to receive(:url_for).with('/catalog?q=search%2520query').and_return('/catalog?q=search%2520query')
-    end
-
     let(:params) { { q: 'search query' } }
 
     it "overrides Blacklight::UrlHelperBehavior#link_to_previous_search to add class=\"d-block\"" do
@@ -63,8 +73,7 @@ describe UrlHelper do
     end
 
     it "links to the given search parameters" do
-      allow(helper).to receive(:render_search_to_s).with(params, '').and_return "link text"
-      expect(helper.link_to_previous_search(params)).to have_link("link text", :href => helper.search_action_path(params))
+      expect(helper.link_to_previous_search(params)).to have_link(:href => helper.search_action_path(params)).and(have_text('search query'))
     end
   end
 
@@ -90,35 +99,27 @@ describe UrlHelper do
     end
 
     it "overrides Blacklight::UrlHelperBehavior#link_to_document to add unique accessible label to the document link" do
-      link = helper.link_to_document document, :title_tsim
+      link = helper.link_to_document document
       expect(link).to have_selector '[aria-label]'
     end
 
     it "consists of the document title wrapped in a <a>" do
-      allow(Deprecation).to receive(:warn)
-      expect(helper.link_to_document(document, :title_tsim)).to have_selector("a", text: '654321', count: 1)
+      expect(helper.link_to_document(document)).to have_selector("a", text: '654321', count: 1)
     end
 
     it "accepts and returns a string label" do
       expect(helper.link_to_document(document, 'This is the title')).to have_selector("a", text: 'This is the title', count: 1)
     end
 
-    it "accepts and returns a Proc" do
-      allow(Deprecation).to receive(:warn)
-      expect(helper.link_to_document(document, proc { |doc, _opts| doc[:id] + ": " + doc.first(:title_tsim) })).to have_selector("a", text: '123456: 654321', count: 1)
-    end
-
     context 'when label is missing' do
       let(:data) { { 'id' => id } }
 
       it "returns id" do
-        allow(Deprecation).to receive(:warn)
-        expect(helper.link_to_document(document, :title_tsim)).to have_selector("a", text: '123456', count: 1)
+        expect(helper.link_to_document(document)).to have_selector("a", text: '123456', count: 1)
       end
 
       it "is html safe" do
-        allow(Deprecation).to receive(:warn)
-        expect(helper.link_to_document(document, :title_tsim)).to be_html_safe
+        expect(helper.link_to_document(document)).to be_html_safe
       end
 
       it "passes on the title attribute to the link_to_with_data method" do
@@ -132,7 +133,7 @@ describe UrlHelper do
       context "with an integer id" do
         let(:id) { 123_456 }
 
-        it "works" do
+        it "has a link" do
           expect(helper.link_to_document(document)).to have_selector("a")
         end
       end

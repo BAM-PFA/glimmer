@@ -2,8 +2,18 @@
 
 require 'rails_helper'
 
-describe ApplicationHelper, type: :helper do
+RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
+
+  before(:all) do
+    @config = Blacklight::Configuration.new do |config|
+      config.index.title_field = 'objname_s'
+    end
+  end
+
+  before do
+    allow(helper).to receive(:blacklight_config).and_return(@config)
+  end
 
   describe '#bookmark_control_label' do
     subject { helper.bookmark_control_label(document, counter, total) }

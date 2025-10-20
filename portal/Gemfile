@@ -46,14 +46,16 @@ group :development, :test do
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'debug', platforms: %i[mri mingw x64_mingw]
+
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
-  gem 'rspec-rails'
+  gem 'selenium-webdriver'
+
+  gem 'rspec-rails', '~> 8.0.0'
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'selenium-webdriver'
   gem 'solr_wrapper', '~> 4.0'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'

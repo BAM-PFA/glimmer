@@ -5,6 +5,16 @@ require 'rails_helper'
 describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
+  before(:all) do
+    @config = Blacklight::Configuration.new do |config|
+      config.index.title_field = 'title_s'
+    end
+  end
+
+  before do
+    allow(helper).to receive(:blacklight_config).and_return(@config)
+  end
+
   let(:mock_response) { instance_double(Blacklight::Solr::Response) }
   let(:mock_document) { instance_double(SolrDocument, export_formats: {}) }
   let(:search_service) { instance_double(Blacklight::SearchService) }
