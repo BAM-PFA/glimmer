@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ApplicationHelper, type: :helper do
+RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
   before(:all) do
@@ -49,13 +49,11 @@ describe ApplicationHelper, type: :helper do
     end
 
     let(:mock_response) do
-      [
-        {
-          response: {
-            docs: documents
-          }
+      {
+        response: {
+          docs: documents
         }
-      ]
+      }
     end
     let(:documents) do
       ids = (1..12).to_a
