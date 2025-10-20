@@ -41,6 +41,7 @@ __py*
 */*.rbc
 */capybara-*.html
 */.rspec
+**/examples.txt
 */db/*.sqlite3
 */db/*.sqlite3-journal
 */public/system
