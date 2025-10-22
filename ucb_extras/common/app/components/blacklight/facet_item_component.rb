@@ -14,7 +14,7 @@ module Blacklight
       @selected = facet_item.selected?
       @wrapping_element = wrapping_element
       @suppress_link = suppress_link
-      @label_for_id = @facet_item.facet_config.label.parameterize
+      @label_for_id = (@facet_item.facet_config.label || @label).parameterize
       @value_for_id = if @facet_item.facet_config.range then 'range' else @facet_item.value.to_s.parameterize end
     end
 

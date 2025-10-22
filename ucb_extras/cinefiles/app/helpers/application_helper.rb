@@ -57,7 +57,7 @@ module ApplicationHelper
       content_tag(:ul) do
         options[:value].collect do |array_element|
           parts = array_element.split(/^(.*?)\+\+(.*?)\+\+(.*)/)
-          content_tag(:li, (link_to parts[2], '/catalog/' + parts[1]) + parts[3])
+          content_tag(:li, (link_to parts[2], '/catalog/' + parts[1]) + parts[3]) unless parts.length < 4
         end.join.html_safe
       end
     end
