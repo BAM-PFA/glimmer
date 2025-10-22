@@ -1,4 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
+require 'simplecov'
+SimpleCov.start 'rails'
+
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
@@ -9,6 +13,10 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 # return unless Rails.env.test?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+
+require "view_component/test_helpers"
+require "view_component/system_test_helpers"
+require "capybara/rspec"
 
 require 'blacklight'
 
@@ -81,6 +89,8 @@ RSpec.configure do |config|
   config.include PresenterTestHelpers, type: :presenter
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponentTestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
+  config.include Capybara::RSpecMatchers, type: :component
 
   config.include(ControllerLevelHelpers, type: :helper)
   config.before(:each, type: :helper) { initialize_controller_helpers(helper) }

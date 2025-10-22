@@ -136,6 +136,7 @@ GEM
     devise-guests (0.8.3)
       devise
     diff-lcs (1.6.2)
+    docile (1.4.1)
     domain_name (0.6.20240107)
     drb (2.2.1)
     erubi (1.13.0)
@@ -385,6 +386,12 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.13.2)
+    simplecov_json_formatter (0.1.4)
     solr_wrapper (4.1.0)
       faraday
       faraday-follow_redirects
@@ -499,6 +506,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   sassc-rails (~> 2.1)
   selenium-webdriver
+  simplecov
   solr_wrapper (~> 4.0)
   sqlite3 (~> 2.0)
   stimulus-rails
