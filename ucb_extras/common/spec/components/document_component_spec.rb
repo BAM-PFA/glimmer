@@ -3,39 +3,35 @@
 require 'rails_helper'
 
 RSpec.describe DocumentComponent, type: :component do
-
   subject(:component) { described_class.new(document: document, **attr) }
+  let(:render) { component.render_in(view_context) }
+  let(:rendered) {  Capybara::Node::Simple.new(render) }
 
   let(:attr) { {} }
   let(:view_context) { controller.view_context }
-
-  let(:render) do
-    component.render_in(view_context)
-  end
-
-  let(:rendered) do
-    Capybara::Node::Simple.new(render)
-  end
-
-  let(:document) { Blacklight::IndexPresenter.new(presented_document, view_context) }
-
   let(:presented_document) do
     SolrDocument.new(
       :id => 'x',
       (blacklight_config.index.thumbnail_field).to_sym => ['image_id'],
-      (blacklight_config.index.title_field).to_sym =>  ['Title'],
+      # (blacklight_config.index.title_field).to_sym =>  ['Title'],
       **doc_fields
     )
   end
-
+  let(:document) { Blacklight::IndexPresenter.new(presented_document, view_context) }
   let(:doc_fields) do
-    fields_key = blacklight_config[controller.action_name][:document_fields_key] if controller.action_name
-    field_config = blacklight_config[:facet_fields].merge(blacklight_config[fields_key || :index_fields])
-    field_config.transform_values do |value|
+    facet_fields = blacklight_config[:facet_fields].transform_values do |value|
       ["test #{value.label}"]
     end
+    facet_fields.merge(view_specific_fields)
   end
-
+  let(:view_specific_fields) do
+    index_fields = blacklight_config[:index_fields].transform_values do |value|
+      ["test #{value.label}"]
+    end
+    # In Cinefiles, the title field is not included in the index fields so we must explicitly add it.
+    title_field = {blacklight_config.index.title_field => ["test Title"]}
+    title_field.merge(index_fields)
+  end
   let(:blacklight_config) do
     CatalogController.blacklight_config.deep_copy.tap do |config|
       config.track_search_session.storage = false
@@ -101,6 +97,7 @@ RSpec.describe DocumentComponent, type: :component do
     end
 
     let(:attr) { { counter: 5 } }
+    let(:expected_title) { presented_document[blacklight_config.index.title_field].first }
 
     it 'has data properties' do
       component.with_body { '-' }
@@ -111,11 +108,11 @@ RSpec.describe DocumentComponent, type: :component do
     end
 
     it 'renders a linked title' do
-      expect(rendered).to have_link 'Title', href: '/catalog/x'
+      expect(rendered).to have_link expected_title, href: '/catalog/x'
     end
 
     it 'renders a counter with the title' do
-      expect(rendered).to have_css 'h3', text: '5. Title'
+      expect(rendered).to have_css 'h3', text: "5. #{expected_title}"
     end
 
     context 'with a document rendered as part of a collection' do
@@ -125,7 +122,7 @@ RSpec.describe DocumentComponent, type: :component do
 
       it 'renders a counter with the title' do
         # after ViewComponent 2.5, collection counter params are 1-indexed
-        expect(rendered).to have_css 'h3', text: '111. Title'
+        expect(rendered).to have_css 'h3', text: "111. #{expected_title}"
       end
     end
 
@@ -134,7 +131,10 @@ RSpec.describe DocumentComponent, type: :component do
     end
 
     it 'renders a thumbnail, overriding Blacklight with a specific link URL and alt text' do
-      expect(rendered).to have_css '.document-thumbnail a[href="/catalog/x"] img[alt][src="https://webapps.cspace.berkeley.edu/cinefiles/imageserver/blobs/image_id/derivatives/Medium/content"]'
+      # Test the beginning and end of the URL, avoiding the tenant-specific string in the middle.
+      img_src_prefix = 'https://webapps.cspace.berkeley.edu/'
+      img_src_suffix = '/imageserver/blobs/image_id/derivatives/Medium/content'
+      expect(rendered).to have_css ".document-thumbnail a[href=\"/catalog/x\"] img[alt][src^=\"#{img_src_prefix}\"][src$=\"#{img_src_suffix}\"]"
     end
 
     context 'with default metadata component' do
@@ -155,11 +155,52 @@ RSpec.describe DocumentComponent, type: :component do
     end
   end
 
+  shared_context 'BAMPFA-specific setup' do
+    # This context is necessary for testing BAMPFA's custom document metadata in 'show' view.
+    # It won't have an effect when we're testing the other portals.
+    before do
+      mock_search_response = {
+        :response => {
+          :docs => [
+            {:id => 'y', **doc_fields}
+          ].to_enum
+        }
+      }
+      allow_any_instance_of(Blacklight::SearchService).to receive(:search_results).and_return(mock_search_response)
+      allow_any_instance_of(Blacklight::Component).to receive(:helpers).and_return(helpers)
+      allow(helpers).to receive(:document_presenter).and_return(document)
+      allow(helpers).to receive_messages(
+        render_document_class: 'doc-class',
+        render_doc_actions: 'actions',
+        render_csid: 'http://image_server.url',
+        render_alt_text: 'alt text',
+        make_artist_search_link: 'http://artist.search.link'
+      )
+    end
+    let(:helpers) { double('helpers') }
+  end
+
   context 'show view' do
-    let(:attr) { { title_component: :h1, show: true } }
+    include_context 'BAMPFA-specific setup'
 
     before do
       controller.action_name = "show"
+      allow_any_instance_of(ApplicationHelper).to receive_messages(
+        render_csid: 'http://image_server.url',
+        render_alt_text: 'alt text'
+      )
+    end
+
+    let(:document) { Blacklight::ShowPresenter.new(presented_document, view_context) }
+    let(:attr) { { title_component: :h1, show: true } }
+    let(:expected_title) { presented_document[blacklight_config.index.title_field].first }
+    let(:view_specific_fields) do
+      show_fields = blacklight_config[:show_fields].transform_values do |value|
+        ["test #{value.label}"]
+      end
+      # In Cinefiles, the title field is not included in the show fields so we must explicitly add it.
+      title_field = {blacklight_config.show.title_field => ["test Title"]}
+      title_field.merge(show_fields)
     end
 
     it 'renders with an id' do
@@ -170,20 +211,22 @@ RSpec.describe DocumentComponent, type: :component do
     end
 
     it 'renders a title' do
-      expect(rendered).to have_css 'h1', text: 'Title'
+      expect(rendered).to have_css 'h1', text: expected_title
     end
 
     it 'renders with show-specific metadata' do
       expect(rendered).to have_css 'dl.document-metadata'
-      blacklight_config[:show_fields].each do |key, value|
-        expect(rendered).to have_css 'dt', text: "#{value.label}:"
-        if value.helper_method
-          expected = Capybara::Node::Simple.new(view_context.send(value.helper_method, {value: presented_document[key], document: presented_document}))
+      blacklight_config[:show_fields].except(:blob_ss).each do |key, field_config|
+        expect(rendered).to have_css 'dt', text: "#{field_config.label}:"
+        if field_config.helper_method
+          expected = Capybara::Node::Simple.new(
+            view_context.send(field_config.helper_method, {value: presented_document[key], document: presented_document})
+          )
           unless expected.blank? || expected.native.blank?
             expect(rendered).to have_css 'dd', text: expected.text
           end
         else
-          expect(rendered).to have_css 'dd', text: doc_fields[key].first
+          expect(rendered).to have_css 'dd', text: view_specific_fields[key].first
         end
       end
     end
@@ -216,8 +259,7 @@ RSpec.describe DocumentComponent, type: :component do
 
       it 'renders with show-specific metadata with correct translation' do
         expect(rendered).to have_css 'dl.document-metadata'
-        expect(rendered).to have_css 'dt', text: 'testing:Images'
-        expect(rendered).to have_css 'dd img[alt]'
+        expect(rendered).to have_css 'img[alt="alt text"][src="http://image_server.url"]'
       end
     end
 

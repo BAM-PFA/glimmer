@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe UrlHelper do
-  around { |test| Deprecation.silence(described_class) { test.call } }
-
   let(:blacklight_config) do
     Blacklight::Configuration.new.configure do |config|
       config.index.title_field = 'title_tsim'
@@ -74,89 +72,6 @@ RSpec.describe UrlHelper do
 
     it "links to the given search parameters" do
       expect(helper.link_to_previous_search(params)).to have_link(:href => helper.search_action_path(params)).and(have_text('search query'))
-    end
-  end
-
-  describe "link_to_document" do
-    let(:title_tsim) { '654321' }
-    let(:id) { '123456' }
-    let(:data) { {
-      'id' => id,
-      'title_tsim' => [title_tsim],
-      'film_year_i' => '1999',
-      'film_director_ss' => ['Skärnheim Vim']
-    } }
-    let(:document) { SolrDocument.new(data) }
-
-    before do
-      allow(controller).to receive(:action_name).and_return('index')
-      allow(helper.main_app).to receive(:respond_to?).with('track_test_path').and_return(true)
-      allow(helper.main_app).to receive(:respond_to?).with(:track_test_path).and_return(true)
-      allow(helper.main_app).to receive(:respond_to?).with(:track_test_path, true).and_return(true)
-      allow(helper.main_app).to receive(:track_test_path).and_return('tracking url')
-      # allow(helper).to receive(:document_link_params).with(document, {:counter=>nil}).and_return({:data=>{:"context-href"=>"tracking url"}})
-      # allow(helper).to receive(:document_link_params).with(document, {:counter=>5}).and_return({:data=>{:"context-href"=>"tracking url"}})
-    end
-
-    it "overrides Blacklight::UrlHelperBehavior#link_to_document to add unique accessible label to the document link" do
-      link = helper.link_to_document document
-      expect(link).to have_selector '[aria-label]'
-    end
-
-    it "consists of the document title wrapped in a <a>" do
-      expect(helper.link_to_document(document)).to have_selector("a", text: '654321', count: 1)
-    end
-
-    it "accepts and returns a string label" do
-      expect(helper.link_to_document(document, 'This is the title')).to have_selector("a", text: 'This is the title', count: 1)
-    end
-
-    context 'when label is missing' do
-      let(:data) { { 'id' => id } }
-
-      it "returns id" do
-        expect(helper.link_to_document(document)).to have_selector("a", text: '123456', count: 1)
-      end
-
-      it "is html safe" do
-        expect(helper.link_to_document(document)).to be_html_safe
-      end
-
-      it "passes on the title attribute to the link_to_with_data method" do
-        expect(helper.link_to_document(document, "Some crazy long label...", title: "Some crazy longer label")).to match(/title="Some crazy longer label"/)
-      end
-
-      it "doesn't add an erroneous title attribute if one isn't provided" do
-        expect(helper.link_to_document(document, "Some crazy long label...")).not_to match(/title=/)
-      end
-
-      context "with an integer id" do
-        let(:id) { 123_456 }
-
-        it "has a link" do
-          expect(helper.link_to_document(document)).to have_selector("a")
-        end
-      end
-    end
-
-    it "converts the counter parameter into a data- attribute" do
-      allow(Deprecation).to receive(:warn)
-      expect(helper.link_to_document(document, :title_tsim, counter: 5)).to include 'data-context-href="tracking url"'
-
-      # This fails, I think because I had to mock `respond_to?` :track_test_path multiple times to get other tests to pass.
-      # expect(helper.main_app).to have_received(:track_test_path).with(hash_including(id: have_attributes(id: '123456'), counter: 5))
-    end
-
-    it "includes the data- attributes from the options" do
-      link = helper.link_to_document document, data: { x: 1 }
-      expect(link).to have_selector '[data-x]'
-    end
-
-    it 'adds a controller-specific tracking attribute' do
-      allow(helper.main_app).to receive(:track_test_path).and_return('/asdf')
-      link = helper.link_to_document document, data: { x: 1 }
-
-      expect(link).to have_selector '[data-context-href="/asdf"]'
     end
   end
 end

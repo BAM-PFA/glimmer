@@ -22,13 +22,14 @@ module Show
       @view_type = view_type
       @field_layout = field_layout
       @component_args = component_args
+      @document = @fields.peek.document
     end
     # rubocop:enable Metrics/ParameterLists
 
     def before_render
       return unless fields
 
-      @document = helpers.instance_variable_get(:@document)
+      @doc_presenter = helpers.document_presenter(@document)
       @fields.each do |field|
         with_field(component: field.component, field: field, show: @show, view_type: @view_type, layout: @field_layout)
       end
