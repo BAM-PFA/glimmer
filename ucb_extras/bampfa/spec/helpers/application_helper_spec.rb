@@ -19,25 +19,42 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:mock_document) { instance_double(SolrDocument, export_formats: {}) }
   let(:search_service) { instance_double(Blacklight::SearchService) }
 
-  describe '#bookmark_control_label' do
-    subject { helper.bookmark_control_label(document, counter, total) }
+  describe '#search_result_unique_label' do
+    subject { helper.search_result_unique_label(document, counter, total) }
 
     let(:document) { SolrDocument.new(title_s: 'Felix the Cat', idnumber_s: '123-abc') }
     let(:counter) { 5 }
-    let(:total) { 20 }
+    let(:total) { 2000 }
 
-    it 'provides a unique accessible label for the bookmark checkbox' do
-      expect(subject).to eq "Felix the Cat, accession number 123-abc. Search result #{counter} of #{total}"
+    it 'provides a unique accessible label for a document in the search results' do
+      expect(subject).to eq "Felix the Cat. 5 of 2,000 search results"
       expect(subject).to be_html_safe
     end
-  end
 
-  describe '#document_link_label' do
-    let(:label) { 'Felix the Cat' }
-    let(:document) { SolrDocument.new(idnumber_s: '123-abc') }
+    context "when there is only one search result" do
+      let(:counter) { 1 }
+      let(:total) { 1 }
 
-    it 'provides a unique accessible label for the link to a document' do
-      expect(helper.document_link_label(document, label)).to eq "Felix the Cat, accession number 123-abc"
+      it 'does not pluralize' do
+        expect(subject).to eq "Felix the Cat. 1 of 1 search result"
+        expect(subject).to be_html_safe
+      end
+    end
+
+    context "when counter is nil (i.e. in the 'show' view)" do
+      let(:counter) { nil }
+      it 'does not include counter or total' do
+        expect(subject).to eq "Felix the Cat"
+        expect(subject).to be_html_safe
+      end
+    end
+
+    context "when counter is provided but total is nil" do
+      let(:total) { nil }
+      it 'does not include total' do
+        expect(subject).to eq "Felix the Cat. Search result 5"
+        expect(subject).to be_html_safe
+      end
     end
   end
 

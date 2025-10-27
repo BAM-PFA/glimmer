@@ -15,47 +15,40 @@ RSpec.describe ApplicationHelper, type: :helper do
     allow(helper).to receive(:blacklight_config).and_return(@config)
   end
 
-  describe '#bookmark_control_label' do
-    subject { helper.bookmark_control_label(document, counter, total) }
+  describe '#search_result_unique_label' do
+    subject { helper.search_result_unique_label(document, counter, total) }
 
     let(:document) { SolrDocument.new(common_doctype_s: 'film', common_title_ss: ['Felix the Cat', 'Felix Goes West']) }
     let(:counter) { 5 }
-    let(:total) { 20 }
+    let(:total) { 2000 }
 
-    it 'provides a unique accessible label for the bookmark checkbox' do
-      expect(subject).to eq "film titled Felix the Cat, Felix Goes West. Search result #{counter} of #{total}"
+    it 'provides a unique accessible label for a document in the search results' do
+      expect(subject).to eq "Felix the Cat, Felix Goes West. 5 of 2,000 search results"
       expect(subject).to be_html_safe
     end
-  end
 
-  describe '#document_link_label' do
-    subject { helper.document_link_label(document, label) }
+    context "when there is only one search result" do
+      let(:counter) { 1 }
+      let(:total) { 1 }
 
-    let(:label) { 'Vær så snill' }
-    let(:document) { SolrDocument.new(data) }
-
-    context 'when object is a document' do
-      let(:data) { {
-        'common_doctype_s' => 'document',
-        'doctype_s' => 'review',
-        'pubdate_s' => 'December 31, 1999',
-        'source_s' => 'The Source',
-        'author_ss' => ['Naylor Lanyan']
-      } }
-      it 'provides a unique accessible label for the link to a document' do
-        expect(subject).to eq "Vær så snill, review published December 31, 1999 in The Source by Naylor Lanyan"
+      it 'does not pluralize' do
+        expect(subject).to eq "Felix the Cat, Felix Goes West. 1 of 1 search result"
         expect(subject).to be_html_safe
       end
     end
 
-    context 'when object is a film' do
-      let(:data) { {
-        'film_year_i' => '1999',
-        'film_director_ss' => ['Skärnheim Vim']
-      } }
+    context "when counter is nil (i.e. in the 'show' view)" do
+      let(:counter) { nil }
+      it 'does not include counter or total' do
+        expect(subject).to eq "Felix the Cat, Felix Goes West"
+        expect(subject).to be_html_safe
+      end
+    end
 
-      it 'provides a unique accessible label for the link to a film' do
-        expect(subject).to eq "Vær så snill (1999), directed by Skärnheim Vim"
+    context "when counter is provided but total is nil" do
+      let(:total) { nil }
+      it 'does not include total' do
+        expect(subject).to eq "Felix the Cat, Felix Goes West. Search result 5"
         expect(subject).to be_html_safe
       end
     end

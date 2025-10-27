@@ -13,7 +13,6 @@ RSpec.describe DocumentComponent, type: :component do
     SolrDocument.new(
       :id => 'x',
       (blacklight_config.index.thumbnail_field).to_sym => ['image_id'],
-      # (blacklight_config.index.title_field).to_sym =>  ['Title'],
       **doc_fields
     )
   end
