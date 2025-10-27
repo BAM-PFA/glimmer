@@ -3,9 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe ConstraintsComponent, type: :component do
-  subject(:component) { described_class.new(**params) }
+  let(:render) do
+    component.render_in(view_context)
+  end
+
+  let(:component) { described_class.new(**params) }
 
   let(:rendered) { render_inline_to_capybara_node(component) }
+
+  let(:view_context) { controller.view_context }
 
   let(:params) do
     { search_state: search_state }
@@ -31,8 +37,10 @@ RSpec.describe ConstraintsComponent, type: :component do
   context 'with a query' do
     let(:query_params) { { q: 'some query' } }
 
-    it 'renders a start-over link' do
-      expect(rendered).to have_link 'Start Over', href: '/catalog'
+    it 'renders a start-over link, overriding Blacklight::StartOverButtonComponent to add an aria label' do
+      expected_btn_text = I18n.t('blacklight.search.start_over')
+      expect(rendered).to have_link expected_btn_text, href: '/catalog'
+      expect(rendered).to have_css("a[aria-label=\"#{expected_btn_text} Search\"]")
     end
 
     it 'has a header' do
@@ -66,17 +74,21 @@ RSpec.describe ConstraintsComponent, type: :component do
   end
 
   describe '.for_search_history' do
-    subject(:component) { described_class.for_search_history(**params) }
+    let(:component) { described_class.for_search_history(**params) }
 
     let(:query_params) { { q: 'some query', f: { some_facet: ['some value'] } } }
 
     it 'overrides Blacklight::ConstraintsComponent to wrap the output in a definition list' do
-      expect(rendered).to have_css('dl dt.filter-name')
-      expect(rendered).to have_css('dl dt.filter-values')
+      expect(rendered).to have_css('dl[aria-label="Search Constraints"][role="region"]')
+      expect(rendered).to have_css('dl > dt.filter-name')
+      expect(rendered).to have_css('dl > dd.filter-values')
     end
 
     it 'renders the search state as lightly-decorated text' do
-      expect(rendered).to have_css('.constraint > .filter-values', text: 'some query').and(have_css('.constraint', text: 'Some Facet:some value'))
+      expect(rendered).to have_css('dt.filter-name', text: 'Any Field')
+      expect(rendered).to have_css('dd.filter-values', text: 'some query')
+      expect(rendered).to have_css('dt.filter-name', text: 'Some Facet')
+      expect(rendered).to have_css('dd.filter-values', text: 'some value')
     end
 
     it 'omits the headers' do
