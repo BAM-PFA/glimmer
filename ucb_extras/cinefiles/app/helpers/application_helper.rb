@@ -1,33 +1,17 @@
 
 module ApplicationHelper
 
-  def bookmark_control_label document, counter, total
-    label = "#{document['common_doctype_s'] || 'object'}"
-    if document['common_title_ss']
-      label += " titled #{document['common_title_ss'].join(', ')}"
-    end
+  def search_result_unique_label document, counter, total = nil
+    total ||= search_session.fetch('total', 0)
+    label = if document['common_title_ss'] then document['common_title_ss'].join(', ') else "Untitled #{document[:doctype_s] || 'Document'}" end
     if counter && counter.to_i > 0
-      label += ". Search result #{number_with_delimiter counter}"
       if total && total.to_i > 0
-        label += " of #{number_with_delimiter total}"
+        label += ". #{number_with_delimiter counter} of #{number_with_delimiter total} #{'search result'.pluralize(total)}"
+      else
+        label += ". Search result #{number_with_delimiter counter}"
       end
     end
     label.html_safe
-  end
-
-  def document_link_label document, label
-    description = ''
-    if 'document' == document['common_doctype_s'] then
-      date = unless document['pubdate_s'].blank? then " published #{document['pubdate_s']}" else '' end
-      source = unless document['source_s'].blank? then " in #{document['source_s']}" else '' end
-      author = unless document['author_ss'].blank? then " by #{document['author_ss'][0]}" else '' end
-      description = ", #{document['doctype_s']}#{date}#{source}#{author}"
-    else
-      year = unless document['film_year_i'].blank? then " (#{document['film_year_i']})" else '' end
-      director = unless document['film_director_ss'].blank? then ", directed by #{document['film_director_ss'][0]}" else ', film' end
-      description = "#{year}#{director}"
-    end
-    "#{label}#{description}".html_safe
   end
 
   def render_csid csid, derivative

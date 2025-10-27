@@ -15,28 +15,42 @@ RSpec.describe ApplicationHelper, type: :helper do
     allow(helper).to receive(:blacklight_config).and_return(@config)
   end
 
-  describe '#bookmark_control_label' do
-    subject { helper.bookmark_control_label(document, counter, total) }
+  describe '#search_result_unique_label' do
+    subject { helper.search_result_unique_label(document, counter, total) }
 
     let(:document) { SolrDocument.new(objname_s: 'stuff', objmusno_s: 123) }
     let(:counter) { 5 }
-    let(:total) { 20 }
+    let(:total) { 2000 }
 
-    it 'provides a unique accessible label for the bookmark checkbox' do
-      expect(subject).to eq "stuff, museum number 123. Search result #{counter} of #{total}"
+    it 'provides a unique accessible label for a document in the search results' do
+      expect(subject).to eq "stuff. 5 of 2,000 search results"
       expect(subject).to be_html_safe
     end
-  end
 
-  describe '#document_link_label' do
-    subject { helper.document_link_label(document, label) }
+    context "when there is only one search result" do
+      let(:counter) { 1 }
+      let(:total) { 1 }
 
-    let(:document) { SolrDocument.new({objmusno_s: '123-abc'}) }
-    let(:label) { 'item' }
+      it 'does not pluralize' do
+        expect(subject).to eq "stuff. 1 of 1 search result"
+        expect(subject).to be_html_safe
+      end
+    end
 
-    it 'provides a unique accessible label for the link to a document' do
-      expect(subject).to eq "item, museum number 123-abc"
-      expect(subject).to be_html_safe
+    context "when counter is nil (i.e. in the 'show' view)" do
+      let(:counter) { nil }
+      it 'does not include counter or total' do
+        expect(subject).to eq "stuff"
+        expect(subject).to be_html_safe
+      end
+    end
+
+    context "when counter is provided but total is nil" do
+      let(:total) { nil }
+      it 'does not include total' do
+        expect(subject).to eq "stuff. Search result 5"
+        expect(subject).to be_html_safe
+      end
     end
   end
 

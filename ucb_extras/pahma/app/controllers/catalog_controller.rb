@@ -34,6 +34,7 @@ class CatalogController < ApplicationController
     config.index.facet_group_component = Response::FacetGroupComponent
     config.index.search_bar_component = SearchBarComponent
     config.index.title_component = DocumentTitleComponent
+    config.index.thumbnail_component = Document::ThumbnailComponent
     config.index.thumbnail_presenter = ThumbnailPresenter
 
     config.add_results_document_tool(:bookmark, component: Document::BookmarkComponent, if: :render_bookmarks_control?)

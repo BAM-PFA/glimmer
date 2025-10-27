@@ -18,7 +18,7 @@ module Document
     end
 
     def label
-      helpers.bookmark_control_label @document, @counter, @total
+      helpers.search_result_unique_label @document, @counter, @total
     end
   end
 end

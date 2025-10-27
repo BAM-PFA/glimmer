@@ -3,19 +3,17 @@ require 'cgi/util'
 module ApplicationHelper
   include ERB::Util
 
-  def bookmark_control_label document, counter, total
-    label = "#{document['title_s']}, accession number #{document['idnumber_s']}"
+  def search_result_unique_label document, counter, total = nil
+    total ||= search_session.fetch('total', 0)
+    label = Array(document['title_s']).first
     if counter && counter.to_i > 0
-      label += ". Search result #{number_with_delimiter counter}"
       if total && total.to_i > 0
-        label += " of #{number_with_delimiter total}"
+        label += ". #{number_with_delimiter counter} of #{number_with_delimiter total} #{'search result'.pluralize(total)}"
+      else
+        label += ". Search result #{number_with_delimiter counter}"
       end
     end
     label.html_safe
-  end
-
-  def document_link_label document, label
-    "#{label}, accession number #{document['idnumber_s']}".html_safe
   end
 
   def get_random_documents(query: '*', limit: 12)

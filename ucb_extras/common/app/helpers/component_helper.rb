@@ -15,7 +15,7 @@ module ComponentHelper
     blacklight_config.view_config(:show).show_tools_component&.tap do |show_tools_component_class|
       return render show_tools_component_class.new(document: document)
     end
-    render 'show_tools', document: document, silence_deprecation: helpers.partial_from_blacklight?('show_tools')
+    render Document::ShowToolsComponent document: document
   end
 
   ##
@@ -30,7 +30,7 @@ module ComponentHelper
   def render_index_doc_actions(document, wrapping_class: "index-document-functions", component: Blacklight::Document::ActionsComponent, counter: nil)
     actions = filter_partials(blacklight_config.view_config(document_index_view_type).document_actions, { document: document }).map { |_k, v| v }
     options = {
-      counter: counter,
+      counter: counter || if search_session then search_session['counter'] else nil end,
       total: if search_session then search_session['total'] else nil end
     }
     render(component.new(document: document, actions: actions, options: options, classes: wrapping_class))
