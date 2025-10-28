@@ -498,6 +498,7 @@ main:focus {
   outline-offset: -6px !important;
 }
 p a:not(.btn):not([aria-disabled]) {
+  font-weight: bold;
   text-decoration: underline dotted;
   text-underline-offset: 0.2em;
   &:hover {
