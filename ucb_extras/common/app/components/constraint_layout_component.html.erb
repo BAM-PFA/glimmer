@@ -11,7 +11,7 @@
     <%= link_to(
         helpers.with_screen_reader_alert(
           @remove_path,
-          "Removed #{@label}: \"#{@value}\" from search constraints",
+          "Removed #{@label}: \"#{strip_tags(@value)}\" from search constraints",
           @next_focus_target
         ),
         class: 'btn btn-outline-secondary remove',
