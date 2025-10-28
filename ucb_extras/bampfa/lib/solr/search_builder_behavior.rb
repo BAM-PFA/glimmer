@@ -95,7 +95,7 @@ module Blacklight::Solr
         f_request_params = blacklight_params[:f]
 
         f_request_params.each_pair do |facet_field, value_list|
-          Array(value_list).reject(&:blank?).each do |value|
+          Array(value_list).compact_blank.each do |value|
             solr_parameters.append_filter_query facet_value_to_fq_string(facet_field, value)
           end
         end
@@ -191,13 +191,9 @@ module Blacklight::Solr
 
       # Now override with our specific things for fetching facet values
       facet_ex = facet_config.respond_to?(:ex) ? facet_config.ex : nil
-      solr_params[:"facet.field"] = with_ex_local_param(facet_ex, facet_config.field)
+      solr_params[:'facet.field'] = with_ex_local_param(facet_ex, facet_config.field)
 
-      limit = if scope.respond_to?(:facet_list_limit)
-                Deprecation.warn(self, "The use of facet_list_limit is deprecated and will be removed in 7.0. " \
-                  "Consider using the 'more_limit' option in the field configuration or 'default_more_limit' instead.")
-                scope.facet_list_limit.to_s.to_i
-              elsif solr_params["facet.limit"]
+      limit = if solr_params["facet.limit"]
                 solr_params["facet.limit"].to_i
               else
                 facet_config.fetch(:more_limit, blacklight_config.default_more_limit)
@@ -288,8 +284,6 @@ module Blacklight::Solr
       local_params = []
       local_params << "tag=#{facet_config.tag}" if facet_config and facet_config.tag
 
-      prefix = "{!#{local_params.join(' ')}}" unless local_params.empty?
-
       if facet_config and facet_config.query
         if facet_config.query[value]
           facet_config.query[value][:fq]
@@ -298,16 +292,22 @@ module Blacklight::Solr
           '-*:*'
         end
       elsif value.is_a?(Range)
-        "#{prefix}#{solr_field}:[#{value.first} TO #{value.last}]"
+        prefix = "{!#{local_params.join(' ')}}" unless local_params.empty?
+        start = value.begin || '*'
+        finish = value.end || '*'
+        "#{prefix}#{solr_field}:[#{start} TO #{finish}]"
+      elsif value == Blacklight::SearchState::FilterField::MISSING
+        "-#{solr_field}:[* TO *]"
       else
-        "{!term f=#{solr_field}#{(' ' + local_params.join(' ')) unless local_params.empty?}}#{convert_to_term_value(value)}"
+        "{!term f=#{solr_field}#{" #{local_params.join(' ')}" unless local_params.empty?}}#{convert_to_term_value(value)}"
       end
     end
 
     def convert_to_term_value(value)
-      if value.is_a?(DateTime) or value.is_a?(Time)
+      case value
+      when DateTime, Time
         value.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-      elsif value.is_a?(Date)
+      when Date
         value.to_time(:local).strftime("%Y-%m-%dT%H:%M:%SZ")
       else
         value.to_s
