@@ -50,9 +50,9 @@
     role="main"
     tabindex="-1"
   >
-    <%= content_for(:container_header) %>
-
     <%= render partial: 'shared/flash_msg', layout: 'shared/flash_messages' %>
+
+    <%= content_for(:container_header) %>
 
     <div class="row">
       <%= content_for?(:content) ? yield(:content) : yield %>

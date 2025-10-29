@@ -42,7 +42,7 @@ class ConstraintsComponent < Blacklight::ConstraintsComponent
 
   def query_constraints
     if @search_state.query_param.present? || (!@search_state.has_constraints? && is_for_search_history?)
-      render(
+      query_constraint = render(
         @query_constraint_component.new(
           search_state: @search_state,
           index: @index,
@@ -53,13 +53,25 @@ class ConstraintsComponent < Blacklight::ConstraintsComponent
           **@query_constraint_component_options
         )
       )
+      @index += 1
     else
-      ''.html_safe
-    end + render(@facet_constraint_component.with_collection(clause_presenters.to_a, **{index: @index, **@facet_constraint_component_options}))
+      query_constraint = ''
+    end
+    query_constraint.html_safe + clause_constraints.html_safe
+  end
+
+  def clause_constraints
+    presenters = clause_presenters.to_a
+    clause_constraints = render(@facet_constraint_component.with_collection(presenters, **{index: @index, **@facet_constraint_component_options}))
+    @index += presenters.length
+    clause_constraints
   end
 
   def facet_constraints
-    render(@facet_constraint_component.with_collection(facet_item_presenters.to_a, **{index: @index, **@facet_constraint_component_options}))
+    presenters = facet_item_presenters.to_a
+    facet_constraints = render(@facet_constraint_component.with_collection(presenters, **{index: @index, **@facet_constraint_component_options}))
+    @index += presenters.length
+    facet_constraints
   end
 
   def render?
