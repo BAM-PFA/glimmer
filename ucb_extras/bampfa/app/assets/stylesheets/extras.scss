@@ -1,3 +1,17 @@
+.bampfa-splash {
+  margin-right: 30px;
+  margin-left: 15px;
+  margin-bottom: 40px;
+  .bampfa-splash-text {
+    font-family: RobotoLight, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+  }
+}
+.document h1 {
+  // this is document title on the show page
+  font-weight: 900;
+  font-size: 3em;
+}
 .documents-list .document .document-metadata {
   line-height: 1.2rem;
 }
@@ -9,24 +23,108 @@
     }
     dt {
       color: black;
-      font-family: Roboto, Helvetica, Arial, sans-serif;
       font-weight: bold;
       text-align: left;
     }
   }
+}
+.facet-field-heading {
+  font-size: 1rem;
+}
+.form-control {
+  font-size: 1rem;
+  color: black;
+}
+.gallery-caption-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.gallery-caption-date {
+  font-size: 1rem;
+  font-weight: 100;
+  line-height: 2;
+}
+.gallery-caption-artist {
+  font-size: 1rem;
+  font-weight: 100;
+}
+.gallery-caption-artist::after, .gallery-caption-title::after, .gallery-caption-date::after {
+  content: "\a";
+  white-space: pre;
+}
+.image-gallery {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(18.75em, 1fr));
+  box-sizing: border-box;
+  margin-bottom: 30px;
+  .gallery-item {
+    position: relative;
+    display: block;
+    font-family: RobotoLight, Helvetica, Arial, sans-serif;
+    img {
+      min-width: 18.75em;
+      max-height: 100%;
+    }
+  }
+}
+.load-more-button {
+  padding: 30px;
+  font-size: 1.125rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.minor-heading {
+  font-weight: bold;
+}
+.page-title {
+  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 2.5em;
+}
+.section-heading {
+  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
+  font-weight: bold;
 }
 .show-document .document .document-metadata {
   line-height: 1.5em;
   margin-bottom: 20px;
   min-width: 14em;
 }
-
-// FOOTER
-
+.show-gallery {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(1, minmax(18.75em, 1fr));
+  box-sizing: border-box;
+  margin-bottom: 30px;
+}
+.show-image {
+  max-width: 100%;
+}
+.show-preview {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(12.5em, 1fr));
+  box-sizing: border-box;
+  margin: 15px;
+  font-family: RobotoLight, Helvetica, Arial, sans-serif;
+}
+.show-preview-container {
+	display:inherit;
+}
+.show-preview-heading {
+  font-family: RobotoLight, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 1.875rem;
+  margin: 15px;
+}
+.show-preview-item img {
+  min-width: 12.5em;
+  max-height: 100%;
+}
 .site-footer {
   background-color: #def2fc;
   color: black;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.25em;
   font-weight: 100;
   padding: 1em 1em 1em;
@@ -63,55 +161,26 @@
   word-wrap: break-word;
 }
 
-// NAVBAR
-
-.navbar-inverse .navbar-nav > li > a {
-  color: black;
-}
-
-.navbar-inverse {
-  background: white;
-  margin-bottom: 0;
-}
-
-.navbar-default {
-  background-color: lightgray;
-}
-
-// SPLASH DISPLAY
-
-.bampfa-splash {
-  margin-right: 30px;
-  margin-left: 15px;
-  margin-bottom: 40px;
-}
-
-// BEGIN FONT STUFF
-
 @font-face {
   font-family: RobotoBlack;
   src: url(Roboto/Roboto-Black.ttf);
   font-weight: bold;
 }
-
 @font-face {
   font-family: Roboto;
   src: url(Roboto/Roboto-Regular.ttf);
   font-weight: normal;
 }
-
 @font-face {
   font-family: RobotoMedium;
   src: url(Roboto/Roboto-Medium.ttf);
   font-weight: normal;
 }
-
 @font-face {
   font-family: Roboto;
   src: url(Roboto/Roboto-Bold.ttf);
   font-weight: bold;
 }
-
 @font-face {
   font-family: RobotoLight;
   src: url(Roboto/Roboto-Light.ttf);
@@ -122,151 +191,6 @@ body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
-
-.minor-heading {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: bold;
-}
-
-.page-title {
-  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
-  font-weight: bold;
-  font-size: 2.5em;
-}
-
-.section-heading {
-  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
-  font-weight: bold;
-}
-
-.bampfa-splash-text {
-  font-family: RobotoLight, Helvetica, Arial, sans-serif;
-  font-size: 1rem;
-}
-
-.panel-heading {
-  padding-right: 1px;
-}
-
-.facet-field-heading {
-  font-size: 1rem;
-}
-
-.search_field {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  font-size: 0.875rem;
-}
-
 h3.index_title > a {
   font-family: RobotoMedium, Helvetica, Arial, sans-serif;
-}
-
-.document h1 {
-  // this is document title on the show page
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 900;
-  font-size: 3em;
-}
-
-.form-control {
-  font-size: 1rem;
-  color: black;
-}
-
-// END FONT STUFF
-
-.facet_limit-active {
-  color: #212121;
-  background-color: #fab946;
-  border-color: #e6fdfe;
-}
-
-// IMAGE GALLERY STUFF
-.imageGallery {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(18.75em, 1fr));
-  box-sizing: border-box;
-  margin-bottom: 30px;
-  // font-size: 1rem;
-}
-
-.imageGallery .gallery-item {
-  position: relative;
-  display: block;
-  font-family: RobotoLight, Helvetica, Arial, sans-serif;
-}
-
-.imageGallery .gallery-item img {
-  min-width: 18.75em;
-  max-height: 100%;
-}
-
-.show-gallery {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(1, minmax(18.75em, 1fr));
-  box-sizing: border-box;
-  margin-bottom: 30px;
-}
-
-.show-image {
-  max-width: 100%;
-}
-
-.show-preview {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(12.5em, 1fr));
-  box-sizing: border-box;
-  margin: 15px;
-  font-family: RobotoLight, Helvetica, Arial, sans-serif;
-}
-
-.show-preview-heading {
-  font-family: RobotoLight, Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  font-size: 1.875rem;
-  margin: 15px;
-}
-
-.show-preview-item img {
-  min-width: 12.5em;
-  max-height: 100%;
-}
-
-.show-preview-container {
-	display:inherit;
-}
-
-.gallery-caption-title {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.gallery-caption-date {
-  font-size: 1rem;
-  font-weight: 100;
-  line-height: 2;
-}
-
-.gallery-caption-artist {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-size: 1rem;
-  font-weight: 100;
-}
-
-.gallery-caption-artist::after, .gallery-caption-title::after, .gallery-caption-date::after {
-  content: "\a";
-  white-space: pre;
-}
-
-.load-more-button {
-  padding: 30px;
-  font-size: 1.125rem;
-  margin-left: auto;
-  margin-right: auto;
-  // display: block;
 }
