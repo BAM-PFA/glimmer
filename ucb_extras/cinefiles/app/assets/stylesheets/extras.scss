@@ -6,7 +6,9 @@
 .bg-dark {
   background-color: gray !important;
 }
-.blacklight-pdf_ss {
+.document .pdf-viewer {
+  height: 800px;
+  padding: 3px;
   width: 100%;
 }
 $global-alert-color: rgb(89, 184, 227);

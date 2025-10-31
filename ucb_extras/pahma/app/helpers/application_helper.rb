@@ -98,7 +98,15 @@ module ApplicationHelper
         end
       end
     else
-      prefix = 'Documentation associated with Hearst Museum object'
+      prefix = 'Documentation'
+      total_pages = document[:card_ss] ? document[:card_ss].length : 1
+      if total_pages > 1
+        page_number = document[:card_ss].find_index(blob_csid)
+        if page_number.is_a? Integer
+          prefix += " page #{page_number + 1} of #{total_pages}"
+        end
+      end
+      prefix += ' associated with Hearst Museum object'
     end
     brief_description = unless document[:objdescr_txt].nil? then "described as #{document[:objdescr_txt][0]}" else 'no description available.' end
     if document[:restrictions_ss] && document[:restrictions_ss].include?('notpublic') && !document[:restrictions_ss].include?('public')
@@ -169,13 +177,22 @@ module ApplicationHelper
     # render audio player
     content_tag(:div) do
       options[:value].collect do |audio_csid|
+        source_url = "https://portal.hearstmuseum.berkeley.edu/cspace-services/blobs/#{audio_csid}/content"
         content_tag(:audio,
-          content_tag(:source, "I'm sorry; your browser doesn't support HTML5 audio in MPEG format.",
-            src: "https://portal.hearstmuseum.berkeley.edu/cspace-services/blobs/#{audio_csid}/content",
+          content_tag(:source,
+            content_tag(:p,
+              [
+                "I'm sorry; your browser doesn't support HTML5 audio in MPEG format. ",
+                link_to('Download the MPEG', source_url, download: "#{audio_csid}.mpeg"),
+                ' to play it on your device.'
+              ].join.html_safe
+            ),
+            src: source_url,
             id: 'audio_csid',
-            type: 'audio/mpeg'),
-          controls: 'controls',
-          style: 'height: 60px; width: 640px;')
+            type: 'audio/mpeg'
+          ),
+          controls: 'controls'
+        )
       end.join.html_safe
     end
   end
@@ -186,13 +203,22 @@ module ApplicationHelper
     # render video player
     content_tag(:div) do
       options[:value].collect do |video_csid|
+        source_url = "https://portal.hearstmuseum.berkeley.edu/cspace-services/blobs/#{video_csid}/content"
         content_tag(:video,
-          content_tag(:source, "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264.",
-            src: "https://portal.hearstmuseum.berkeley.edu/cspace-services/blobs/#{video_csid}/content",
+          content_tag(:source,
+            content_tag(:p,
+              [
+                "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264.",
+                 link_to('Download the MP4', source_url, download: "#{video_csid}.mp4"),
+                ' to play it on your device.'
+              ].join.html_safe
+            ),
+            src: source_url,
             id: 'video_csid',
-            type: 'video/mp4'),
-          controls: 'controls',
-          style: 'width: 640px;')
+            type: 'video/mp4'
+          ),
+          controls: 'controls'
+        )
       end.join.html_safe
     end
   end
@@ -293,5 +319,4 @@ module ApplicationHelper
       )
     end.join.html_safe
   end
-
 end
