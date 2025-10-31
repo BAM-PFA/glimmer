@@ -77,7 +77,6 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
     min-width: 9em;
   }
   .show-tools {
-    margin-bottom: 16px;
     min-width: 11em;
   }
 }
@@ -145,10 +144,7 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
 .documents-list, .show-document {
   .document .document-metadata {
     dd {
-      padding-right: 0;
-    }
-    dt {
-      white-space: nowrap !important;
+      padding-right: 8px;
     }
   }
 }
@@ -330,6 +326,7 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
 }
 .sidenav {
   --bl-facets-smallish-margin-bottom: 0;
+  --bl-facets-smallish-padding: 0;
   .facet-limit .card-body {
     padding: 1rem 0.5rem;
   }
@@ -435,13 +432,13 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   .documents-list, .show-document {
     .document .document-metadata {
       dd {
-        flex: 0 0 66%;
-        max-width: 66%;
+        flex: 1 0 66%;
+        margin-bottom: .5rem;
         width: 66%;
       }
       dt {
         flex: 0 0 33%;
-        max-width: 33%;
+        margin-bottom: .5rem;
         width: 33%;
       }
     }
@@ -457,13 +454,15 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   .documents-list .document {
     .document-thumbnail {
       float: right;
+      max-width: fit-content;
       padding-left: 24px;
       width: 33%;
     }
     .document-metadata {
       clear: unset;
       padding-left: 0px;
-      width: 66%;
+      min-width: 66%;
+      width: fit-content
     }
   }
   .w-md-25 {
@@ -512,8 +511,11 @@ label.toggle-bookmark {
     margin-right: 0.5rem;
   }
 }
-main:focus {
-  outline-offset: -6px !important;
+main {
+  padding-block: 0;
+  &:focus {
+    outline-offset: -6px !important;
+  }
 }
 p a:not(.btn):not([aria-disabled]) {
   font-weight: bold;
