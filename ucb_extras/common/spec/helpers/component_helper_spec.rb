@@ -7,11 +7,13 @@ RSpec.describe ComponentHelper, type: :helper do
     allow(helper).to receive(:blacklight_config).and_return(blacklight_config)
     allow(controller).to receive(:render_bookmarks_control?).and_return(true)
     allow_any_instance_of(ActionDispatch::TestResponse).to receive(:documents).and_return([document])
+    allow(document).to receive(:response).and_return(response)
   end
 
   let(:document) do
     SolrDocument.new(:id => '123abc', blacklight_config.index.title_field => ["test Title"])
   end
+  let(:response) { instance_double(Blacklight::Solr::Response, total: 10) }
   let(:blacklight_config) do
     CatalogController.blacklight_config.deep_copy.tap do |config|
       config.track_search_session.storage = false

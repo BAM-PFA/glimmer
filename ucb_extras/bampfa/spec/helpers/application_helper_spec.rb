@@ -123,44 +123,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_status' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_multiline' do
-    subject { helper.render_multiline(options) }
-
-    let(:options) { {value: ['life', 'death', 123]} }
-
-    it 'renders an array of values as a list' do
-      expect(subject).to have_selector 'div > ul > li:nth-child(1)', text: 'life'
-      expect(subject).to have_selector 'div > ul > li:nth-child(2)', text: 'death'
-      expect(subject).to have_selector 'div > ul > li:nth-child(3)', text: '123'
-      expect(subject).to be_html_safe
-    end
-  end
-
-  describe '#render_film_links' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_doc_link' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_warc' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#check_and_render_pdf' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
   describe '#render_alt_text' do
     subject { helper.render_alt_text(blob_csid, document) }
 
@@ -254,94 +216,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     it "renders each image with alt text " do
       expect(subject).to have_selector("img[src=\"#{expected_img_src}\"]")
       expect(subject).to have_selector("img[alt=\"BAMPFA object no title available, of unknown materials, no accession number available.\"]")
-    end
-  end
-
-  describe '#render_linkless_media' do
-    subject { helper.render_linkless_media(options) }
-
-    let(:blob_csid) { '123abc' }
-    let(:document) { SolrDocument.new({}) }
-    let(:options) { {document: document, value: [blob_csid]} }
-    let(:expected_img_src) { "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{blob_csid}/derivatives/Medium/content" }
-
-    it 'does not wrap each image in a link' do
-      expect(subject).not_to have_link
-      expect(subject).to have_selector 'div.d-inline-block > img.thumbclass'
-      expect(subject).to be_html_safe
-    end
-
-    it "renders each image with alt text" do
-      expect(subject).to have_selector "img[src=\"#{expected_img_src}\"]"
-      expect(subject).to have_selector("img[alt=\"BAMPFA object no title available, of unknown materials, no accession number available.\"]")
-    end
-  end
-
-  describe '#render_restricted_media' do
-    subject { helper.render_restricted_media(options) }
-
-    let(:blob_csid) { '123abc' }
-    let(:document) { SolrDocument.new({}) }
-    let(:options) { {document: document, value: [blob_csid]} }
-    let(:expected_img_src) { "https://webapps.cspace.berkeley.edu/bampfa/imageserver/blobs/#{blob_csid}/derivatives/Medium/content" }
-
-    context 'when user is anonymous' do
-      it 'renders a placeholder with alt text for each image' do
-        expect(subject).not_to have_link
-        expect(subject).to have_selector 'div > img.thumbclass'
-        expect(subject).to have_selector 'img[src="../kuchar.jpg"]'
-        expect(subject).to have_selector 'img[alt="log in to view images"]'
-        expect(subject).to be_html_safe
-      end
-    end
-
-    context 'when user is authenticated' do
-      before do
-        allow(helper).to receive(:current_user).and_return true
-      end
-
-      it 'renders each image with alt text' do
-        expect(subject).not_to have_link
-        expect(subject).to have_selector 'div > img.thumbclass'
-        expect(subject).to have_selector "img[src=\"#{expected_img_src}\"]"
-        expect(subject).to have_selector("img[alt=\"BAMPFA object no title available, of unknown materials, no accession number available.\"]")
-        expect(subject).to be_html_safe
-      end
-    end
-  end
-
-  describe '#render_audio_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_video_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_audio_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_video_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_x3d_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_x3d_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_ark' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
     end
   end
 end

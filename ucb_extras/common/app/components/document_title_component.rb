@@ -25,7 +25,7 @@ class DocumentTitleComponent < Blacklight::DocumentTitleComponent
         counter: @counter,
         itemprop: 'name',
         aria: {
-          label: helpers.search_result_unique_label(presenter.document, @counter)
+          label: helpers.search_result_unique_label(presenter.document, @counter, @document.response.total)
         }
       )
     else
@@ -55,7 +55,7 @@ class DocumentTitleComponent < Blacklight::DocumentTitleComponent
     return unless @counter
 
     content_tag :span, aria: {hidden: true}, class: 'document-counter' do
-      t('blacklight.search.documents.counter', counter: @counter)
+      t('blacklight.search.documents.counter', counter: number_with_delimiter(@counter))
     end
   end
 end

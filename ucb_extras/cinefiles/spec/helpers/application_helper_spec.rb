@@ -63,11 +63,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_status' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
   describe '#render_multiline' do
     subject { helper.render_multiline(options) }
 
@@ -340,41 +335,6 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(subject).to have_selector("img[alt=\"Document no title available\"]")
         expect(subject).to be_html_safe
       end
-    end
-  end
-
-  describe '#render_audio_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_video_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_audio_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_video_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_x3d_csid' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_x3d_directly' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
-    end
-  end
-
-  describe '#render_ark' do
-    example 'is skipped', :skip => 'this method is only used by PAHMA' do
     end
   end
 end
