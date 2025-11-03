@@ -79,31 +79,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_multiline' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_film_links' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_doc_link' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_warc' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#check_and_render_pdf' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
   describe '#render_alt_text' do
     subject { helper.render_alt_text(blob_csid, options) }
 
@@ -228,16 +203,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_linkless_media' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
-  describe '#render_restricted_media' do
-    example 'is skipped', :skip => 'this method is only used by Cinefiles' do
-    end
-  end
-
   describe '#render_audio_csid' do
     subject { helper.render_audio_csid(options) }
 
@@ -270,38 +235,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_audio_directly' do
-    subject { helper.render_audio_directly(options) }
-
-    let(:audio_md5) { '123abc' }
-    let(:options) { {value: [audio_md5]} }
-    let(:expected_audio_src) { "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/12/3a/#{audio_md5}" }
-
-    it 'renders an audio player serving audio directy via apache' do
-      expect(subject).to have_selector 'div > audio[controls="controls"] > source[id="audio_md5"]'
-      expect(subject).to have_selector 'div > audio > source[type="audio/mpeg"]'
-      expect(subject).to have_selector "div > audio > source[src=\"#{expected_audio_src}\"]"
-      expect(subject).to have_text "I'm sorry; your browser doesn't support HTML5 audio in MPEG format."
-      expect(subject).to be_html_safe
-    end
-  end
-
-  describe '#render_video_directly' do
-    subject { helper.render_video_directly(options) }
-
-    let(:video_md5) { '123abc' }
-    let(:options) { {value: [video_md5]} }
-    let(:expected_video_src) { "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/12/3a/#{video_md5}" }
-
-    it 'renders a video player serving video directy via apache' do
-      expect(subject).to have_selector 'div > video[controls="controls"] > source[id="video_md5"]'
-      expect(subject).to have_selector 'div > video > source[type="video/mp4"]'
-      expect(subject).to have_selector "div > video > source[src=\"#{expected_video_src}\"]"
-      expect(subject).to have_text "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264."
-      expect(subject).to be_html_safe
-    end
-  end
-
   describe '#render_x3d_csid' do
     subject { helper.render_x3d_csid(options) }
 
@@ -314,22 +247,6 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(subject).to have_selector 'div > x3d[role="img"] > scene > inline[type="model/x3d+xml"]'
       expect(subject).to have_selector "div > x3d.x3d-object > scene > inline[url=\"#{expected_x3d_src}\"]"
       expect(subject).to have_selector 'div > x3d[aria-label="Hearst Museum object no title available, no object museum number available, no description available. "] > scene > inline[id="x3d"]'
-      expect(subject).to be_html_safe
-    end
-  end
-
-  describe '#render_x3d_directly' do
-    subject { helper.render_x3d_directly(options) }
-
-    let(:x3d_md5) { '123abc' }
-    let(:document) { SolrDocument.new({}) }
-    let(:options) { {document: document, value: [x3d_md5]} }
-    let(:expected_x3d_src) { "https://cspace-prod-02.ist.berkeley.edu/pahma_nuxeo/data/12/3a/#{x3d_md5}" }
-
-    it 'renders an X3D element serving a 3-D image directy via apache' do
-      expect(subject).to have_selector 'div > x3d[role="img"] > scene > inline[type="model/x3d+xml"]'
-      expect(subject).to have_selector "div > x3d.x3d-object > scene > inline[url=\"#{expected_x3d_src}\"]"
-      expect(subject).to have_selector 'div > x3d[aria-label="Hearst Museum object no title available, no object museum number available, no description available. "] > scene > inline[class="x3d"]'
       expect(subject).to be_html_safe
     end
   end

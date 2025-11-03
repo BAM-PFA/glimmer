@@ -36,6 +36,7 @@ RSpec.describe DocumentComponent, type: :component do
       config.track_search_session.storage = false
     end
   end
+  let(:response) { instance_double(Blacklight::Solr::Response, total: 10) }
 
   before do
     # Every call to view_context returns a different object. This ensures it stays stable.
@@ -54,6 +55,7 @@ RSpec.describe DocumentComponent, type: :component do
       current_bookmarks: [],
       blacklight_config: blacklight_config,
     )
+    allow(presented_document).to receive(:response).and_return(response)
   end
 
   it 'has some defined content areas' do

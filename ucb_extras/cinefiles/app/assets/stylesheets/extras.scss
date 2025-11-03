@@ -37,17 +37,19 @@ $global-alert-color: rgb(89, 184, 227);
   font-weight: bold;
 }
 .navbar.topbar {
-  min-width: 600px;
   *:focus {
     box-shadow: none !important;
     outline-color: white !important;
     outline-offset: -2px;
   }
-  .navbar-brand:focus {
-    outline-offset: -6px;
-  }
-  .navbar-brand img {
-    width: 600px;
+  .navbar-brand{
+    width: 565px;
+    &:focus {
+      outline-offset: -6px;
+    }
+    img {
+      width: 600px;
+    }
   }
   .navbar-nav {
     flex-wrap: wrap;
@@ -177,6 +179,11 @@ h4.facets-heading {
   font-weight: normal;
 }
 
+@media (min-width: 576px) {
+  .navbar.topbar .navbar-brand img {
+    width: 650px;
+  }
+}
 @media print {
   a[href]:after {
     content: none;
