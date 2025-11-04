@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Blacklight::FacetFieldListComponent, type: :component do
   subject(:rendered) do
-    render_inline_to_capybara_node(described_class.new(facet_field: facet_field))
+    render_inline_to_capybara_node(component)
   end
 
   before do
@@ -12,6 +12,9 @@ RSpec.describe Blacklight::FacetFieldListComponent, type: :component do
     allow(facet_field).to receive(:in_advanced_search?).and_return(is_advanced_search)
   end
 
+  let(:component) { described_class.new(facet_field: facet_field) }
+  let(:render) { component.render_in(view_context) }
+  let(:view_context) { controller.view_context }
   let(:facet_field) do
     instance_double(
       Blacklight::FacetFieldPresenter,
@@ -26,20 +29,16 @@ RSpec.describe Blacklight::FacetFieldListComponent, type: :component do
       values: []
     )
   end
-
   let(:display_facet) do
     instance_double(Blacklight::Solr::Response::Facets::FacetField, items: [], sort: :index, offset: 0, prefix: nil)
   end
-
   let(:facet_config) { Blacklight::Configuration::NullField.new(key: 'field', item_component: Blacklight::FacetItemComponent, item_presenter: Blacklight::FacetItemPresenter) }
-
   let(:paginator) do
     instance_double(Blacklight::FacetPaginator, items: [
                       double(label: 'x', hits: 10),
                       double(label: 'y', hits: 33)
                     ])
   end
-
   let(:is_advanced_search) { false }
 
   it 'renders a collapsible card' do
@@ -154,11 +153,11 @@ RSpec.describe Blacklight::FacetFieldListComponent, type: :component do
 
     it 'displays the constraint above the list, overriding Blacklight to add sr_alert and focus_targets to the remove link URL' do
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'a'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=b&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed%2520%253A%2520%2522a%2522%2520from%2520search%2520constraints&focus_target=%255B%2522%2523add-facet-a-a%2522%252C%2520%2522%2523facet-a-toggle-btn%2522%252C%2520%2522%2523facet-panel-collapse-toggle-btn%2522%255D'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=b&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22a%22+from+search+constraints&focus_target=%23add-facet-a-a&focus_target=%23facet-a-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'b'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed%2520%253A%2520%2522b%2522%2520from%2520search%2520constraints&focus_target=%255B%2522%2523add-facet-b-b%2522%252C%2520%2522%2523facet-b-toggle-btn%2522%252C%2520%2522%2523facet-panel-collapse-toggle-btn%2522%255D'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22b%22+from+search+constraints&focus_target=%23add-facet-b-b&focus_target=%23facet-b-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'c'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=b&sr_alert=Removed%2520%253A%2520%2522c%2522%2520from%2520search%2520constraints&focus_target=%255B%2522%2523add-facet-c-c%2522%252C%2520%2522%2523facet-c-toggle-btn%2522%252C%2520%2522%2523facet-panel-collapse-toggle-btn%2522%255D'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=b&sr_alert=Removed+%3A+%22c%22+from+search+constraints&focus_target=%23add-facet-c-c&focus_target=%23facet-c-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
     end
   end
 end
