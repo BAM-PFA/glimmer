@@ -296,6 +296,8 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   list-style: none;
   .filter-name {
     color: #4A5155 !important;
+    font-family: RobotoBold, Helvetica, Arial, sans-serif;
+    font-weight: bold;
     min-width: 7rem;
   }
   > li {

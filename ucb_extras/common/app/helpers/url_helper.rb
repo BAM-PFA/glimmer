@@ -10,7 +10,7 @@ module UrlHelper
     query = if uri.query then CGI.parse(uri.query) else {} end
     query[:sr_alert] = msg
     unless focus_target.blank?
-      query[:focus_target] = focus_target
+      query['focus_target[]'] = Array(focus_target)
     end
     uri.query = URI.encode_www_form(query)
     uri.to_s

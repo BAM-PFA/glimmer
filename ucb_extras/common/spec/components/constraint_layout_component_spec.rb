@@ -42,7 +42,7 @@ RSpec.describe ConstraintLayoutComponent, type: :component do
 
     it "includes remove link, overriding Blacklight to add sr_alert and focus_targets to the remove link URL" do
       expect(rendered).to have_css("span.applied-filter") do |s|
-        expect(s).to have_css(".remove[href='http://remove?sr_alert=Removed+my+label%3A+%22my+value%22+from+search+constraints&focus_target=%23remove-constraint-0&focus_target=%23facets+.facet-limit%3Afirst-child+button&focus_target=%23facet-panel-collapse-toggle-btn']")
+        expect(s).to have_css(".remove[href='http://remove?sr_alert=Removed+my+label%3A+%22my+value%22+from+search+constraints&focus_target%5B%5D=%23remove-constraint-0&focus_target%5B%5D=%23remove-constraint-1&focus_target%5B%5D=%23facets+.facet-limit%3Afirst-child+button&focus_target%5B%5D=%23facet-panel-collapse-toggle-btn']")
       end
     end
 
