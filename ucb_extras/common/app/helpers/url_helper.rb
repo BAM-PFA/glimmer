@@ -8,9 +8,9 @@ module UrlHelper
   def with_screen_reader_alert(href, msg, focus_target = nil)
     uri = URI.parse(href)
     query = if uri.query then CGI.parse(uri.query) else {} end
-    query[:sr_alert] = ERB::Util.url_encode(msg)
+    query[:sr_alert] = msg
     unless focus_target.blank?
-      query[:focus_target] = ERB::Util.url_encode(focus_target)
+      query[:focus_target] = focus_target
     end
     uri.query = URI.encode_www_form(query)
     uri.to_s

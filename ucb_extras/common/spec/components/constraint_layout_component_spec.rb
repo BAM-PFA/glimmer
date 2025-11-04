@@ -4,8 +4,12 @@ require 'rails_helper'
 
 RSpec.describe ConstraintLayoutComponent, type: :component do
   subject(:rendered) do
-    render_inline_to_capybara_node(described_class.new(**params))
+    render_inline_to_capybara_node(component)
   end
+
+  let(:component) { described_class.new(**params) }
+  let(:render) { component.render_in(view_context) }
+  let(:view_context) { controller.view_context }
 
   describe "for simple display" do
     let(:params) do
@@ -38,7 +42,7 @@ RSpec.describe ConstraintLayoutComponent, type: :component do
 
     it "includes remove link, overriding Blacklight to add sr_alert and focus_targets to the remove link URL" do
       expect(rendered).to have_css("span.applied-filter") do |s|
-        expect(s).to have_css(".remove[href='http://remove?sr_alert=Removed%2520my%2520label%253A%2520%2522my%2520value%2522%2520from%2520search%2520constraints&focus_target=%255B%2522%2523remove-constraint-0%2522%252C%2520%2522%2523facets%2520.facet-limit%253Afirst-child%2520button%2522%252C%2520%2522%2523facet-panel-collapse-toggle-btn%2522%255D']")
+        expect(s).to have_css(".remove[href='http://remove?sr_alert=Removed+my+label%3A+%22my+value%22+from+search+constraints&focus_target=%23remove-constraint-0&focus_target=%23facets+.facet-limit%3Afirst-child+button&focus_target=%23facet-panel-collapse-toggle-btn']")
       end
     end
 

@@ -32,19 +32,19 @@ RSpec.describe UrlHelper do
 
     it "adds query parameter 'sr_alert' to a URL" do
       decorated_url = helper.with_screen_reader_alert(url, 'hello, screen reader')
-      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%252C%2520screen%2520reader'
+      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%2C+screen+reader'
     end
 
     it "adds query parameters 'sr_alert' and 'focus_target' to a URL" do
       decorated_url = helper.with_screen_reader_alert(url, 'hello, screen reader', '#element-id')
-      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%252C%2520screen%2520reader&focus_target=%2523element-id'
+      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%2C+screen+reader&focus_target=%23element-id'
     end
 
     it "appends to a URL with existing query parameters" do
       url = 'test.berkeley.edu?foo=bar'
 
       decorated_url = helper.with_screen_reader_alert(url, 'hello, screen reader', '#element-id')
-      expect(decorated_url).to eq 'test.berkeley.edu?foo=bar&sr_alert=hello%252C%2520screen%2520reader&focus_target=%2523element-id'
+      expect(decorated_url).to eq 'test.berkeley.edu?foo=bar&sr_alert=hello%2C+screen+reader&focus_target=%23element-id'
     end
 
     it "handles a list of focus targets" do
@@ -54,7 +54,7 @@ RSpec.describe UrlHelper do
         'a > #complex .element.selector'
       ]
       decorated_url = helper.with_screen_reader_alert(url, 'hello, screen reader', focus_targets)
-      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%252C%2520screen%2520reader&focus_target=%255B%2522%2523element-id%2522%252C%2520%2522.element-class%2522%252C%2520%2522a%2520%253E%2520%2523complex%2520.element.selector%2522%255D'
+      expect(decorated_url).to eq 'test.berkeley.edu?sr_alert=hello%2C+screen+reader&focus_target=%23element-id&focus_target=.element-class&focus_target=a+%3E+%23complex+.element.selector'
     end
   end
 
