@@ -136,7 +136,7 @@ module ApplicationHelper
           href: "/catalog/#{doc[:id]}",
           class: 'd-inline-block'
         ) +
-        content_tag(:div) do
+        content_tag(:div, class: 'mt-1') do
           content_tag(:span, title, class: "gallery-caption-title") +
           content_tag(:span, "("+datemade+")", class: "gallery-caption-date") +
           artist_tag

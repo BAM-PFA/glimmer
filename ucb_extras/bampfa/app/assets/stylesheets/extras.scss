@@ -36,17 +36,10 @@
   color: black;
 }
 .gallery-caption-title {
-  font-size: 1rem;
-  font-weight: bold;
+  font-family: RobotoBold, Helvetica, Arial, sans-serif;
 }
 .gallery-caption-date {
-  font-size: 1rem;
-  font-weight: 100;
   line-height: 2;
-}
-.gallery-caption-artist {
-  font-size: 1rem;
-  font-weight: 100;
 }
 .gallery-caption-artist::after, .gallery-caption-title::after, .gallery-caption-date::after {
   content: "\a";
@@ -61,7 +54,6 @@
   .gallery-item {
     position: relative;
     display: block;
-    font-family: RobotoLight, Helvetica, Arial, sans-serif;
     img {
       min-width: 18.75em;
       max-height: 100%;
@@ -75,6 +67,7 @@
   margin-right: auto;
 }
 .minor-heading {
+  font-family: RobotoBold, Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 .navbar.topbar .navbar-brand img {
@@ -133,6 +126,7 @@
   padding: 1em 1em 1em;
   a.nav-link {
     color: black;
+    font-family: RobotoBold, Helvetica, Arial, sans-serif;
     font-weight: bold;
     text-decoration: none;
     &:hover:not([aria-disabled]) {
@@ -165,29 +159,26 @@
 }
 
 @font-face {
-  font-family: RobotoBlack;
-  src: url(Roboto/Roboto-Black.ttf);
-  font-weight: bold;
-}
-@font-face {
   font-family: Roboto;
   src: url(Roboto/Roboto-Regular.ttf);
-  font-weight: normal;
 }
 @font-face {
-  font-family: RobotoMedium;
-  src: url(Roboto/Roboto-Medium.ttf);
-  font-weight: normal;
-}
-@font-face {
-  font-family: Roboto;
-  src: url(Roboto/Roboto-Bold.ttf);
+  font-family: RobotoBlack;
   font-weight: bold;
+  src: url(Roboto/Roboto-Black.ttf);
+}
+@font-face {
+  font-family: RobotoBold;
+  font-weight: bold;
+  src: url(Roboto/Roboto-Bold.ttf);
 }
 @font-face {
   font-family: RobotoLight;
   src: url(Roboto/Roboto-Light.ttf);
-  font-weight: normal;
+}
+@font-face {
+  font-family: RobotoMedium;
+  src: url(Roboto/Roboto-Medium.ttf);
 }
 
 body {

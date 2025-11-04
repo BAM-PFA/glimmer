@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
       flash[:sr_alert] = CGI.unescape(sr_alert)
     end
     unless focus_target.blank?
-      flash[:focus_target] = CGI.unescape(focus_target)
+      flash[:focus_target] = focus_target
     end
     unless sr_alert.blank? && focus_target.blank?
       redirect_to request.parameters

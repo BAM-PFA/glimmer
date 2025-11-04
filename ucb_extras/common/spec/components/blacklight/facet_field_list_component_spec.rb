@@ -153,11 +153,11 @@ RSpec.describe Blacklight::FacetFieldListComponent, type: :component do
 
     it 'displays the constraint above the list, overriding Blacklight to add sr_alert and focus_targets to the remove link URL' do
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'a'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=b&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22a%22+from+search+constraints&focus_target=%23add-facet-a-a&focus_target=%23facet-a-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=b&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22a%22+from+search+constraints&focus_target%5B%5D=%23add-facet-a-a&focus_target%5B%5D=%23facet-a-toggle-btn&focus_target%5B%5D=%23facet-panel-collapse-toggle-btn'
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'b'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22b%22+from+search+constraints&focus_target=%23add-facet-b-b&focus_target=%23facet-b-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=c&sr_alert=Removed+%3A+%22b%22+from+search+constraints&focus_target%5B%5D=%23add-facet-b-b&focus_target%5B%5D=%23facet-b-toggle-btn&focus_target%5B%5D=%23facet-panel-collapse-toggle-btn'
       expect(rendered).to have_css '.inclusive_or .facet-label', text: 'c'
-      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=b&sr_alert=Removed+%3A+%22c%22+from+search+constraints&focus_target=%23add-facet-c-c&focus_target=%23facet-c-toggle-btn&focus_target=%23facet-panel-collapse-toggle-btn'
+      expect(rendered).to have_link href: 'http://test.host/catalog?f_inclusive%5Bfield%5D%5B%5D=a&f_inclusive%5Bfield%5D%5B%5D=b&sr_alert=Removed+%3A+%22c%22+from+search+constraints&focus_target%5B%5D=%23add-facet-c-c&focus_target%5B%5D=%23facet-c-toggle-btn&focus_target%5B%5D=%23facet-panel-collapse-toggle-btn'
     end
   end
 end

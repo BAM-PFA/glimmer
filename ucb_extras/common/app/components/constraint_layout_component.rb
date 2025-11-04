@@ -20,6 +20,8 @@ class ConstraintLayoutComponent < Blacklight::ConstraintLayoutComponent
     focus_targets = ["#remove-constraint-#{@index}"]
     if @index > 0
       focus_targets << "#remove-constraint-#{@index - 1}"
+    else
+      focus_targets << "#remove-constraint-#{@index + 1}"
     end
     focus_targets << '#facets .facet-limit:first-child button'
     focus_targets << '#facet-panel-collapse-toggle-btn'

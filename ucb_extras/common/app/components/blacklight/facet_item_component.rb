@@ -45,8 +45,8 @@ module Blacklight
           label,
           helpers.with_screen_reader_alert(
             href,
-            "Added #{@facet_item.facet_config.label}: \"#{label}\" to search constraints",
-            focus_target = [
+            sr_alert="Added #{@facet_item.facet_config.label}: \"#{label}\" to search constraints",
+            focus_target=[
               "#remove-facet-#{@label_for_id}-#{@value_for_id}",
               "#facet-#{@label_for_id}-toggle-btn",
               '#facet-panel-collapse-toggle-btn'
@@ -71,8 +71,8 @@ module Blacklight
           link_to(
             helpers.with_screen_reader_alert(
               href,
-              "Removed #{@facet_item.facet_config.label}: \"#{strip_tags(label)}\" from search constraints",
-              focus_target = [
+              sr_alert="Removed #{@facet_item.facet_config.label}: \"#{strip_tags(label)}\" from search constraints",
+              focus_target=[
                 "#add-facet-#{@label_for_id}-#{@value_for_id}",
                 "#facet-#{@label_for_id}-toggle-btn",
                 '#facet-panel-collapse-toggle-btn'
