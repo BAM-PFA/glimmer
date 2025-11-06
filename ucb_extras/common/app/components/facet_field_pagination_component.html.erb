@@ -15,7 +15,8 @@
     <%= content_tag :a,
           raw(t('views.pagination.previous')),
           class: 'disabled btn btn-link text-decoration-none',
-          aria: { disabled: true }
+          aria: { disabled: true },
+          href: '#'
     %>
   <% end %>
 
@@ -35,7 +36,8 @@
     <%= content_tag :a,
           raw(t('views.pagination.next')),
           class: 'disabled btn btn-link text-decoration-none',
-          aria: { disabled: true }
+          aria: { disabled: true },
+          href: '#'
     %>
   <% end %>
 </div>

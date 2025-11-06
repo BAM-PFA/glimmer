@@ -308,7 +308,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'docnamesubject_ss', label: 'Document name subject'
 
     config.add_show_field 'has_ss', label: 'Document contains'
-    config.add_show_field 'film_info_ss', helper_method: 'render_film_links', label: 'Documents related to this film'
+    config.add_show_field 'film_info_ss', helper_method: 'render_film_links', label: 'Related films'
     # config.add_show_field 'biblio_s', label: 'Has bibliography'
     # config.add_show_field 'bx_info_s', label: 'Has box info'
     # config.add_show_field 'cast_cr_s', label: 'Has cast credits'
@@ -366,7 +366,7 @@ class CatalogController < ApplicationController
     config.add_index_field 'has_ss', label: 'Document contains'
     config.add_index_field 'pages_s', label: 'Number of pages'
     # config.add_index_field 'pg_info_s', label: 'Source pagination'
-    config.add_index_field 'film_info_ss', helper_method: 'render_film_links', label: 'Documents related to this film'
+    config.add_index_field 'film_info_ss', helper_method: 'render_film_links', label: 'Related films'
 
     # Film records
     config.add_index_field 'film_director_ss', label: 'Film director'
