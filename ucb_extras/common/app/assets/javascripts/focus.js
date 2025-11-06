@@ -8,8 +8,8 @@ const putFocus = el => {
       let counter = 0
       const attemptFocus = setInterval(() => {
         el.focus()
-        if (el === document.activeElement || ++counter > 4) {
-          // Abort after success or five attempts
+        if (el === document.activeElement || ++counter > 9) {
+          // Abort after success or ten attempts
           clearInterval(attemptFocus)
           resolve()
         }
