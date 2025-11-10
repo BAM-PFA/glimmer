@@ -1,0 +1,21 @@
+<% if resource.errors.any? %>
+  <div
+    id="error_explanation"
+    class="alert alert-danger"
+    data-turbo-cache="false"
+  >
+    <h2 id="devise-errors-heading" class="h4">
+      <%= I18n.t("errors.messages.not_saved",
+                 count: resource.errors.count,
+                 resource: resource.class.model_name.human.downcase)
+       %>
+    </h2>
+    <ul aria-labelledby="devise-errors-heading">
+      <% resource.errors.each do |error| %>
+        <li id="user-<%= error.attribute %>-error">
+          <%= error.full_message %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

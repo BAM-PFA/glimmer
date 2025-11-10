@@ -1,16 +1,28 @@
-<h1>Forgot your password?</h1>
+<div class="devise login-container mx-auto">
+  <h1>Forgot your password?</h1>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <div aria-live="assertive" role="alert"><%= render "devise/shared/error_messages", resource: resource %></div>
+  <div class="login-form form-group">
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <div aria-live="assertive" role="alert"><%= render "devise/shared/error_messages", resource: resource %></div>
 
-  <div class="field">
-    <%= f.label :email, class: "d-block" %>
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <div class="field">
+      <%= f.label :email, class: "d-block" %>
+      <%= f.email_field :email,
+            aria: {
+              errormessage: resource.errors.has_key?(:email) ? 'user-email-error' : nil,
+              invalid: resource.errors.has_key?(:email),
+              required: true
+            },
+            autocomplete: "email",
+            autofocus: true,
+            class: 'form-control'
+      %>
+    </div>
 
-  <div class="actions py-2">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+    <div class="actions pt-1 pb-4">
+      <%= f.submit "Send me reset password instructions", class: 'btn btn-tertiary text-wrap w-100 w-sm-auto' %>
+    </div>
+  <% end %>
 
-<div class="pb-2"><%= render "devise/shared/links" %></div>
+  <%= render "devise/shared/links" %>
+</div>
