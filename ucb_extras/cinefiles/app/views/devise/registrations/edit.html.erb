@@ -1,47 +1,82 @@
-<h1>Edit <%= resource_name.to_s.humanize %></h1>
+<div class="devise edit-container">
+  <h1>Edit <%= resource_name.to_s.humanize %></h1>
 
-<h2 class="h4">Change password</h2>
+  <h2 class="h4">Change password</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <div aria-live="assertive" role="alert"><%= render "devise/shared/error_messages", resource: resource %></div>
-
-  <div class="field">
-    <%= f.label :email, class: "d-block" %>
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div class="pt-2">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field pt-2">
-    <div><%= f.label :password %> <i id="new-password-desc">(leave blank if you don't want to change it)</i></div>
-    <%= f.password_field :password, autocomplete: "new-password", "aria-describedby": "new-password-desc new-password-rules" %>
-    <% if @minimum_password_length %>
-      <em id="new-password-rules" class="d-block"><%= @minimum_password_length %> characters minimum</em>
+  <div class="login-form form-group">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <div aria-live="assertive" role="alert"><%= render "devise/shared/error_messages", resource: resource %></div>
+      <div class="field">
+        <%= f.label :email, class: "d-block" %>
+        <%= f.email_field :email,
+              aria: {
+                errormessage: resource.errors.has_key?(:email) ? 'user-email-error' : nil,
+                invalid: resource.errors.has_key?(:email),
+                required: true
+              },
+              autofocus: true,
+              autocomplete: "email",
+              class: 'form-control'
+        %>
+      </div>
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div class="pt-2">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
+      <div class="field">
+        <%= f.label :password %> <span id="new-password-desc" class="text-muted">(leave blank if you don't want to change it)</span>
+        <%= f.password_field :password,
+              aria: {
+                describedby: 'new-password-desc new-password-rules',
+                errormessage: resource.errors.has_key?(:password) ? 'user-password-error' : nil,
+                invalid: resource.errors.has_key?(:password)
+              },
+              autocomplete: "new-password",
+              class: 'form-control'
+        %>
+        <% if @minimum_password_length %>
+          <span id="new-password-rules" class="d-block text-muted"><%= @minimum_password_length %> characters minimum</span>
+        <% end %>
+      </div>
+      <div class="field">
+        <%= f.label :password_confirmation, class: "d-block" %>
+        <%= f.password_field :password_confirmation,
+              aria: {
+                errormessage: resource.errors.has_key?(:password_confirmation) ? 'user-password_confirmation-error' : nil,
+                invalid: resource.errors.has_key?(:password_confirmation)
+              },
+              autocomplete: "new-password",
+              class: 'form-control'
+        %>
+      </div>
+      <div class="field">
+        <%= f.label :current_password %> <span id="current-password-desc" class="text-muted">(we need your current password to confirm your changes)</span>
+        <%= f.password_field :current_password,
+              aria: {
+                describedby: 'current-password-desc',
+                errormessage: resource.errors.has_key?(:current_password) ? 'user-current_password-error' : nil,
+                invalid: resource.errors.has_key?(:current_password),
+                required: true
+              },
+              autocomplete: "current-password",
+              class: 'form-control'
+        %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Update", class: 'btn btn-primary px-5' %>
+      </div>
     <% end %>
   </div>
-
-  <div class="field pt-2">
-    <%= f.label :password_confirmation, class: "d-block" %>
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  <hr class="my-4" />
+  <h2 class="h4">Cancel account</h2>
+  <div>
+    Unhappy?
+    <%= button_to "Terminate my account",
+          registration_path(resource_name),
+          data: { confirm: "Are you sure you want to delete your account?", turbo_confirm: "Are you sure you want to delete your account?" },
+          method: :delete,
+          class: 'btn btn-outline-secondary my-2 py-1'
+    %>
   </div>
 
-  <div class="field pt-2">
-    <div><%= f.label :current_password %> <i id="">(we need your current password to confirm your changes)</i></div>
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions pt-2">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h2 class="h4">Cancel account</h2>
-<div>
-  Unhappy?
-  <%= button_to "Terminate my account", registration_path(resource_name), data: { confirm: "Are you sure you want to delete your account?", turbo_confirm: "Are you sure?" }, method: :delete, class: "my-2" %>
+  <div class="pt-4"><%= link_to "Back", :back %></div>
 </div>
-
-
-<div class="py-2"><%= link_to "Back", :back %></div>

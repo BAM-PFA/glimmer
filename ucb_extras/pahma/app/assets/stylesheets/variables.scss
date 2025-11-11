@@ -1,9 +1,10 @@
 /* _variables.scss */
 $primary: #22348D;
 $secondary: #6c757d;
+$tertiary: #c8c8c8;
 $success: lighten($primary, 60%);
 $info: #7854e4;
-$warning: #b8c924;
+$warning: #fab946;
 $danger: #d62518;
 $light: #f8f9fa;
 $dark: #343a40;
@@ -12,3 +13,7 @@ $gray-900: #151519;
 $theme-colors: (
   "anchor": #4159D2
 );
+
+$facet-active-border: $success !default;
+$facet-active-bg: $success !default;
+$facet-active-item-color: $success !default;

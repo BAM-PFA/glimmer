@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   layout :determine_layout if respond_to? :layout
 
   before_action :alert_screen_reader
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   private
 
@@ -24,6 +25,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:_method, :authenticity_token, :user, :commit])
+  end
+
   # Method used by sessions controller to sign out a user. You can overwrite
   # it in your ApplicationController to provide a custom hook for a custom
   # scope. Notice that differently from +after_sign_in_path_for+ this method
@@ -36,7 +41,7 @@ class ApplicationController < ActionController::Base
     context = router_name ? send(router_name) : self
     # Redirect back to the page the user was on when they logged out, if possible
     uri = URI(request.referrer)
-    referrer_path = unless uri.path == '/users/edit' then uri.path else nil end
+    referrer_path = unless uri.path.start_with?('/users') then uri.path else nil end
     referrer_path || (context.respond_to?(:root_path) ? context.root_path : "/")
   end
 end

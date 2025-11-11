@@ -15,7 +15,7 @@ module System
     def button_contents
       return if helpers.controller.blacklight_config.bootstrap_version == 5
 
-      tag.span '&times;'.html_safe, class: 'blacklight-icons-remove', aria: { hidden: true }
+      tag.span '&times;'.html_safe, class: 'blacklight-icons blacklight-icons-remove', aria: { hidden: true }
     end
 
     def alert_class(type)

@@ -1,37 +1,67 @@
 @import 'tiles';
 
-.actions {
-  margin-bottom: 30px;
-}
 .bg-dark {
   background-color: gray !important;
+}
+.btn {
+  // Adjust for custom font so text looks vertically centered
+  padding-top: .45rem;
+  padding-bottom: 0.301rem;
+}
+.btn.btn-close {
+  line-height: .9rem;
+}
+.devise {
+  &.edit-container {
+    min-width: 14rem;
+    padding: 0.5rem 1rem;
+    .field .form-control {
+      max-width: 32rem;
+      min-width: 14rem;
+    }
+  }
+  &.login-container {
+    max-width: 32rem;
+    min-width: 14rem;
+    padding: 8px 16px 32px 16px;
+    a {
+      margin-bottom: 4px;
+    }
+  }
+  &.signup-container {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .login-form, .signup-form {
+    width: 100%;
+    .field {
+      padding-bottom: 1rem;
+      .field_with_errors {
+        display: inline;
+        input {
+          border-color: var(--danger);
+          border-width: 2px;
+          outline-color: var(--danger) !important;
+          padding-right: calc(1.5em + .75rem) !important;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+          background-repeat: no-repeat;
+          background-position: right calc(.375em + .1875rem) center;
+          background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+        }
+      }
+      label {
+        margin-bottom: 0.125rem;
+      }
+    }
+  }
 }
 .document .pdf-viewer {
   height: 800px;
   padding: 3px;
   width: 100%;
 }
-$global-alert-color: rgb(89, 184, 227);
-.global-alert {
-  border: 1px solid $global-alert-color;
-  margin: 10px 0;
-  padding: 10px;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-}
 .h1, h1 {
   font-size: 2rem;
-}
-.login-container {
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 22px;
-}
-.login-form {
-  width: 100%;
-  margin-bottom: 30px;
 }
 .minor-heading {
   font-weight: bold;
@@ -78,23 +108,18 @@ $global-alert-color: rgb(89, 184, 227);
   font-size: 0.875rem;
   padding-right: 12px;
 }
+.search-history .filter-name {
+  font-family: RobotoBold, Helvetica, Arial, sans-serif;
+}
 .section-heading {
   font-family: MontserratBlack, Helvetica, Arial, sans-serif;
   font-weight: bold;
-}
-.signup-container {
-  margin-left: 40px;
-  margin-right: 40px;
-}
-.signup-form {
-  width: 100%;
-  margin-bottom: 30px;
 }
 .site-footer {
   background: transparent;
   color: #757575;
   margin: auto;
-  padding: 100px 10% 40px;
+  padding: 100px 1rem 40px;
   p {
     line-height: 1.5;
   }
@@ -179,6 +204,9 @@ h4.facets-heading {
 @media (min-width: 576px) {
   .navbar.topbar .navbar-brand img {
     width: 650px;
+  }
+  .site-footer {
+    padding: 100px 10% 40px !important;
   }
 }
 @media print {
