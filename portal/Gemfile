@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem 'rails', '~> 8.0.2'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
-gem "sprockets-rails"
+gem "sprockets-rails", :require => 'sprockets/railtie'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 2.0'
@@ -71,6 +71,7 @@ gem "bootstrap", ">=4.3.1", "<6.0.0"
 gem "twitter-typeahead-rails", "0.11.1.pre.corejavascript"
 gem "sassc-rails", "~> 2.1"
 gem "jquery-rails"
+gem "terser", '~> 1.2', '>= 1.2.6'
 
 gem 'uri'
 
