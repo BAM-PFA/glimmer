@@ -21,7 +21,7 @@
   </div>
   <!-- metadata -->
   <div class="col-12 col-md-6">
-    <dl class="document-metadata dl-invert row pl-2">
+    <dl class="<%= @classes %>">
       <% @doc_presenter.fields_to_render.each do |field_name, field| -%>
         <% unless field_name == "blob_ss" %>
           <dt class="col-4 blacklight-<%= field_name.parameterize %>">

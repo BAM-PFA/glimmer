@@ -8,8 +8,7 @@ module Show
     def initialize(
         fields: [],
         tag: 'div',
-        # classes: %w[document-metadata dl-invert row],
-        classes: 'row',
+        classes: 'document-metadata dl-invert row pl-2',
         show: false,
         view_type: nil,
         field_layout: nil,

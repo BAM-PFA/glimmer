@@ -61,4 +61,5 @@ echo "Restarting portal, you can too! enter: cd ~/projects/${RUN_DIR}/portal/ ; 
 echo "Or just restart Apache"
 
 cd ~/projects/${RUN_DIR}/portal/
+bin/rails assets:precompile
 bin/rails restart
