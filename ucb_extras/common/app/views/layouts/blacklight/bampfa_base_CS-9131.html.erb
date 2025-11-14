@@ -25,8 +25,10 @@
     <title><%= render_page_title %></title>
     <%= opensearch_description_tag application_name, opensearch_catalog_url(format: 'xml') %>
     <%= favicon_link_tag 'favicon.png' %>
-    <%= stylesheet_link_tag "application", media: "all" %>
-    <%= javascript_include_tag "application" %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload"  %>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.8.2/dist/es-module-shims.js" data-turbo-track="reload"></script>
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "x3dom" %>
 
     <%= csrf_meta_tags %>
     <%= content_for(:head) %>

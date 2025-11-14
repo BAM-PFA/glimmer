@@ -152,6 +152,7 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   .document-metadata {
     clear: right;
     margin-bottom: 0;
+    margin-left: 0;
     min-width: 24em;
     padding-left: 15px;
     width: 100%;
@@ -310,6 +311,14 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
 .pagination {
   min-width: 12em;
   padding-bottom: 0.25em;
+}
+.range_limit .chart_js:not([aria-hidden]) {
+  // These styles apply to the list of links used as
+  // a fallback when the chart cannot be displayed.
+  height: unset !important;
+  margin-left: unset;
+  margin-right: unset;
+  min-height: unset;
 }
 .search-history {
   list-style: none;

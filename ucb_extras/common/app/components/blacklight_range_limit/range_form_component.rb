@@ -9,48 +9,36 @@ module BlacklightRangeLimit
       @classes = classes
     end
 
-    def begin_label
-      range_config[:input_label_range_begin] || t("blacklight.range_limit.range_begin", field_label: @facet_field.label)
+    def begin_value_default
+      @facet_field.selected_range.is_a?(Range) ? @facet_field.selected_range.begin : @facet_field.min
     end
 
-    def end_label
-      range_config[:input_label_range_end] || t("blacklight.range_limit.range_end", field_label: @facet_field.label)
+    def end_value_default
+      @facet_field.selected_range.is_a?(Range) ? @facet_field.selected_range.end : @facet_field.max
     end
 
-    def maxlength
-      range_config[:maxlength]
+    def begin_input_name
+      "range[#{@facet_field.key}][begin]"
     end
 
-    # type is 'begin' or 'end'
-    def render_range_input(type, input_label = nil, maxlength_override = nil)
-      type = type.to_s
+    def end_input_name
+      "range[#{@facet_field.key}][end]"
+    end
 
-      default = if @facet_field.selected_range.is_a?(Range)
-                  case type
-                  when 'begin' then @facet_field.selected_range.first
-                  when 'end' then @facet_field.selected_range.last
-                  end
-                end
-      element_name = "range[#{@facet_field.key}][#{type}]"
-      element_id = if @facet_field.in_modal?
-                     "range-#{@facet_field.key}-#{type}-modal"
-                   else
-                     "range-#{@facet_field.key}-#{type}"
-                   end
-      html = number_field_tag(
-        element_name,
-        default,
-        id: element_id,
-        maxlength: maxlength_override || maxlength,
-        class: "form-control text-center range_#{type}"
-      )
-      html += label_tag(
-        element_id,
-        input_label,
-        class: 'sr-only visually-hidden',
-        'for': element_id
-      ) if input_label.present?
-      html
+    def begin_input_id
+      if @facet_field.in_modal?
+        "range-#{@facet_field.key}-begin-modal"
+      else
+        "range-#{@facet_field.key}-begin"
+      end
+    end
+
+    def end_input_id
+      if @facet_field.in_modal?
+        "range-#{@facet_field.key}-end-modal"
+      else
+        "range-#{@facet_field.key}-end"
+      end
     end
 
     private
