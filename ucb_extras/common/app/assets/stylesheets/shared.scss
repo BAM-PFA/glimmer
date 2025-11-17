@@ -312,13 +312,20 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
   min-width: 12em;
   padding-bottom: 0.25em;
 }
-.range_limit .chart_js:not([aria-hidden]) {
-  // These styles apply to the list of links used as
-  // a fallback when the chart cannot be displayed.
-  height: unset !important;
-  margin-left: unset;
-  margin-right: unset;
-  min-height: unset;
+.range_limit {
+  .chart_js:not([aria-hidden]) {
+    // These styles apply to the list of links used as
+    // a fallback when the chart cannot be displayed.
+    height: unset !important;
+    margin-left: unset;
+    margin-right: unset;
+    min-height: unset;
+  }
+  .range_limit_form {
+    .range_begin, .range_end, .submit {
+      min-width: 7rem;
+    }
+  }
 }
 .search-history {
   list-style: none;

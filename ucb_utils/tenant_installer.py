@@ -67,4 +67,9 @@ def log_path(path, names):
 tenant_path = Path('../' + tenant)
 os.chdir(tenant_path)
 shutil.copytree(tenant_path, app_path, ignore=log_path, dirs_exist_ok=True)
+
+print('Compiling assets')
+os.chdir('../..')
+os.system('cd portal && bin/rails assets:precompile')
+
 print(f'\n🪄 ✨ Installed {tenant}')

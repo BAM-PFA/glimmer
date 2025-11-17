@@ -38,7 +38,11 @@
                 id: "#{@prefix}q",
                 autocomplete: "off",
                 autofocus: @autofocus,
-                aria: { label: scoped_t('search.label'), autocomplete: 'list', controls: 'autocomplete-popup' }
+                aria: {
+                  label: scoped_t('search.label'),
+                  autocomplete: 'list',
+                  controls: 'autocomplete-popup'
+                }
             ) %>
             <ul id="autocomplete-popup" class="dropdown-menu" role="listbox" aria-label="<%= scoped_t('search.label') %>" hidden></ul>
           </auto-complete>
