@@ -211,9 +211,12 @@ class CatalogController < ApplicationController
     # mean") suggestion is offered.
     config.spell_max = 5
 
-    # Configuration for autocomplete suggestor
+    # Configuration for autocomplete suggester
     config.autocomplete_enabled = false
     config.autocomplete_path = 'suggest'
+    # if the name of the solr.SuggestComponent provided in your solrconfig.xml is not the
+    # default 'mySuggester', uncomment and provide it below
+    # config.autocomplete_suggester = 'mySuggester'
 
     # FACET FIELDS
     config.add_facet_field 'artistorigin_s', label: 'Country', limit: true
