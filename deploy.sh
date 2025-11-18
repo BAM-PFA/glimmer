@@ -55,11 +55,11 @@ rsync -av ucb_extras/${museum}/ ~/projects/${RUN_DIR}/portal/
 # complete configuration depending on environment (dev or prod)
 ./relink.sh ${RUN_DIR} ${museum} "$3"
 
+cd ~/projects/${RUN_DIR}/portal
+bin/rails assets:precompile
+
 # migrations and secrets are applied by relink.sh, or you can do them by hand
 echo "deployed tag ${TAG} to ${RUN_DIR}, environment is $3"
 echo "Restarting portal, you can too! enter: cd ~/projects/${RUN_DIR}/portal/ ; bin/rails restart."
 echo "Or just restart Apache"
-
-cd ~/projects/${RUN_DIR}/portal/
-bin/rails assets:precompile
 bin/rails restart

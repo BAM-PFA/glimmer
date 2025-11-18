@@ -74,7 +74,7 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
   # Don't log any deprecations.
-  Deprecation.default_deprecation_behavior = :silence
+  config.active_support.report_deprecations = false
 
   # don't complain about the fact that we are using sqlite3
   # config.active_record.sqlite3_production_warning = false
