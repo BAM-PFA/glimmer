@@ -1,6 +1,90 @@
 /**
  * modal.js
  */
+import { putFocus } from 'focus'
+
+const focusableDescendantsSelector = ':where(button, input:not([type="hidden"]), textarea, select, a:any-link, *[tabindex]):not([aria-hidden="true"]):not([hidden]):not(disabled):not([id^="focus-trap"])'
+
+const isValidTabindex = v => !Number.isNaN(Number.parseInt(v, 10))
+
+const cacheAriaHidden = el => {
+  return new Promise((resolve) => {
+    if (el.hasAttribute('aria-hidden')) {
+      el.dataset.ariaHidden = el.getAttribute('aria-hidden')
+    }
+    resolve()
+  })
+}
+
+const restoreAriaHidden = el => {
+  new Promise((resolve) => {
+    if (el.dataset.ariaHidden) {
+      el.setAttribute('aria-hidden', el.dataset.ariaHidden)
+    } else {
+      el.removeAttribute('aria-hidden')
+    }
+    resolve()
+  }).then(() => delete el.dataset.ariaHidden)
+}
+
+const cacheTabIndex = el => {
+  return new Promise((resolve) => {
+    if (isValidTabindex(el.tabindex)) {
+      el.dataset.tabindex = el.tabindex
+    }
+    resolve()
+  })
+}
+
+const restoreTabIndex = el => {
+  new Promise((resolve) => {
+    if (isValidTabindex(el.dataset.tabindex)) {
+      el.setAttribute('tabindex', el.dataset.tabindex)
+    } else {
+      el.removeAttribute('tabindex')
+    }
+    resolve()
+  }).then(() => delete el.dataset.tabindex)
+}
+
+const toggleBackgroundElementsDisabled = (disable, modalId) => {
+  /* The modal element is a child of <body>. When the modal opens we need to disable its siblings.
+   * Any of these siblings' descendants that can receive focus must also be disabled. */
+  const bodyEl = $('body')[0]
+  const backgroundElements = Array.from(bodyEl.children)
+  if (disable) {
+    bodyEl.classList.add('modal-open')
+  } else {
+    bodyEl.classList.remove('modal-open')
+  }
+  backgroundElements.forEach(el => {
+    if (['NAV', 'DIV', 'MAIN', 'FOOTER'].includes(el.tagName.toUpperCase()) && ![modalId || 'blacklight-modal'].includes(el.id)) {
+      if (disable) {
+        const focusableDescendants = Array.from(el.querySelectorAll(focusableDescendantsSelector))
+        el.setAttribute('inert', true)
+        cacheAriaHidden(el).then(() => el.setAttribute('aria-hidden', true))
+
+        focusableDescendants.forEach(child => {
+          child.setAttribute('aria-disabled', true)
+          child.setAttribute('disabled', true)
+          cacheTabIndex(child).then(() => child.setAttribute('tabindex', -1))
+          child.dataset.focusableHidden = true
+        })
+      } else {
+        const focusableDescendants = Array.from(el.querySelectorAll('[data-focusable-hidden]'))
+        el.removeAttribute('inert')
+        restoreAriaHidden(el)
+
+        focusableDescendants.forEach(child => {
+          child.removeAttribute('aria-disabled')
+          child.removeAttribute('disabled')
+          restoreTabIndex(child)
+          delete child.dataset.focusableHidden
+        })
+      }
+    }
+  })
+}
 
 class FocusTrap {
   constructor(modalEl) {
@@ -47,89 +131,6 @@ class FocusTrap {
 
 
 const ModalAccessibility = (() => {
-  const focusableDescendantsSelector = ':where(button, input:not([type="hidden"]), textarea, select, a:any-link, *[tabindex]):not([aria-hidden="true"]):not([hidden]):not(disabled):not([id^="focus-trap"])'
-
-  const isValidTabindex = v => !Number.isNaN(Number.parseInt(v, 10))
-
-  const cacheAriaHidden = el => {
-    return new Promise((resolve) => {
-      if (el.hasAttribute('aria-hidden')) {
-        el.dataset.ariaHidden = el.getAttribute('aria-hidden')
-      }
-      resolve()
-    })
-  }
-
-  const restoreAriaHidden = el => {
-    new Promise((resolve) => {
-      if (el.dataset.ariaHidden) {
-        el.setAttribute('aria-hidden', el.dataset.ariaHidden)
-      } else {
-        el.removeAttribute('aria-hidden')
-      }
-      resolve()
-    }).then(() => delete el.dataset.ariaHidden)
-  }
-
-  const cacheTabIndex = el => {
-    return new Promise((resolve) => {
-      if (isValidTabindex(el.tabindex)) {
-        el.dataset.tabindex = el.tabindex
-      }
-      resolve()
-    })
-  }
-
-  const restoreTabIndex = el => {
-    new Promise((resolve) => {
-      if (isValidTabindex(el.dataset.tabindex)) {
-        el.setAttribute('tabindex', el.dataset.tabindex)
-      } else {
-        el.removeAttribute('tabindex')
-      }
-      resolve()
-    }).then(() => delete el.dataset.tabindex)
-  }
-
-  const toggleBackgroundElementsDisabled = (disable, modalId) => {
-    /* The modal element is a child of <body>. When the modal opens we need to disable its siblings.
-     * Any of these siblings' descendants that can receive focus must also be disabled. */
-    const bodyEl = $('body')[0]
-    const backgroundElements = Array.from(bodyEl.children)
-    if (disable) {
-      bodyEl.classList.add('modal-open')
-    } else {
-      bodyEl.classList.remove('modal-open')
-    }
-    backgroundElements.forEach(el => {
-      if (['NAV', 'DIV', 'MAIN', 'FOOTER'].includes(el.tagName.toUpperCase()) && ![modalId || 'blacklight-modal'].includes(el.id)) {
-        if (disable) {
-          const focusableDescendants = Array.from(el.querySelectorAll(focusableDescendantsSelector))
-          el.setAttribute('inert', true)
-          cacheAriaHidden(el).then(() => el.setAttribute('aria-hidden', true))
-
-          focusableDescendants.forEach(child => {
-            child.setAttribute('aria-disabled', true)
-            child.setAttribute('disabled', true)
-            cacheTabIndex(child).then(() => child.setAttribute('tabindex', -1))
-            child.dataset.focusableHidden = true
-          })
-        } else {
-          const focusableDescendants = Array.from(el.querySelectorAll('[data-focusable-hidden]'))
-          el.removeAttribute('inert')
-          restoreAriaHidden(el)
-
-          focusableDescendants.forEach(child => {
-            child.removeAttribute('aria-disabled')
-            child.removeAttribute('disabled')
-            restoreTabIndex(child)
-            delete child.dataset.focusableHidden
-          })
-        }
-      }
-    })
-  }
-
   const onModalShow = e => {
     /* When the modal is open, content outside the modal should not be accessible via
      * keyboard or assistive technology. */
@@ -173,6 +174,7 @@ const ModalAccessibility = (() => {
 })
 
 export {
+  toggleBackgroundElementsDisabled,
   FocusTrap,
   ModalAccessibility as default
 }

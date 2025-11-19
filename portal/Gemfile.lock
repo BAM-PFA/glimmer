@@ -140,7 +140,6 @@ GEM
       devise
     diff-lcs (1.6.2)
     docile (1.4.1)
-    domain_name (0.6.20240107)
     drb (2.2.1)
     erubi (1.13.0)
     execjs (2.10.0)
@@ -152,22 +151,6 @@ GEM
       faraday (>= 1, < 3)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-aarch64-linux-musl)
-    ffi (1.17.0-arm-linux-gnu)
-    ffi (1.17.0-arm-linux-musl)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86-linux-gnu)
-    ffi (1.17.0-x86-linux-musl)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
-    ffi (1.17.0-x86_64-linux-musl)
-    ffi-compiler (1.3.2)
-      ffi (>= 1.15.5)
-      rake
-    global_alerts (0.8.0)
-      http
-      rails (>= 6.1, < 9.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-protobuf (4.33.1)
@@ -197,15 +180,6 @@ GEM
     google-protobuf (4.33.1-x86_64-linux-musl)
       bigdecimal
       rake (>= 13)
-    http (5.2.0)
-      addressable (~> 2.8)
-      base64 (~> 0.1)
-      http-cookie (~> 1.0)
-      http-form_data (~> 2.2)
-      llhttp-ffi (~> 0.5.0)
-    http-cookie (1.0.7)
-      domain_name (~> 0.5)
-    http-form_data (2.3.0)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -237,9 +211,6 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
-    llhttp-ffi (0.5.0)
-      ffi-compiler (~> 1.0)
-      rake (~> 13.0)
     logger (1.6.1)
     loofah (2.23.1)
       crass (~> 1.0.2)
@@ -527,14 +498,13 @@ DEPENDENCIES
   blacklight_advanced_search
   blacklight_range_limit (~> 9.1.0)
   bootsnap (>= 1.4.4)
-  bootstrap (>= 4.3.1, < 5.0.0)
+  bootstrap (~> 4.6.2.1)
   brakeman
   capybara (>= 2.15)
   dartsass-sprockets (~> 3.2)
   debug
   devise
   devise-guests (~> 0.3)
-  global_alerts
   importmap-rails
   jbuilder (~> 2.7)
   jquery-rails

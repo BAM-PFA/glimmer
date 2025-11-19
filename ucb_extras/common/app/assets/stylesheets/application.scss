@@ -9,7 +9,6 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
- *
 */
 
 @import 'variables';
@@ -18,7 +17,10 @@
 
 @import 'blacklight/blacklight';
 
-@import 'blacklight_gallery/default';
+@import 'blacklight_gallery/gallery';
+@import 'blacklight_gallery/masonry';
+@import 'blacklight_gallery/osd_viewer';
+@import 'blacklight_gallery/slideshow';
 
 @import 'openseadragon';
 
