@@ -5,6 +5,7 @@ import '@hotwired/stimulus'
 import '@hotwired/stimulus-loading'
 import 'controllers'
 import 'jquery'
+import Rails from '@rails/ujs'
 import 'openseadragon'
 import Blacklight from 'blacklight'
 import 'blacklight-gallery'
@@ -13,6 +14,8 @@ import BlacklightRangeLimit from 'blacklight-range-limit'
 import FocusManagement from 'focus'
 import ModalAccessibility from 'modal'
 import SlideshowModalAccessibility from 'slideshow-modal'
+
+Rails.start()
 
 // Initialize blacklight_range_limit
 BlacklightRangeLimit.init({onLoadHandler: Blacklight.onLoad})
