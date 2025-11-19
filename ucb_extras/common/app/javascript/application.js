@@ -12,7 +12,7 @@ import 'bootstrap'
 import BlacklightRangeLimit from 'blacklight-range-limit'
 import 'ga'
 import FocusManagement from 'focus'
-import ModalAccessibility from  'modal'
+import ModalAccessibility from 'modal'
 import SlideshowModalAccessibility from 'slideshow-modal'
 
 // Initialize blacklight_range_limit

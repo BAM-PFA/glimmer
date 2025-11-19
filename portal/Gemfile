@@ -66,9 +66,9 @@ gem 'devise-guests', '~> 0.3'
 gem 'global_alerts'
 
 gem "rsolr", ">= 1.0", "< 3"
-gem "bootstrap", ">=4.3.1", "<6.0.0"
+gem "bootstrap", ">=4.3.1", "<5.0.0"
 gem "twitter-typeahead-rails", "0.11.1.pre.corejavascript"
-gem "sassc-rails", "~> 2.1"
+gem "dartsass-sprockets", "~> 3.2"
 gem "jquery-rails"
 gem "terser", '~> 1.2', '>= 1.2.6'
 
