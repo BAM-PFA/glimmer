@@ -4,7 +4,6 @@
 # enable_integrity!
 
 pin "application", preload: true
-pin "ga", to: "google_analytics.js"
 pin "slideshow-modal", to: "slideshow_modal.js"
 pin "modal", to: "modal.js"
 pin "focus", to: "focus.js"
@@ -15,18 +14,18 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "popper", to: 'popper.js', preload: true
 pin "bootstrap", to: 'bootstrap.min.js', preload: true
-pin "jquery", to: "https://code.jquery.com/jquery-3.7.1.min.js"
-pin "openseadragon", to: "openseadragon.js"
+pin "jquery", to: "https://code.jquery.com/jquery-3.7.1.min.js", preload: true
+pin "openseadragon", to: "openseadragon.js", preload: true
 
 # To use autocomplete, configure a solr.SuggestComponent in solrconfig.xml and set blacklight_config.autocomplete_enabled = true.
 # pin "@github/auto-complete-element", to: "https://cdn.skypack.dev/@github/auto-complete-element"
 
 pin "blacklight", to: "blacklight/blacklight.js", preload: true
-pin "blacklight-gallery", to: "blacklight_gallery/blacklight-gallery.js"
+pin "blacklight-gallery", to: "blacklight_gallery/blacklight-gallery.js", preload: true
 
 # chart.js is dependency of blacklight-range-limit, currently is not working
 # as vendored importmaps, but instead must be pinned to CDN. You may want to update
 # versions perioidically.
-pin "chart.js", to: "https://ga.jspm.io/npm:chart.js@4.2.0/dist/chart.js"
+pin "chart.js", to: "https://ga.jspm.io/npm:chart.js@4.2.0/dist/chart.js", preload: true
 # chart.js dependency
-pin "@kurkle/color", to: "https://ga.jspm.io/npm:@kurkle/color@0.3.2/dist/color.esm.js"
+pin "@kurkle/color", to: "https://ga.jspm.io/npm:@kurkle/color@0.3.2/dist/color.esm.js", preload: true

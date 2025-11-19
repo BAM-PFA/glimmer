@@ -2,25 +2,25 @@
  * focus.js
  */
 
-const FocusManagement = (() => {
-  const putFocus = el => {
-    return new Promise(resolve => {
-      if (el) {
-        let counter = 0
-        const attemptFocus = setInterval(() => {
-          el.focus()
-          if (el === document.activeElement || ++counter > 9) {
-            // Abort after success or ten attempts
-            clearInterval(attemptFocus)
-            resolve()
-          }
-        }, 100)
-      } else {
-        resolve()
-      }
-    })
-  }
+const putFocus = el => {
+  return new Promise(resolve => {
+    if (el) {
+      let counter = 0
+      const attemptFocus = setInterval(() => {
+        el.focus()
+        if (el === document.activeElement || ++counter > 9) {
+          // Abort after success or ten attempts
+          clearInterval(attemptFocus)
+          resolve()
+        }
+      }, 100)
+    } else {
+      resolve()
+    }
+  })
+}
 
+const FocusManagement = (() => {
   const onClickBookmarkCheckbox = (e, $thumbnailContainer) => {
     /* 1. Returns focus to the Bookmark checkbox after checking/unchecking.
      * 2. Temporarily adds a class to the container so that the checkbox will remain visible in masonry view
@@ -77,4 +77,7 @@ const FocusManagement = (() => {
   setBookmarkCheckboxHandlers()
 })
 
-export default FocusManagement
+export {
+  putFocus,
+  FocusManagement as default
+}

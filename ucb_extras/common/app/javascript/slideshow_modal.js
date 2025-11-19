@@ -1,7 +1,8 @@
 /**
  * slideshow_modal.js
  */
-import { FocusTrap } from 'modal'
+import { putFocus } from 'focus'
+import { toggleBackgroundElementsDisabled, FocusTrap } from 'modal'
 
 const SlideshowModalAccessibility = (() => {
   class Slideshow {
