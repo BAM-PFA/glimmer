@@ -26,6 +26,8 @@ Rails.application.configure do
 
   # Compress CSS using a preprocessor.
   config.assets.css_compressor = :sass
+  config.sass.inline_source_maps = true
+
   config.assets.js_compressor  = :terser
 
   # Fallback to assets pipeline if a precompiled asset is missed.

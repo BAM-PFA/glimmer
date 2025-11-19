@@ -10,10 +10,6 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
-
- *= require 'blacklight_gallery'
- *= require 'openseadragon'
- *= require 'x3dom'
 */
 
 @import 'variables';
@@ -21,6 +17,12 @@
 @import 'bootstrap';
 
 @import 'blacklight/blacklight';
+
+@import 'blacklight_gallery/default';
+
+@import 'openseadragon';
+
+@import 'x3dom';
 
 @import 'shared';
 
