@@ -8,16 +8,16 @@
     <div class="d-flex flex-row-reverse flex-wrap align-items-center mb-2">
       <%= link_to t('blacklight.search_history.clear.action_title'),
                   blacklight.clear_search_history_path,
-                  method: :delete,
                   data: {
-                    confirm: t('blacklight.search_history.clear.action_confirm'), # for rails-ujs
                     turbo_confirm: t('blacklight.search_history.clear.action_confirm'),
                     turbo_method: :delete
                   },
                   class: 'btn btn-danger ml-auto' %>
-      <h2 id="search-history-section-heading" class="section-heading mr-auto mb-0">
-        <%= t('blacklight.search_history.recent') %><span class="sr-only">, most recent first</span>
-      </h2>
+      <div class="pr-2 mr-auto">
+        <h2 id="search-history-section-heading" class="section-heading mb-0">
+          <%= t('blacklight.search_history.recent') %><span class="sr-only">, most recent first</span>
+        </h2>
+      </div>
     </div>
     <ul aria-labelledby="search-history-section-heading" class="search-history pl-0">
       <% index = 0 %>
