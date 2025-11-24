@@ -1,0 +1,195 @@
+.bampfa-splash {
+  margin-right: 30px;
+  margin-left: 15px;
+  margin-bottom: 40px;
+  .bampfa-splash-text {
+    font-family: RobotoLight, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+  }
+}
+.btn {
+  // Adjust for custom font so text looks vertically centered
+  padding-top: .45rem;
+  padding-bottom: 0.301rem;
+}
+.document h1 {
+  // this is document title on the show page
+  font-weight: 900;
+  font-size: 3em;
+}
+.documents-list .document .document-metadata {
+  line-height: 1.2rem;
+}
+.documents-list, .show-document {
+  .document .document-metadata {
+    dd {
+      font-family: RobotoLight, Helvetica, Arial, sans-serif;
+      font-weight: normal;
+    }
+    dt {
+      color: black;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+}
+.facet-field-heading {
+  font-size: 1rem;
+}
+.form-control {
+  font-size: 1rem;
+  color: black;
+}
+.gallery-caption-title {
+  font-family: RobotoBold, Helvetica, Arial, sans-serif;
+}
+.gallery-caption-date {
+  line-height: 2;
+}
+.gallery-caption-artist::after, .gallery-caption-title::after, .gallery-caption-date::after {
+  content: "\a";
+  white-space: pre;
+}
+.image-gallery {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(18.75em, 1fr));
+  box-sizing: border-box;
+  margin-bottom: 30px;
+  .gallery-item {
+    position: relative;
+    display: block;
+    img {
+      min-width: 18.75em;
+      max-height: 100%;
+    }
+  }
+}
+.load-more-button {
+  padding: 30px;
+  font-size: 1.125rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.minor-heading {
+  font-family: RobotoBold, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+.navbar.topbar .navbar-brand img {
+  width: 9em;
+}
+.page-title {
+  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 2.5em;
+}
+.section-heading {
+  font-family: RobotoBlack, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+.show-document .document .document-metadata {
+  line-height: 1.5em;
+  margin-bottom: 20px;
+  min-width: 14em;
+}
+.show-gallery {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(1, minmax(18.75em, 1fr));
+  box-sizing: border-box;
+  margin-bottom: 30px;
+}
+.show-image {
+  max-width: 100%;
+}
+.show-preview {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(12.5em, 1fr));
+  box-sizing: border-box;
+  margin: 15px;
+  font-family: RobotoLight, Helvetica, Arial, sans-serif;
+}
+.show-preview-container {
+	display:inherit;
+}
+.show-preview-heading {
+  font-family: RobotoLight, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 1.875rem;
+  margin: 15px;
+}
+.show-preview-item img {
+  min-width: 12.5em;
+  max-height: 100%;
+}
+.site-footer {
+  background-color: #def2fc;
+  color: black;
+  font-size: 1.25em;
+  font-weight: 100;
+  padding: 1em 1em 1em;
+  a.nav-link {
+    color: black;
+    font-family: RobotoBold, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    &:hover:not([aria-disabled]) {
+      text-decoration: underline;
+    }
+  }
+  p {
+    line-height: 1.5;
+  }
+  ul li:not(.social) {
+    max-width: 12em;
+    padding: 4px 20px 16px;
+  }
+  .blacklight-logo {
+    width: 6.25em;
+  }
+  .footer-logo {
+    max-width: 150px;
+    object-fit: cover;
+    width: 100%;
+  }
+}
+.site-footer-text {
+  font-family: RobotoLight, Helvetica, Arial, sans-serif;
+  font-size: 1em;
+  color: black;
+  padding: 1em 0 1em 1em;
+  font-weight: normal;
+  word-wrap: break-word;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(Roboto/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: RobotoBlack;
+  font-weight: bold;
+  src: url(Roboto/Roboto-Black.ttf);
+}
+@font-face {
+  font-family: RobotoBold;
+  font-weight: bold;
+  src: url(Roboto/Roboto-Bold.ttf);
+}
+@font-face {
+  font-family: RobotoLight;
+  src: url(Roboto/Roboto-Light.ttf);
+}
+@font-face {
+  font-family: RobotoMedium;
+  src: url(Roboto/Roboto-Medium.ttf);
+}
+
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+}
+h3.index_title > a {
+  font-family: RobotoMedium, Helvetica, Arial, sans-serif;
+}
