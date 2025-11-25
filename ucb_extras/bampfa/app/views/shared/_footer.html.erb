@@ -1,6 +1,5 @@
-<script src="https://use.fontawesome.com/4c5d5212e2.js"></script>
 <footer class="site-footer container-fluid">
-  <ul aria-label="secondary navigation links" class="w-100 d-md-flex flex-wrap justify-content-between">
+  <ul aria-label="secondary navigation links" class="d-md-flex flex-wrap justify-content-between px-2 w-100">
     <li>
       <a aria-current="<%= current_page?('/', check_parameters: true) ? 'page' : false %>" href="/" class="nav-link">Home</a>
     </li>
@@ -16,25 +15,27 @@
     <li>
       <a href="https://bampfa.org/about/contact-us" class="nav-link">Help</a>
      </li>
-    <li>
+    <li class="social">
       <ul aria-label="social media links" class="d-flex flex-nowrap justify-content-between">
-        <li class="pl-1">
-          <a href="https://www.facebook.com/bampfa/" class="nav-link"><i class="fa fa-facebook" aria-hidden="false" role="img" aria-label="Facebook"></i></a>
+        <li>
+          <a href="https://www.facebook.com/bampfa/" class="nav-link"><i class="fab fa-lg fa-facebook" aria-hidden="false" role="img" aria-label="Facebook"></i></a>
         </li>
         <li>
-          <a href="https://twitter.com/bampfa/" class="nav-link"><i class="fa fa-twitter" aria-hidden="false" role="img" aria-label="Twitter"></i></a>
+          <a href="https://twitter.com/bampfa/" class="nav-link"><i class="fab fa-lg fa-twitter" aria-hidden="false" role="img" aria-label="Twitter"></i></a>
         </li>
         <li>
-          <a href="https://www.instagram.com/bampfa/" class="nav-link"><i class="fa fa-instagram" aria-hidden="false" role="img" aria-label="Instagram"></i></a>
+          <a href="https://www.instagram.com/bampfa/" class="nav-link"><i class="fab fa-lg fa-instagram" aria-hidden="false" role="img" aria-label="Instagram"></i></a>
         </li>
       </ul>
     </li>
   </ul>
   <div class="row">
-    <div class="col-xs-5 col-sm-4 p-4">
-      <a href="https://bampfa.org"><img class="footer-logo" src="/footer-logo-bampfa.png" alt="bampfa"></a>
+    <div class="col-xs-5 col-sm-4 col-lg-3 d-flex p-4">
+      <a class="ml-sm-auto mr-lg-3 mr-xl-5" href="https://bampfa.org">
+        <img class="footer-logo" src="/footer-logo-bampfa.png" alt="bampfa">
+       </a>
     </div>
-    <div class="col-xs-7 col-sm-8 site-footer-text">
+    <div class="col-xs-7 col-sm-8 col-lg-9 site-footer-text">
       <p>
         Committed to
         <a href="https://dap.berkeley.edu/get-help/report-web-accessibility-issue">accessibility,</a>

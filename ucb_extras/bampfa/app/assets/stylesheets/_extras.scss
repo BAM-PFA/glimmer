@@ -138,20 +138,18 @@
       text-decoration: underline;
     }
   }
+  .blacklight-logo {
+    width: 6.25em;
+  }
+  .footer-logo {
+    max-width: 20.2rem;
+  }
   p {
     line-height: 1.5;
   }
   ul li:not(.social) {
     max-width: 12em;
     padding: 4px 20px 16px;
-  }
-  .blacklight-logo {
-    width: 6.25em;
-  }
-  .footer-logo {
-    max-width: 150px;
-    object-fit: cover;
-    width: 100%;
   }
 }
 .site-footer-text {

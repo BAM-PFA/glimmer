@@ -11,6 +11,11 @@ import Blacklight from 'blacklight'
 import 'blacklight-gallery'
 import 'bootstrap'
 import BlacklightRangeLimit from 'blacklight-range-limit'
+import {far} from "@fortawesome/free-regular-svg-icons"
+import {fas} from "@fortawesome/free-solid-svg-icons"
+import {fab} from "@fortawesome/free-brands-svg-icons"
+import {library} from "@fortawesome/fontawesome-svg-core"
+import "@fortawesome/fontawesome-free"
 import FocusManagement from 'focus'
 import ModalAccessibility from 'modal'
 import SlideshowModalAccessibility from 'slideshow-modal'
@@ -29,6 +34,8 @@ Blacklight.onLoad(function() {
   if (window.x3dom) {
     x3dom.reload()
   }
+
+  library.add(far, fas, fab)
 
   // Initialize our custom JS
   FocusManagement()
