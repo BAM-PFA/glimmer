@@ -138,8 +138,8 @@
     width: 7.25em;
   }
   .footer-logo {
+    max-width: 15.5rem;
     object-fit: cover;
-    width: 150px;
   }
   .social {
     padding: 0px 12px;
@@ -209,7 +209,7 @@ h4.facets-heading {
     width: 650px;
   }
   .site-footer {
-    padding: 100px 10% 40px !important;
+    padding: 100px 7% 40px !important;
   }
 }
 @media print {

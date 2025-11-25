@@ -23,7 +23,7 @@
   .btn-close {
     color: theme-color-level(danger, 5) !important;
     &:focus, &.focus {
-      outline-color: theme-color-level(danger, 5) !important;
+      outline-color: theme-color-level(danger, 3) !important;
     }
   }
 }
@@ -31,7 +31,7 @@
   .btn-close {
     color: theme-color-level(info, 3) !important;
     &:focus, &.focus {
-      outline-color: theme-color-level(info, 3) !important;
+      outline-color: theme-color-level(info, 2) !important;
     }
   }
 }
@@ -39,7 +39,7 @@
   .btn-close {
     color: theme-color-level(success, 5) !important;
     &:focus, &.focus {
-      outline-color: theme-color-level(success, 5) !important;
+      outline-color: theme-color-level(success, 3) !important;
     }
   }
 }
@@ -47,7 +47,7 @@
   .btn-close {
     color: theme-color-level(warning, 5) !important;
     &:focus, &.focus {
-      outline-color: theme-color-level(warning, 5) !important;
+      outline-color: theme-color-level(warning, 3) !important;
     }
   }
 }
@@ -410,9 +410,8 @@ a:not(.btn):not(.nav-link):not(.navbar-brand):focus,
 }
 .site-footer ul {
   list-style: none;
-  margin-bottom: 0px;
-  margin-left: -10px;
-  padding-left: 0px;
+  margin: 0 auto;
+  max-width: 110rem;
 }
 .skip-links {
   position: absolute;
