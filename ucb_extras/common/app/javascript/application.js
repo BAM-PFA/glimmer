@@ -1,15 +1,16 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+window.process = { env: { NODE_ENV: 'production' } };
 
 import '@hotwired/turbo-rails'
 import '@hotwired/stimulus'
 import '@hotwired/stimulus-loading'
 import 'controllers'
 import 'jquery'
+import 'bootstrap'
 import Rails from '@rails/ujs'
 import 'openseadragon'
 import Blacklight from 'blacklight'
 import 'blacklight-gallery'
-import 'bootstrap'
 import BlacklightRangeLimit from 'blacklight-range-limit'
 import {far} from "@fortawesome/free-regular-svg-icons"
 import {fas} from "@fortawesome/free-solid-svg-icons"
