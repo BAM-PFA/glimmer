@@ -182,7 +182,7 @@ GEM
       rake (>= 13)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    importmap-rails (2.0.3)
+    importmap-rails (1.2.3)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
@@ -505,7 +505,7 @@ DEPENDENCIES
   debug
   devise
   devise-guests (~> 0.3)
-  importmap-rails
+  importmap-rails (~> 1.0)
   jbuilder (~> 2.7)
   jquery-rails
   openseadragon (~> 1.0)

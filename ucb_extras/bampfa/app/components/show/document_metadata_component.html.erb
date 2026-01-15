@@ -1,7 +1,7 @@
 <%= _artist = nil %>
 <%# default partial to display solr document fields in catalog show view -%>
 <div class="row">
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-6 col-xl-5">
     <!-- images -->
     <% unless @document[:blob_ss].nil? %>
       <div class="show-gallery">
@@ -20,7 +20,7 @@
     <% end %>
   </div>
   <!-- metadata -->
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-6 col-xl-7">
     <dl class="<%= @classes %>">
       <% @doc_presenter.fields_to_render.each do |field_name, field| -%>
         <% unless field_name == "blob_ss" %>

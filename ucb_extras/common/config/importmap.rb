@@ -13,10 +13,9 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "@rails/ujs", to: "https://ga.jspm.io/npm:@rails/ujs@7.1.3-4/app/assets/javascripts/rails-ujs.esm.js"
-pin "popper", to: 'popper.js'
-pin "bootstrap", to: 'bootstrap.min.js'
-pin "jquery", to: "https://code.jquery.com/jquery-3.7.1.min.js"
-pin "openseadragon", to: "openseadragon.js"
+pin "bootstrap", to: "bootstrap.min.js", preload: true
+pin "jquery", to: "jquery.min.js", preload: true
+pin "openseadragon", to: "openseadragon.js", preload: true
 
 # To use autocomplete, configure a solr.SuggestComponent in solrconfig.xml and set blacklight_config.autocomplete_enabled = true.
 # pin "@github/auto-complete-element", to: "https://cdn.skypack.dev/@github/auto-complete-element"
