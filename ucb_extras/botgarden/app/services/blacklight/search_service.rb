@@ -3,6 +3,8 @@
 # SearchService returns search results from the repository
 module Blacklight
   class SearchService
+    require Rails.root.join('lib', 'blacklight','solr','repository.rb').to_s
+
     def initialize(config:, search_state: nil, user_params: nil, search_builder_class: config.search_builder_class, **context)
       @blacklight_config = config
       @search_state = search_state || Blacklight::SearchState.new(user_params || {}, config)
@@ -26,6 +28,8 @@ module Blacklight
     # @yield [search_builder] optional block yields configured SearchBuilder, caller can modify or create new SearchBuilder to be used. Block should return SearchBuilder to be used.
     # @return [Blacklight::Solr::Response] the solr response object
     def search_results
+      # puts "FROM search_results WEOIRJEWOIJRO"
+
       builder = search_builder.with(search_state)
       builder.page = search_state.page
       builder.rows = search_state.per_page
@@ -167,6 +171,8 @@ module Blacklight
     end
 
     def fetch_one(id, extra_controller_params)
+      require Rails.root.join('lib', 'blacklight','solr','repository.rb').to_s
+      # puts repository.inspect
       solr_response = repository.find id, extra_controller_params
       solr_response.documents.first
     end

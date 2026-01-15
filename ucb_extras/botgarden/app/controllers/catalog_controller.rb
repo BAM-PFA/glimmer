@@ -219,25 +219,29 @@ class CatalogController < ApplicationController
     config.autocomplete_path = 'suggest'
 
     # FACET FIELDS
+    config.add_facet_field 'scientificName_s', label: 'Scientific Name', limit: true
+    config.add_facet_field 'family_s', label: 'Family', limit: true
+    config.add_facet_field 'collector_s', label: 'Collector', limit: true
+    config.add_facet_field 'locality_s', label: 'Locality', limit: true
+    config.add_facet_field 'collcounty_ss', label: 'County', limit: true
+    config.add_facet_field 'collstate_ss', label: 'State', limit: true
+    # config.add_facet_field 'accessrestrictions_s', label: 'accessrestrictions_s', limit: true
     config.add_facet_field 'collcountry_ss', label: 'Country', limit: true
-    # config.add_facet_field 'locality_s', label: 'Locality', limit: true
-    config.add_facet_field 'hybridflag_s', label: 'hybridflag_s', limit: true
-    config.add_facet_field 'accessrestrictions_s', label: 'accessrestrictions_s', limit: true
     config.add_facet_field 'rare_s', label: 'rare_s', limit: true
-    # config.add_facet_field 'datemade_s', label: 'Date Made', limit: true
-    config.add_facet_field("deaddate_s") do |field|
-      field.include_in_advanced_search = false
-      field.label = 'Date dead'
-      field.range = true
-      field.index_range = true
-    end
-    config.add_facet_field("collectiondate_s") do |field|
-      # field[:4]
-      field.include_in_advanced_search = false
-      field.label = 'Date collected'
-      field.range = true
-      field.index_range = true
-    end
+    config.add_facet_field 'deadflag_s', label: 'Date Made', limit: true
+    # config.add_facet_field("deaddate_s") do |field|
+    #   field.include_in_advanced_search = false
+    #   field.label = 'Date dead'
+    #   field.range = true
+    #   field.index_range = true
+    # end
+    # config.add_facet_field("collectiondate_s") do |field|
+    #   # field[:4]
+    #   field.include_in_advanced_search = false
+    #   field.label = 'Date collected'
+    #   field.range = true
+    #   field.index_range = true
+    # end
     # config.add_facet_field 'measurement_s', label: 'Dimensions', limit: true
     # config.add_facet_field 'status_s', label: 'Status', limit: true
     config.add_facet_field 'Has image', query: {
@@ -246,54 +250,72 @@ class CatalogController < ApplicationController
     }
 
     # SEARCH FIELDS
-    config.add_search_field 'collectiondate_s', label: 'collectiondate_s'
-    config.add_search_field 'family_s', label: 'family_s'
-    config.add_search_field 'collcountry_txt', label: 'collcountry_txt'
-    config.add_search_field 'accessionnumber_s', label: 'accessionnumber_s'
-    config.add_search_field 'commonname_s', label: 'commonname_s'
-    config.add_search_field 'canonicalName_s', label: 'canonicalName_s'
-    config.add_search_field 'canonicalNameComplete_s', label: 'canonicalNameComplete_s'
-    config.add_search_field 'scientificName_s', label: 'scientificName_s'
-    config.add_search_field 'specificEpithet_s', label: 'specificEpithet_s'
-    config.add_search_field 'determination_s', label: 'determination_s'
-    config.add_search_field 'gardenlocation_s', label: 'gardenlocation_s'
-    config.add_search_field 'rare_s', label: 'rare_s'
+    config.add_search_field 'scientificName_s', label: 'Scientific Name'
+    config.add_search_field 'commonname_s', label: 'Common Name'
+    config.add_search_field 'family_s', label: 'Family'
+    config.add_search_field 'order_s', label: 'Order'
+    config.add_search_field 'division_s', label: 'Division'
+    config.add_search_field 'determination_s', label: 'Determination'
+    config.add_search_field 'accessionnumber_s', label: 'Accession Number'
+    config.add_search_field 'gardenlocation_s', label: 'Garden Location'
+    config.add_search_field 'deadflag_s', label: 'Dead?'
+    config.add_search_field 'provenancetype_s', label: 'Provenance Type'
+    config.add_search_field 'collcountry_ss', label: 'Country'
+    config.add_search_field 'collstate_ss', label: 'State'
+    config.add_search_field 'collcounty_ss', label: 'County'
+    config.add_search_field 'locality_s', label: 'Place Name'
+    config.add_search_field 'collector_s', label: 'Collector'
+    config.add_search_field 'collectornumber_s', label: 'Collector Number'
+    config.add_search_field 'collectiondate_s', label: 'Collection Date'
+    config.add_search_field 'rare_s', label: 'Rare?'
+    config.add_search_field 'conserveorg_ss', label: 'Conservation Organization'
+    config.add_search_field 'conservecat_ss', label: 'Conservation Category'
+    config.add_search_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
+    config.add_search_field 'flowercolor_s', label: 'Flower Color'
+    config.add_search_field 'habit_s', label: 'Habit'
 
     # 'SHOW' VIEW FIELDS 
-    config.add_show_field "collectiondate_s", label: 'collectiondate_s'
-    config.add_show_field 'locality_s', label: 'locality_s'
-    config.add_show_field 'accessionnumber_s', label: 'accessionnumber_s'
-    config.add_show_field 'gardenlocation_s', label: 'gardenlocation'
-    config.add_show_field 'commonname_s', label: 'commonname_s'
-    config.add_show_field 'canonicalName_s', label: 'canonicalName_s'
-    config.add_show_field 'canonicalNameComplete_s', label: 'canonicalNameComplete_s'
-    config.add_show_field 'scientificName_s', label: 'scientificName_s'
-    config.add_show_field 'specificEpithet_s', label: 'specificEpithet_s'
-    config.add_show_field 'family_s', label: 'family_s'
-    config.add_show_field 'determination_s', label: 'determination_s'
-    config.add_show_field 'rare_xs', label: 'rare_s'
-    config.add_show_field 'elevation_s', label: 'elevation_s'
-    config.add_show_field 'deaddate_s', label: 'deaddate_s'
+    config.add_show_field 'accessionnumber_s', label: 'Accession Number'
+    config.add_show_field 'determination_s', label: 'Determination'
+    config.add_show_field 'commonname_s', label: 'Common Name'
+    config.add_show_field 'family_s', label: 'Family'
+    config.add_show_field 'gardenlocation_s', label: 'Garden Location'
+    config.add_show_field 'deadflag_s', label: 'Dead?'
+    config.add_show_field 'provenancetype_s', label: 'Provenance Type'
+    config.add_show_field 'materialtype_s', label: 'Material Received As'
+    config.add_show_field 'sex_s', label: 'Sex'
+    config.add_show_field 'locality_s', label: 'Place Name'
+    config.add_show_field 'collector_s', label: 'Collector'
+    config.add_show_field 'collectornumber_s', label: 'Collector Number'
+    config.add_show_field 'collectiondate_s', label: 'Collection Date'
+    config.add_show_field 'rare_s', label: 'Rare?'
+    config.add_show_field 'conservecat_ss', label: 'Conservation Category'
+    config.add_show_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
+    config.add_show_field 'voucherlist_s', label: 'Voucher Institution'
     config.add_show_field 'floweringverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Flowering Months'
     config.add_show_field 'fruitingverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Fruiting Months'
-    config.add_show_field 'deadflag_s', label: 'deadflag_s'
     config.add_show_field 'latitude_f', helper_method: 'render_map', label: 'map'
     # config.add_show_field 'blob_ss', helper_method: 'render_media', label: 'Images'
     # gallery
 
     # 'INDEX' VIEW FIELDS
-    config.add_index_field 'collectiondate_s', label: 'collectiondate_s'
-    config.add_index_field 'accessionnumber_s', label: 'accessionnumber_s'
-    config.add_index_field 'locality_s', label: 'locality_s'
-    config.add_index_field 'commonname_s', label: 'commonname_s'
-    config.add_index_field 'canonicalName_s', label: 'canonicalName_s'
-    config.add_index_field 'canonicalNameComplete_s', label: 'canonicalNameComplete_s'
-    config.add_index_field 'scientificName_s', label: 'scientificName_s'
-    config.add_index_field 'specificEpithet_s', label: 'specificEpithet_s'
-    config.add_index_field 'determination_s', label: 'determination_s'
-    config.add_index_field 'rare_s', label: 'rare_s'
-    config.add_index_field 'floweringverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Flowering Months'
-    config.add_index_field 'fruitingverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Fruiting Months'
+    config.add_index_field 'accessionnumber_s', label: 'Accession Number'
+    config.add_index_field 'determination_s', label: 'Determination'
+    config.add_index_field 'scientificName_s', label: 'Scientific Name'
+    config.add_index_field 'commonname_s', label: 'Common Name'
+    config.add_index_field 'gardenlocation_s', label: 'Garden Location'
+    config.add_index_field 'provenancetype_s', label: 'Provenance Type'
+    config.add_index_field 'locality_s', label: 'Place Name'
+    config.add_index_field 'collector_s', label: 'Collector'
+    config.add_index_field 'collectornumber_s', label: 'Collector Number'
+    config.add_index_field 'rare_s', label: 'Rare?'
+    config.add_index_field 'deaddate_s', label: 'Dead Date'
+    config.add_index_field 'flowercolor_s', label: 'Flower Color'
+    config.add_index_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
+    # config.add_index_field 'floweringverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Flowering Months'
+    # config.add_index_field 'fruitingverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Fruiting Months'
+    # config.add_index_field 'canonicalName_s', label: 'canonicalName_s'
+    # config.add_index_field 'canonicalNameComplete_s', label: 'canonicalNameComplete_s'
     # config.add_index_field 'blob_ss', helper_method: 'render_media', label: 'Images'
 
     # sort
