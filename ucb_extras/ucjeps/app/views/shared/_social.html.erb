@@ -1,0 +1,23 @@
+<%# = simple_format @document.to_yaml %>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@ucbgarden"/>
+<% if @document %>
+  <meta property="og:title"       content="<%= @document['commonname_s'] %>" />
+  <meta property="og:description" content="<%= @document['canonicalNameComplete_s'] %>" />
+  <% unless @document['blob_ss'].nil? %>
+    <meta property="og:image"     content="https://webapps.cspace.berkeley.edu/botgarden/imageserver/blobs/<%= @document['blob_ss'].join('')[0...23] %>/derivatives/Medium/content"/>
+    <meta property="twitter:image:alt" content="Image of <%= @document['commonname_s'] %> in the UC Botanical Garden collection."/>
+  <% else %>
+    <meta property="og:image"     content="/site_image.jpg" />
+    <meta property="twitter:image:alt" content="Entryway to the UC Botanical Garden."/>
+  <% end %>
+  <meta property="og:url"         content="https://collection.botanicalgarden.berkeley.edu/catalog/<%= @document['objcsid_s'] %>" />
+  <meta property="og:type"        content="plant" />
+<% else %>
+  <meta property="og:url"         content="https://botanicalgarden.berkeley.edu/"/>
+  <meta property="og:title"       content="UC Botanical Garden collection" />
+  <meta property="og:creator" content="UC Botanical Garden" />
+  <meta property="og:description" content="The UC Botanical Garden is an invaluable resource for research, conservation, education" />
+  <meta property="og:image"       content="/site_image.jpg" />
+    <meta property="twitter:image:alt" content="Entryway to the UC Botanical Garden."/>
+<% end %>
