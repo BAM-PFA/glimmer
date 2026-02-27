@@ -4,8 +4,8 @@
         raw(t('views.pagination.previous')),
         params: {
           **@facet_field.search_state.to_h,
-          sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.prev_page} loaded"),
-          focus_target: ERB::Util.url_encode(["##{@html_id}-prev-link", "##{@html_id}-next-link"])
+          sr_alert: "Page #{@facet_field.paginator.prev_page} loaded",
+          focus_target: ["##{@html_id}-prev-link", "##{@html_id}-next-link"]
         },
         param_name: param_name,
         id: "#{@html_id}-prev-link",
@@ -25,8 +25,8 @@
         raw(t('views.pagination.next')),
         params: {
           **@facet_field.search_state.to_h,
-          sr_alert: ERB::Util.url_encode("Page #{@facet_field.paginator.next_page} loaded"),
-          focus_target: ERB::Util.url_encode(["##{@html_id}-next-link", "##{@html_id}-prev-link"])
+          sr_alert: "Page #{@facet_field.paginator.next_page} loaded",
+          focus_target: ["##{@html_id}-next-link", "##{@html_id}-prev-link"]
         },
         param_name: param_name,
         id: "#{@html_id}-next-link",
