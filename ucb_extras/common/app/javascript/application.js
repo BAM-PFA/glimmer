@@ -27,6 +27,8 @@ Rails.start()
 BlacklightRangeLimit.init({onLoadHandler: Blacklight.onLoad})
 
 Blacklight.onLoad(function() {
+  window.Blacklight = Blacklight
+
   // Initialize blacklight-gallery
   $('.documents-masonry').BlacklightMasonry()
   $('.documents-slideshow').slideshow()
