@@ -7,7 +7,7 @@ import re
 import shutil
 import sys
 
-tenant_list = ['bampfa','cinefiles','pahma']
+tenant_list = ['bampfa','cinefiles','pahma','botgarden']
 if len(sys.argv) <=1 or sys.argv[1] not in tenant_list:
     print("Please specify a valid tenant from this list: "+', '.join(tenant_list))
     print("Like so: `python3 tenant_installer.py TENANT`")
