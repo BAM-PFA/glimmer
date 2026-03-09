@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# lil helper script to deploy all 3 blacklight apps
+# lil helper script to deploy all 5 blacklight apps
 
 function usage() {
     echo
@@ -28,7 +28,9 @@ git pull -v
 
 cd ${HOME}/projects
 
-# redeploy all 3
+# redeploy all 5
 glimmer/deploy.sh ${YYYYMMDDHHMM}.pahma pahma $2 $1
+glimmer/deploy.sh ${YYYYMMDDHHMM}.ucjeps ucjeps $2 $1
 glimmer/deploy.sh ${YYYYMMDDHHMM}.cinefiles cinefiles $2 $1
+glimmer/deploy.sh ${YYYYMMDDHHMM}.botgarden botgarden $2 $1
 glimmer/deploy.sh ${YYYYMMDDHHMM}.bampfa bampfa $2 $1
