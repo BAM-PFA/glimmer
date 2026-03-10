@@ -26,6 +26,9 @@ Rails.application.configure do
 
   # Compress CSS using a preprocessor.
   config.assets.css_compressor = :sass
+  config.sass.inline_source_maps = true
+
+  config.assets.js_compressor  = :terser
 
   # Fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = true
@@ -73,10 +76,10 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
   # Don't log any deprecations.
-  Deprecation.default_deprecation_behavior = :silence
+  config.active_support.report_deprecations = false
 
   # don't complain about the fact that we are using sqlite3
-  config.active_record.sqlite3_production_warning = false
+  # config.active_record.sqlite3_production_warning = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
@@ -95,7 +98,10 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # set host for password resets
-  config.action_mailer.default_url_options = { :host => 'collection.bampfa.berkeley.edu', :from => 'cspace-support@lists.berkeley.edu' }
+  config.action_mailer.default_url_options = {
+    :host => 'collection.bampfa.berkeley.edu',
+    :from => 'cspace-support@lists.berkeley.edu'
+  }
   config.action_mailer.delivery_method = :sendmail
 
 end
