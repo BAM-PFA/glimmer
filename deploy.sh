@@ -23,7 +23,7 @@ if ! grep -q " $3 " <<< " prod dev "; then
     usage
 fi
 
-WHOLE_LIST="bampfa cinefiles pahma"
+WHOLE_LIST="bampfa botgarden cinefiles pahma ucjeps"
 museum="$2"
 if [[ ! $WHOLE_LIST =~ .*${museum}.* || "$museum" == "" ]]
 then

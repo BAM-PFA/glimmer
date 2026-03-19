@@ -89,7 +89,7 @@ module ApplicationHelper
     solr_params.each do |k,v|
       endpoint_params+="#{k} : #{v} "
     end
-    url_string = "https://webapps.cspace.berkeley.edu/solr/botgarden-public/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
+    url_string = "https://webapps.cspace.berkeley.edu/solr/ucjeps-public/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
     url_string = url_string.gsub("'","%22").gsub(" ","%20")
     puts url_string
     
@@ -123,8 +123,6 @@ module ApplicationHelper
     results_per_page = 500
     requery_url_string = "#{requery_url}&rows=#{results_per_page}"
     response = get_single_solr_page(requery_url_string,0)
-    puts "response"
-    puts response
     
     total_items = response['response']['numFound'].to_i
     number_of_full_pages, last_page_num_items = total_items.divmod(results_per_page)
@@ -302,22 +300,20 @@ module ApplicationHelper
     ### IGNORE SSL CERT JUST FOR TESTING
     res=nil
 
-    # Net::HTTP.start(requery_url.host, requery_url.port,
-    #   :use_ssl => requery_url.scheme == 'https', 
-    #   :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+    Net::HTTP.start(requery_url.host, requery_url.port,
+      :use_ssl => requery_url.scheme == 'https', 
+      :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
       
-    #   request = Net::HTTP::Get.new(requery_url.request_uri)
-    #   res = http.request(request)
+      request = Net::HTTP::Get.new(requery_url.request_uri)
+      res = http.request(request)
       
       
-    # end
+    end
 
 
     ###
 
-    res = Net::HTTP.get_response(requery_url,:verify_mode => OpenSSL::SSL::VERIFY_NONE)
-    puts "res"
-    puts res
+    # res = Net::HTTP.get_response(requery_url,:verify_mode => OpenSSL::SSL::VERIFY_NONE)
     if res.is_a?(Net::HTTPSuccess) 
       response = JSON.parse(res.body)
       return response
@@ -494,7 +490,7 @@ module ApplicationHelper
   end
 
   def render_csid csid, derivative
-    "https://webapps.cspace.berkeley.edu/botgarden/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
+    "https://webapps.cspace.berkeley.edu/ucjeps/imageserver/blobs/#{csid}/derivatives/#{derivative}/content"
   end
 
   def render_status options = {}
@@ -640,7 +636,7 @@ module ApplicationHelper
       options[:value].collect do |audio_csid|
         content_tag(:audio,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 audio in MPEG format.",
-            src: "https://webapps.cspace.berkeley.edu/botgarden/imageserver/blobs/#{audio_csid}/content",
+            src: "https://webapps.cspace.berkeley.edu/ucjeps/imageserver/blobs/#{audio_csid}/content",
             id: 'audio_csid',
             type: 'audio/mpeg'),
           controls: 'controls',
@@ -656,7 +652,7 @@ module ApplicationHelper
       options[:value].collect do |video_csid|
         content_tag(:video,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264.",
-            src: "https://webapps.cspace.berkeley.edu/botgarden/imageserver/blobs/#{video_csid}/content",
+            src: "https://webapps.cspace.berkeley.edu/ucjeps/imageserver/blobs/#{video_csid}/content",
             id: 'video_csid',
             type: 'video/mp4'),
           controls: 'controls',
@@ -674,7 +670,7 @@ module ApplicationHelper
         l2 = audio_md5[2..3]
         content_tag(:audio,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 audio in MPEG format.",
-            src: "https://cspace-prod-02.ist.berkeley.edu/botgarden_nuxeo/data/#{l1}/#{l2}/#{audio_md5}",
+            src: "https://cspace-prod-02.ist.berkeley.edu/ucjeps_nuxeo/data/#{l1}/#{l2}/#{audio_md5}",
             id: 'audio_md5',
             type: 'audio/mpeg'),
           controls: 'controls',
@@ -692,7 +688,7 @@ module ApplicationHelper
         l2 = video_md5[2..3]
         content_tag(:video,
           content_tag(:source, "I'm sorry; your browser doesn't support HTML5 video in MP4 with H.264.",
-            src: "https://cspace-prod-02.ist.berkeley.edu/botgarden_nuxeo/data/#{l1}/#{l2}/#{video_md5}",
+            src: "https://cspace-prod-02.ist.berkeley.edu/ucjeps_nuxeo/data/#{l1}/#{l2}/#{video_md5}",
             id: 'video_md5',
             type: 'video/mp4'),
           controls: 'controls',
@@ -709,7 +705,7 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://webapps.cspace.berkeley.edu/botgarden/imageserver/blobs/#{x3d_csid}/content",
+            url: "https://webapps.cspace.berkeley.edu/ucjeps/imageserver/blobs/#{x3d_csid}/content",
             id: 'x3d',
             type: 'model/x3d+xml')),
         style: 'margin-bottom: 6px; height: 660px; width: 660px;')
@@ -727,7 +723,7 @@ module ApplicationHelper
         content_tag(:x3d,
           content_tag(:scene,
             content_tag(:inline, '',
-            url: "https://cspace-prod-02.ist.berkeley.edu/botgarden_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
+            url: "https://cspace-prod-02.ist.berkeley.edu/ucjeps_nuxeo/data/#{l1}/#{l2}/#{x3d_md5}",
             class: 'x3d',
             type: 'model/x3d+xml')),
           style: 'margin-bottom: 6px; height: 660px; width: 660px;')

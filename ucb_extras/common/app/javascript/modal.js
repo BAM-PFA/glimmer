@@ -1,7 +1,7 @@
 /**
  * modal.js
  */
-import { putFocus } from 'focus'
+import { putFocus, putFocusOnTarget } from 'focus'
 
 const focusableDescendantsSelector = ':where(button, input:not([type="hidden"]), textarea, select, a:any-link, *[tabindex]):not([aria-hidden="true"]):not([hidden]):not(disabled):not([id^="focus-trap"])'
 
@@ -129,30 +129,33 @@ class FocusTrap {
   }
 }
 
-
 const ModalAccessibility = (() => {
   const onModalShow = e => {
     /* When the modal is open, content outside the modal should not be accessible via
      * keyboard or assistive technology. */
     const modalEl = e.target
-    const modalTitle = modalEl.querySelector('#modal-title').textContent
     const focusTrap = new FocusTrap(modalEl)
 
     focusTrap.focusFirstDescendant()
     setTimeout(focusTrap.activate, 1000)
 
     toggleBackgroundElementsDisabled(true)
+    modalEl.removeAttribute('aria-hidden')
 
     const onClose = e => {
-      onModalHide(modalTitle)
       focusTrap.deactivate()
+      onModalHide(e)
     }
-    modalEl.addEventListener('hide.blacklight.blacklight-modal', onClose, {once: true})
+    // We use the native <dialog> 'close' event because 'hide.blacklight.blacklight-modal'
+    // fails to fire in some instances when the Escape key is pressed.
+    modalEl.addEventListener('close', onClose, {once: true})
   }
 
-  const onModalHide = modalTitle => {
+  const onModalHide = e => {
     /* 1. Return the elements outside the modal to their original state.
     * 2. Return focus to the element that triggered the modal. */
+    const modalEl = e.target
+    const modalTitle = modalEl.querySelector('#modal-title').textContent
     const selector = `:contains("${modalTitle}")`
     const modalTrigger = $(`${Blacklight.Modal.triggerLinkSelector}${selector}, ${Blacklight.Modal.triggerFormSelector}${selector}`)
     toggleBackgroundElementsDisabled(false)
