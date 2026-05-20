@@ -215,10 +215,11 @@ class CatalogController < ApplicationController
     config.spell_max = 5
 
     # Configuration for autocomplete suggestor
-    config.autocomplete_enabled = false
+    config.autocomplete_enabled = true
     config.autocomplete_path = 'suggest'
 
     # FACET FIELDS
+    config.add_facet_field 'deadflag_s', label: 'Dead plant?', limit: true
     config.add_facet_field 'scientificName_s', label: 'Scientific Name', limit: true
     config.add_facet_field 'family_s', label: 'Family', limit: true
     config.add_facet_field 'collector_s', label: 'Collector', limit: true
@@ -227,8 +228,7 @@ class CatalogController < ApplicationController
     config.add_facet_field 'collstate_ss', label: 'State', limit: true
     # config.add_facet_field 'accessrestrictions_s', label: 'accessrestrictions_s', limit: true
     config.add_facet_field 'collcountry_ss', label: 'Country', limit: true
-    config.add_facet_field 'rare_s', label: 'rare_s', limit: true
-    config.add_facet_field 'deadflag_s', label: 'Date Made', limit: true
+    config.add_facet_field 'rare_s', label: 'Rare?', limit: true
     # config.add_facet_field("deaddate_s") do |field|
     #   field.include_in_advanced_search = false
     #   field.label = 'Date dead'
@@ -300,28 +300,34 @@ class CatalogController < ApplicationController
 
     # 'INDEX' VIEW FIELDS
     config.add_index_field 'accessionnumber_s', label: 'Accession Number'
-    config.add_index_field 'determination_s', label: 'Determination'
+    # config.add_index_field 'determination_s', label: 'Determination'
     config.add_index_field 'scientificName_s', label: 'Scientific Name'
-    config.add_index_field 'commonname_s', label: 'Common Name'
     config.add_index_field 'gardenlocation_s', label: 'Garden Location'
-    config.add_index_field 'provenancetype_s', label: 'Provenance Type'
-    config.add_index_field 'locality_s', label: 'Place Name'
+    config.add_index_field 'family_s', label: 'family_s'
+    config.add_index_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
     config.add_index_field 'collector_s', label: 'Collector'
     config.add_index_field 'collectornumber_s', label: 'Collector Number'
-    config.add_index_field 'rare_s', label: 'Rare?'
-    config.add_index_field 'deaddate_s', label: 'Dead Date'
     config.add_index_field 'flowercolor_s', label: 'Flower Color'
-    config.add_index_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
+    # config.add_index_field 'commonname_s', label: 'Common Name'
+    # config.add_index_field 'provenancetype_s', label: 'Provenance Type'
+    # config.add_index_field 'locality_s', label: 'Place Name'
+    # config.add_index_field 'rare_s', label: 'Rare?'
+    # config.add_index_field 'deaddate_s', label: 'Dead Date'
     # config.add_index_field 'floweringverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Flowering Months'
     # config.add_index_field 'fruitingverbatim_ss', helper_method: 'render_flower_n_fruit_calendar', label: 'Fruiting Months'
-    # config.add_index_field 'canonicalName_s', label: 'canonicalName_s'
     # config.add_index_field 'canonicalNameComplete_s', label: 'canonicalNameComplete_s'
     # config.add_index_field 'blob_ss', helper_method: 'render_media', label: 'Images'
 
     # sort
     config.index.title_field = 'scientificName_s'
-    config.add_sort_field 'collectiondate_s asc', label: 'collectiondate_s A-Z'
-    config.add_sort_field 'collectiondate_s desc', label: 'collectiondate_s Z-A'
+    config.add_sort_field 'accessionnumber_s asc', label: 'Accession Number A-Z'
+    config.add_sort_field 'accessionnumber_s desc', label: 'Accession Number Z-A'
+    config.add_sort_field 'determination_s asc', label: 'Determination A-Z'
+    config.add_sort_field 'determination_s desc', label: 'Determination Z-A'
+    config.add_sort_field 'family_s asc', label: 'Family A-Z'
+    config.add_sort_field 'family_s desc', label: 'Family Z-A'
+    config.add_sort_field 'gardenlocation_s asc', label: 'Garden Location A-Z'
+    config.add_sort_field 'gardenlocation_s desc', label: 'Garden Location Z-A'
   end
 
   def decode_ark
