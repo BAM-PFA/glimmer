@@ -124,9 +124,10 @@ module ApplicationHelper
     requery_url_string = "#{requery_url}&rows=#{results_per_page}"
     response = get_single_solr_page(requery_url_string,0)
     puts "response"
-    puts response
+    # puts response
+    puts JSON.parse(response.body)['response']#['numFound']
     
-    total_items = response['response']['numFound'].to_i
+    total_items = JSON.parse(response.body)['response']['numFound'].to_i
     number_of_full_pages, last_page_num_items = total_items.divmod(results_per_page)
     starting_row = 0
     last_page = number_of_full_pages + 1
@@ -155,7 +156,7 @@ module ApplicationHelper
             start_row = page_queue.pop(true) rescue nil
             if start_row
               response = get_single_solr_page(requery_url_string,start_row)
-              response['response']['docs']&.each do |row|
+              JSON.parse(response.body)['response']['docs']&.each do |row|
                 values = [row[summary_field]]
                 fields_to_export.each {|column| values << row[column] }
                 values.map! { |value| value.is_a?(Array) ? value.join(" | ") : value&.to_s }
@@ -187,7 +188,7 @@ module ApplicationHelper
             start_row = page_queue.pop(true) rescue nil
             if start_row
               response = get_single_solr_page(requery_url_string,start_row)
-              response['response']['docs'].each do |row|
+              JSON.parse(response.body)['response']['docs'].each do |row|
                 # account for the column for search params
                 row_to_enter = [""]
                 fields_to_export.each do |field|
@@ -302,28 +303,29 @@ module ApplicationHelper
     ### IGNORE SSL CERT JUST FOR TESTING
     res=nil
 
-    # Net::HTTP.start(requery_url.host, requery_url.port,
-    #   :use_ssl => requery_url.scheme == 'https', 
-    #   :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+    Net::HTTP.start(requery_url.host, requery_url.port,
+      :use_ssl => requery_url.scheme == 'https', 
+      :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
       
-    #   request = Net::HTTP::Get.new(requery_url.request_uri)
-    #   res = http.request(request)
+      request = Net::HTTP::Get.new(requery_url.request_uri)
+      res = http.request(request)
+      # puts res
       
       
-    # end
+    end
 
 
     ###
 
-    res = Net::HTTP.get_response(requery_url,:verify_mode => OpenSSL::SSL::VERIFY_NONE)
-    puts "res"
-    puts res
-    if res.is_a?(Net::HTTPSuccess) 
-      response = JSON.parse(res.body)
-      return response
-    else
-      return ""
-    end
+    # res = Net::HTTP.get_response(requery_url,:verify_mode => OpenSSL::SSL::VERIFY_NONE)
+    # puts "res"
+    # puts res
+    # if res.is_a?(Net::HTTPSuccess) 
+    #   response = JSON.parse(res.body)
+    #   return response
+    # else
+    #   return ""
+    # end
   end
 
   def get_random_documents(query: '*', limit: 12, sort: 'random')

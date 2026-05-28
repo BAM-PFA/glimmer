@@ -1,5 +1,5 @@
 <div class="container-fluid">  
-  <%= form_with url: "/make_summary",  name: "download-summary-form", method: :post do |form| %>
+  <%= form_with url: "/make_summary",  name: "download-summary-form", method: :post, html: { data: { turbo: false } } do |form| %>
   <div class="row">
     <div class="col-sm-12 col-md-5 mt-3">
       <%= form.label "Select a field to summarize on and which fields to display, then select 'Create a summary'", { class: "form-label"} %>
