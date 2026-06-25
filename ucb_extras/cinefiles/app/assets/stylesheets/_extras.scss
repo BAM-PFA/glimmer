@@ -76,12 +76,12 @@
     outline-offset: -2px;
   }
   .navbar-brand{
-    width: 565px;
+    width: inherit;
     &:focus {
       outline-offset: -6px;
     }
     img {
-      width: 600px;
+      width: inherit;
     }
   }
   .navbar-nav {
@@ -100,22 +100,29 @@
   }
   .navbar-toggler {
     margin: 0.25rem;
+    background-color: #000000;
   }
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+  .container-fluid {
+      width: inherit;
+    }
 }
 .panel-heading {
   padding-right: 1px;
 }
 .panel-title {
-  font-family: MontserratLight, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   font-size: 0.875rem;
   padding-right: 12px;
 }
 .search-history .filter-name {
-  font-family: RobotoBold, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 .section-heading {
-  font-family: MontserratBlack, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 .site-footer {
@@ -138,7 +145,6 @@
     width: 7.25em;
   }
   .footer-logo {
-    max-width: 15.5rem;
     object-fit: contain;
   }
   .social {
@@ -172,36 +178,18 @@ article .document-title {
   overflow: inherit;
 }
 body {
-  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
+  width: fit-content;
 }
 h3.index_title > a {
-  font-family: MontserratMedium, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 h4.facets-heading {
   font-size: 0.875rem;
 }
 
 @font-face {
-  font-family: MontserratBlack;
-  src: url(Montserrat/Montserrat-Black.ttf);
-  font-weight: bold;
-}
-@font-face {
-  font-family: Montserrat;
-  src: url(Montserrat/Montserrat-Regular.ttf);
-}
-@font-face {
-  font-family: MontserratMedium;
-  src: url(Montserrat/Montserrat-Medium.ttf);
-}
-@font-face {
-  font-family: Montserrat;
-  src: url(Montserrat/Montserrat-Bold.ttf);
-  font-weight: bold;
-}
-@font-face {
-  font-family: MontserratLight;
-  src: url(Montserrat/Montserrat-Light.ttf);
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 @media (min-width: 576px) {

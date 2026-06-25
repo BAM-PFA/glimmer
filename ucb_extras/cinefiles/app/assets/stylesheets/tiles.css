@@ -176,8 +176,9 @@ section.showcase .isotope-item p {
 }
 
 .isotope-item .back .citation {
-  color: #5C686A;
+  color: #000;
   font-size: 0.875rem;
+  font-style: italic;
 }
 
 .isotope-item .back p {
