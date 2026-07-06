@@ -33,32 +33,35 @@ module Portal
     config.csv_output_fields = {
       "csid_s" => "Object CSID",
       "objmusno_s"=>"Museum number",
-      "objdept_s"=>"objdept_s",
-      "objtype_txt"=>"objtype_txt",
-      "objname_txt"=>"objname_txt",
-      "objaccno_ss"=>"objaccno_ss",
-      "anonymousdonor_ss"=>"anonymousdonor_ss",
-      "objaccdate_ss"=>"objaccdate_ss",
-      "objacqdate_ss"=>"objacqdate_ss",
-      "objfcp_s"=>"objfcp_s",
-      "objfcpgeoloc_p"=>"objfcpgeoloc_p",
-      "objfcptree_ss"=>"objfcptree_ss",
-      "status_ss"=>"status_ss",
-      "imagetype_ss"=>"imagetype_ss",
-      "media_available_ss"=>"media_available_ss",
-      "objculturetree_ss"=>"objculturetree_ss",
-      "deaccessioned_s"=>"deaccessioned_s",
-      "objassoccult_ss"=>"objassoccult_ss",
-      "objobjectclasstree_ss"=>"objobjectclasstree_ss",
-      "restrictions_ss"=>"restrictions_ss"
+      "objdept_s"=>"Department",
+      "objtype_txt"=>"Object type",
+      "objname_txt"=>"Object name",
+      "objaccno_ss"=>"Accession number",
+      "anonymousdonor_ss"=>"Anonymous donor",
+      "objcollector_ss"=>"Collector",
+      "objaccdate_ss"=>"Accession date",
+      "objacqdate_ss"=>"Acquisition date",
+      "objfcp_s"=>"Collection place",
+      "objfcpgeoloc_p"=>"Collection lat/long",
+      "objfcptree_ss"=>"Collection place hierarchy",
+      "status_ss"=>"Status",
+      "imagetype_ss"=>"Image type",
+      "media_available_ss"=>"Media available?",
+      # "objculturetree_ss"=>"Associated culture hierarchy",
+      "deaccessioned_s"=>"Deaccessioned?",
+      "objassoccult_ss"=>"Associated culture",
+      # "objobjectclasstree_ss"=>"Object class hierarchy",
+      "objobjectclass_ss"=>"Object class",
+      "restrictions_ss"=>"Restrictions",
+      "objinscrtext_ss"=>"Inscription"
       }
 
       config.mapping_fields = {
-        "objmusno_s" => "Museum Number",
-        "objname_s"=>"Object Name",
-        "objfcp_s"=>"Collection Place",
-        "objculturetree_ss"=>"Culture Hierarchy",
-        "objfcpgeoloc_p"=>"Lat/Long"
+        "objmusno_s" => "Museum number",
+        "objname_s"=>"Object name",
+        "objfcp_s"=>"Collection place",
+        "objculturetree_ss"=>"Culture hierarchy",
+        "objfcpgeoloc_p"=>"Lat/long"
     }
 
 
