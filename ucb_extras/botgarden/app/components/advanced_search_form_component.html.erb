@@ -1,0 +1,68 @@
+
+<div class="clearfix">
+    <% if sort_fields_select %>
+      <div class="float-left mb-5 mr-3">
+        <%= label_tag :sort,
+            t('blacklight.advanced_search.form.sort_label'),
+            id: 'advanced-search-sort-label',
+            class: 'col-form-label mr-1'
+        %>
+        <%= sort_fields_select %>
+      </div>
+    <% end %>
+    <div class="float-right">
+      <%= submit_tag t('blacklight.advanced_search.form.search_btn_html'),
+          class: 'btn btn-primary advanced-search-submit',
+          id: "advanced-search-submit",
+          form: 'advanced-search-form'
+      %>
+      <%= link_to t('blacklight.advanced_search.form.start_over_html'),
+          request.path,
+          :class =>"btn btn-secondary advanced-search-start-over",
+          id: "advanced-search-start-over-bottom"
+      %>
+    </div>
+</div>
+
+<% if constraints? %>
+  <div class="constraints well search_history">
+    <div class="constraints-label"><%= t 'blacklight.advanced_search.form.search_context' %></div>
+    <% constraints.each do |constraint| %>
+      <%= constraint %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= form_tag @url, method: @method, class: @classes.join(' '), id: 'advanced-search-form', role: 'search', 'aria-label' => t('blacklight.search.form.submit') do %>
+  <%= render Blacklight::HiddenSearchStateComponent.new(params: hidden_search_state_params) %>
+
+  <div class="input-criteria">
+    <div class="query-criteria mb-4">
+      <div class="query-criteria-heading  mb-4">
+        <%= t('blacklight.advanced_search.form.query_criteria_heading_html', select_menu: default_operator_menu) %>
+      </div>
+
+      <div id="advanced_search">
+        <% search_field_controls.each do |control| %>
+          <%= control %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if search_filter_controls? %>
+      <div class="limit-criteria mb-4">
+        <h2 class="limit-criteria-heading h3"><%= t('blacklight.advanced_search.form.limit_criteria_heading_html')%></h2>
+
+        <div id="advanced_search_facets" class="limit_input">
+          <div class="advanced-facet-limits panel-group col-12">
+            <% search_filter_controls.each do |control| %>
+              <%= control %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  
+<% end %>

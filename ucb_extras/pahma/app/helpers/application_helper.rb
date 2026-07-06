@@ -353,7 +353,8 @@ module ApplicationHelper
   def create_summary_db fields_to_export,summary_field,uuid
     require 'sqlite3'
     require 'fileutils'
-    db_path = "public/summary_#{uuid}.db"
+    db_path = "tmp/summary_#{uuid}.db"
+    puts db_path+"**\n"*50
     FileUtils.touch(db_path)
     db = SQLite3::Database.open(db_path)
     fields_columns = ""

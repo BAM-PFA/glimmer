@@ -4,6 +4,15 @@ en:
     advanced_search:
       op:
         label: 'search operator'
+      form:
+        title: More Search Options
+        search_context: Within the following search
+        query_criteria_heading_html: "Find items that match %{select_menu} of these terms"
+        limit_criteria_heading_html: "<strong>AND</strong> filter by these attributes"
+        search_operators: "Search Operators" 
+        sort_label: "Sort results by"
+        start_over: "Start over"
+        search_btn: 'Search'
     application_name: 'UC Botanical Garden'
     search:
       form:
