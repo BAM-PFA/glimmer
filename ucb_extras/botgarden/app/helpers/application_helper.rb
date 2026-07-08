@@ -61,7 +61,7 @@ module ApplicationHelper
     end
 
     if blacklight_q_params.key?("f")
-      puts blacklight_q_params['f']
+      # puts blacklight_q_params['f']
       if blacklight_q_params['f'].key?("Has image")
         
         if blacklight_q_params['f']["Has image"][0] == "has_image"
@@ -72,7 +72,7 @@ module ApplicationHelper
         blacklight_q_params['f'] = blacklight_q_params['f'].delete("Has Image")
 
       end
-      puts solr_params
+      # puts solr_params
       blacklight_q_params['f']&.each do |k,v|
         if v.kind_of?(Array)
           v = v.join(separator = " ")
@@ -82,7 +82,7 @@ module ApplicationHelper
       solr_params.delete('f')
     end
     solr_params&.delete("advanced")
-    puts solr_params
+    # puts solr_params
 
 
     endpoint_params = ""
@@ -91,7 +91,7 @@ module ApplicationHelper
     end
     url_string = "https://webapps.cspace.berkeley.edu/solr/botgarden-public/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
     url_string = url_string.gsub("'","%22").gsub(" ","%20")
-    puts url_string
+    # puts url_string
     
     return url_string, solr_params
   end
@@ -123,9 +123,17 @@ module ApplicationHelper
     results_per_page = 500
     requery_url_string = "#{requery_url}&rows=#{results_per_page}"
     response = get_single_solr_page(requery_url_string,0)
-    puts "response"
+    # puts "response"
     # puts response
-    puts JSON.parse(response.body)['response']#['numFound']
+    # puts JSON.parse(response.body)['response']#['numFound']
+
+    begin
+      total_items = JSON.parse(response.body)['response']['numFound'].to_i
+    rescue
+      path = 'public/error_'+SecureRandom.uuid+'.html'
+      File.write(path, response.body+response.each_header.to_h.to_s)
+      return path
+    end
     
     total_items = JSON.parse(response.body)['response']['numFound'].to_i
     number_of_full_pages, last_page_num_items = total_items.divmod(results_per_page)
@@ -224,7 +232,7 @@ module ApplicationHelper
     # puts fields_to_export
     fields_to_export.each {|column| count_string += ", GROUP_CONCAT(DISTINCT #{column}) AS '#{Rails.application.config.csv_output_fields[column]}'" }
     count_string += " FROM summary GROUP BY #{summary_field}_summary ORDER BY Count DESC #{limit};"
-    puts count_string
+    # puts count_string
     results = summary_database.query(count_string)
     # puts results[-1].to_s
     # puts results.columns
@@ -288,7 +296,7 @@ module ApplicationHelper
     end
 
     sql_create_statement = "CREATE TABLE summary(#{summary_field}_summary TEXT, count INTEGER#{fields_columns})"
-    puts sql_create_statement
+    # puts sql_create_statement
     db.execute sql_create_statement
 
     return db,db_path
@@ -298,7 +306,7 @@ module ApplicationHelper
   def get_single_solr_page requery_url_string,start_row
     requery_url_string = "#{requery_url_string}&start=#{start_row}"
     requery_url = URI(requery_url_string)
-    puts requery_url
+    # puts requery_url
 
     ### IGNORE SSL CERT JUST FOR TESTING
     res=nil

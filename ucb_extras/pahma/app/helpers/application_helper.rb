@@ -17,7 +17,7 @@ module ApplicationHelper
   end
 
   def requery_solr_map(params,fields_to_export=nil,summary_field=nil,map=true)
-    puts fields_to_export.class
+    # puts fields_to_export.class
     requery_url, solr_params = format_requery_params(params)
     map_tsv_path = get_paginated_solr_results(requery_url,solr_params,fields_to_export,summary_field,map)
     return map_tsv_path
@@ -50,7 +50,7 @@ module ApplicationHelper
     end
 
     if blacklight_q_params.key?("f")
-      puts blacklight_q_params['f']
+      # puts blacklight_q_params['f']
       if blacklight_q_params['f'].key?("Has image")
         
         if blacklight_q_params['f']["Has image"][0] == "has_image"
@@ -61,7 +61,7 @@ module ApplicationHelper
         blacklight_q_params['f'] = blacklight_q_params['f'].delete("Has Image")
 
       end
-      puts solr_params
+      # puts solr_params
       blacklight_q_params['f']&.each do |k,v|
         if v.kind_of?(Array)
           v = v.join(separator = " ")
@@ -80,7 +80,7 @@ module ApplicationHelper
     end
     url_string = "https://webapps.cspace.berkeley.edu/solr/pahma-public/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
     url_string = url_string.gsub("'","%22").gsub(" ","%20")
-    puts url_string
+    # puts url_string
     
     return url_string, solr_params
   end
@@ -118,7 +118,7 @@ module ApplicationHelper
         end
       end
       headers = headers + ["DecimalLatitude","DecimalLongitude"]
-      puts headers
+      # puts headers
     end
 
 
@@ -130,7 +130,13 @@ module ApplicationHelper
     # puts requery_url_string
     response = get_single_solr_page(requery_url_string,0)
     
-    total_items = response['response']['numFound'].to_i
+    begin
+      total_items = JSON.parse(response.body)['response']['numFound'].to_i
+    rescue
+      path = 'public/error_'+SecureRandom.uuid+'.html'
+      File.write(path, response.body+response.each_header.to_h.to_s)
+      return path
+    end
     number_of_full_pages, last_page_num_items = total_items.divmod(results_per_page)
     starting_row = 0
     last_page = number_of_full_pages + 1
@@ -223,10 +229,10 @@ module ApplicationHelper
                     values << row[column]
                   end
                 end
-                puts values.to_s
+                # puts values.to_s
 
                 insert_string = "INSERT INTO summary (#{columns}) VALUES (#{parameterized_values});"
-                puts insert_string
+                # puts insert_string
                 summary_database.execute insert_string, values
 
               end
@@ -354,7 +360,7 @@ module ApplicationHelper
     require 'sqlite3'
     require 'fileutils'
     db_path = "tmp/summary_#{uuid}.db"
-    puts db_path+"**\n"*50
+    # puts db_path+"**\n"*50
     FileUtils.touch(db_path)
     db = SQLite3::Database.open(db_path)
     fields_columns = ""
@@ -363,7 +369,7 @@ module ApplicationHelper
     end
 
     sql_create_statement = "CREATE TABLE summary(#{summary_field}_summary TEXT DEFAULT '', count INTEGER DEFAULT 0#{fields_columns})"
-    puts sql_create_statement
+    # puts sql_create_statement
     db.execute sql_create_statement
 
     return db,db_path
