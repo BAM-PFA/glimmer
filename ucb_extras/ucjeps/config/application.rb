@@ -38,6 +38,9 @@ module Portal
     # config.eager_load_paths << Rails.root.join("extras")
 
 
+    # read the correct URL for requerying solr from portal/config/blacklight.yml
+    config.blacklight_solr = config_for(:blacklight)
+    
     # hash that defines the fields used in outputting search results to a csv
     config.csv_output_fields = {
       "accessionnumber_s"=>"Accession Number",

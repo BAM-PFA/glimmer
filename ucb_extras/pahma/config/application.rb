@@ -29,6 +29,9 @@ module Portal
     config.sass.quiet_deps = true
     config.sass.silence_deprecations = ['import']
 
+    # read the correct URL for requerying solr from portal/config/blacklight.yml
+    config.blacklight_solr = config_for(:blacklight)
+    
     # hash that defines the fields used in outputting search results to a csv
     config.csv_output_fields = {
       "csid_s" => "Object CSID",
