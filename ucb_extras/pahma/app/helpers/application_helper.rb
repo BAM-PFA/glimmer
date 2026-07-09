@@ -78,8 +78,8 @@ module ApplicationHelper
     solr_params.each do |k,v|
       endpoint_params+="#{k} : #{v} "
     end
-    
-    url_string = "https://webapps.cspace.berkeley.edu/solr/pahma-public/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
+    solr_url = Rails.application.config.blacklight_solr['url'].to_s
+    url_string = solr_url+"/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
     url_string = url_string.gsub("'","%22").gsub(" ","%20")
     # puts url_string
     
