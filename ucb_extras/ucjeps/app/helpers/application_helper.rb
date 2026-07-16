@@ -87,7 +87,7 @@ module ApplicationHelper
 
     endpoint_params = ""
     solr_params.each do |k,v|
-      endpoint_params+="#{k} : #{v} "
+      endpoint_params+="#{k} : \"#{v}\""
     end
     solr_url = Rails.application.config.blacklight_solr['url'].to_s
     url_string = solr_url+"/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
