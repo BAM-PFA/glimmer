@@ -14,7 +14,7 @@ class CatalogController < ApplicationController
     config.advanced_search[:form_solr_parameters] ||= {}
 
     config.skip_link_component = SkipLinkComponent
-    config.skip_link_item_component = SkipLinkItemComponent
+    config.skip_link_item_component = Blacklight::SkipLinkItemComponent
 
     config.bootstrap_version = 4
 
@@ -37,8 +37,6 @@ class CatalogController < ApplicationController
     config.show.metadata_component = Show::DocumentMetadataComponent
     config.show.show_tools_component = Document::ShowToolsComponent
     config.show.title_component = DocumentTitleComponent
-    config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
-    config.show.partials.insert(1, :openseadragon)
 
     # disable these three document action until we have resources to configure them to work
     config.show.document_actions.delete(:citation)
@@ -220,15 +218,16 @@ class CatalogController < ApplicationController
 
     # FACET FIELDS
     config.add_facet_field 'deadflag_s', label: 'Dead plant?', limit: true
-    config.add_facet_field 'scientificName_s', label: 'Scientific Name', limit: true
+    config.add_facet_field 'gardenlocation_s', label: 'Garden Location', limit: true
+    config.add_facet_field 'canonicalName_s', label: 'Scientific Name', limit: true
     config.add_facet_field 'family_s', label: 'Family', limit: true
     config.add_facet_field 'collector_s', label: 'Collector', limit: true
     config.add_facet_field 'locality_s', label: 'Locality', limit: true
     config.add_facet_field 'collcounty_ss', label: 'County', limit: true
     config.add_facet_field 'collstate_ss', label: 'State', limit: true
-    # config.add_facet_field 'accessrestrictions_s', label: 'accessrestrictions_s', limit: true
     config.add_facet_field 'collcountry_ss', label: 'Country', limit: true
     config.add_facet_field 'rare_s', label: 'Rare?', limit: true
+    config.add_facet_field 'vouchers_txt', label: 'Has Herbarium Vouchers?', limit: true
     # config.add_facet_field("deaddate_s") do |field|
     #   field.include_in_advanced_search = false
     #   field.label = 'Date dead'
@@ -250,29 +249,40 @@ class CatalogController < ApplicationController
     }
 
     # SEARCH FIELDS
-    config.add_search_field 'scientificName_s', label: 'Scientific Name'
-    config.add_search_field 'commonname_s', label: 'Common Name'
-    config.add_search_field 'family_s', label: 'Family'
-    config.add_search_field 'order_s', label: 'Order'
-    config.add_search_field 'division_s', label: 'Division'
-    config.add_search_field 'determination_s', label: 'Determination'
-    config.add_search_field 'accessionnumber_s', label: 'Accession Number'
-    config.add_search_field 'gardenlocation_s', label: 'Garden Location'
-    # config.add_search_field 'deadflag_s', label: 'Dead?'
-    config.add_search_field 'provenancetype_s', label: 'Provenance Type'
-    config.add_search_field 'collcountry_ss', label: 'Country'
-    config.add_search_field 'collstate_ss', label: 'State'
-    config.add_search_field 'collcounty_ss', label: 'County'
-    config.add_search_field 'locality_s', label: 'Place Name'
-    config.add_search_field 'collector_s', label: 'Collector'
-    config.add_search_field 'collectornumber_s', label: 'Collector Number'
-    config.add_search_field 'collectiondate_s', label: 'Collection Date'
-    config.add_search_field 'rare_s', label: 'Rare?'
-    config.add_search_field 'conserveorg_ss', label: 'Conservation Organization'
-    config.add_search_field 'conservecat_ss', label: 'Conservation Category'
-    config.add_search_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
-    config.add_search_field 'flowercolor_s', label: 'Flower Color'
-    config.add_search_field 'habit_s', label: 'Habit'
+    [
+      ['canonicalName_txt','Scientific Name'],
+      ['commonname_txt','Common Name'],
+      ['family_txt','Family'],
+      ['order_txt','Order'],
+      ['division_txt','Division'],
+      ['determination_txt','Determination'],
+      ['accessionnumber_txt','Accession Number'],
+      ['gardenlocation_txt','Garden Location'],
+      #  ][['deadflag_txt','Dead?'],
+      ['provenancetype_txt','Provenance Type'],
+      ['collcountry_txts','Country'],
+      ['collstate_txts','State'],
+      ['collcounty_txts','County'],
+      ['locality_txt','Place Name'],
+      ['collector_txt','Collector'],
+      ['collectornumber_txt','Collector Number'],
+      ['collectiondate_txt','Collection Date'],
+      ['rare_txt','Rare?'],
+      ['conserveorg_txt','Conservation Organization'],
+      ['conservecat_txt','Conservation Category'],
+      ['vouchers_txt','Has Herbarium Vouchers?'],
+      ['flowercolor_txt','Flower Color'],
+      ['habit_txt','Habit'],
+      ].each do |search_field|
+        config.add_search_field(search_field[0]) do |field|
+          field.label = search_field[1]
+          #field.solr_parameters = { :'spellcheck.dictionary' => search_field[0] }
+          field.solr_parameters = {
+            qf: search_field[0],
+            pf: search_field[0]
+          }
+        end
+      end
 
     # 'SHOW' VIEW FIELDS 
     config.add_show_field 'accessionnumber_s', label: 'Accession Number'
@@ -301,7 +311,7 @@ class CatalogController < ApplicationController
     # 'INDEX' VIEW FIELDS
     config.add_index_field 'accessionnumber_s', label: 'Accession Number'
     # config.add_index_field 'determination_s', label: 'Determination'
-    config.add_index_field 'scientificName_s', label: 'Scientific Name'
+    config.add_index_field 'canonicalName_s', label: 'Scientific Name'
     config.add_index_field 'gardenlocation_s', label: 'Garden Location'
     config.add_index_field 'family_s', label: 'Family'
     config.add_index_field 'vouchers_s', label: 'Has Herbarium Vouchers?'
@@ -319,7 +329,7 @@ class CatalogController < ApplicationController
     # config.add_index_field 'blob_ss', helper_method: 'render_media', label: 'Images'
 
     # sort
-    config.index.title_field = 'scientificName_s'
+    config.index.title_field = 'canonicalName_s'
     config.add_sort_field 'accessionnumber_s asc', label: 'Accession Number A-Z'
     config.add_sort_field 'accessionnumber_s desc', label: 'Accession Number Z-A'
     config.add_sort_field 'determination_s asc', label: 'Determination A-Z'
