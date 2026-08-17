@@ -7,12 +7,12 @@ class SearchBuilder < Blacklight::SearchBuilder
 
   # @example Adding a new step to the processor chain
   self.default_processor_chain += [:add_random_sort]
-  #
+
   def add_random_sort(solr_parameters)
-		if search_state.params_for_search['sort']&. == 'random'
-			require 'securerandom'
-			random_string = SecureRandom.uuid
-	    solr_parameters[:sort] = "random_%s asc" % random_string
-		end
+    if search_state.params_for_search['sort']&. == 'random'
+      require 'securerandom'
+      random_string = SecureRandom.uuid
+      solr_parameters[:sort] = "random_%s asc" % random_string
+    end
   end
 end
