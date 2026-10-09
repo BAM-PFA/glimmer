@@ -112,10 +112,15 @@ module ApplicationHelper
     first_row = first_row.unshift(solr_params)
     headers = []
 
-    # headers = fields_to_export
+    first_row = fields_to_export.map { |value| "" }
+    query_params_readable = solr_params.map { |k,v| 
+      "#{Rails.application.config.csv_output_fields[k]} : #{v}"
+    }
+    query_params_readable = query_params_readable.join("\n")
+    first_row = first_row.unshift(query_params_readable)
     headers = headers.unshift("Query parameters")
-    fields_to_export.each do |f|
-      headers << Rails.application.config.csv_output_fields[f]
+    fields_to_export.each do |item|
+      headers << Rails.application.config.csv_output_fields[item]
     end
 
     # define the number of results per page returned by solr

@@ -27,7 +27,7 @@ class SearchOutputController < ApplicationController
 				fields_to_query << field
 			end
 		end
-		puts params
+		# puts params
 
 		send_file(view_context.requery_solr(
 			JSON.parse(params[:solr_params]),
@@ -36,18 +36,21 @@ class SearchOutputController < ApplicationController
 		
 	end
 
-	def map_results
+	def make_map
 		require 'json'
-		puts params[:solr_params]
-		view_context.requery_solr_map(
+		# puts params[:solr_params]
+		mappable = view_context.requery_solr_map(
 			JSON.parse(params[:solr_params]),
 			Rails.application.config.mapping_fields.to_json
 			)
+		@mappable = view_context.make_map_data(mappable)
+		# params.permit(:mappable)
+		# params[:mappable] = mappable
 		
 		respond_to do |format|
 		    format.html
 			# format.json
-		    # format.js
+		    format.js 
 		end
 		
 	end
@@ -68,7 +71,7 @@ class SearchOutputController < ApplicationController
 		params[:summary_field] = summary_field
 		params[:fields_to_export] = fields_to_export
 		params[:summary_database_path] = summary_database_path
-		puts params
+		# puts params
 		respond_to do |format|
 		    format.html
 			# format.json

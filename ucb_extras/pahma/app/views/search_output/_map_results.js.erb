@@ -1,0 +1,39 @@
+console.log("BEFORE!")
+
+let items = <%= @mappable.to_json.html_safe %>
+console.log(items);
+
+const markersGroup = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true, // Fans out overlapping markers at maximum zoom
+    showCoverageOnHover: true
+});
+
+let sum_latitudes = 0;
+let sum_longitudes = 0;
+
+items.forEach(item => { 
+    sum_latitudes += item["Latitude"];
+    sum_longitudes += item["Longitude"];
+    const marker = L.marker([ item["Latitude"], item["Longitude"] ]);
+    marker.bindPopup(
+        `
+        <p><strong>Museum number: ${ item["Museum number"] }</strong></p
+        <p>Object name: ${ item["Object name"] }</p>
+        <p>Collection place: ${ item["Collection place"] }</p>
+        <p>Culture hierarchy: ${ item["Culture hierarchy"] }</p>
+        `
+    );
+    markersGroup.addLayer(marker)
+});
+
+let avg_latitudes = sum_latitudes / items.length;
+let avg_longitudes = sum_longitudes / items.length;
+
+const map = L.map('map').setView([avg_latitudes, avg_longitudes], 2);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+map.addLayer(markersGroup);
+console.log("AFTER!")

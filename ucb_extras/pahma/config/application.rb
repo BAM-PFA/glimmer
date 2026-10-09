@@ -50,10 +50,10 @@ module Portal
       "status_ss"=>"Status",
       "imagetype_ss"=>"Image type",
       "media_available_ss"=>"Media available?",
-      # "objculturetree_ss"=>"Associated culture hierarchy",
+      "objculturetree_ss"=>"Associated culture hierarchy",
       "deaccessioned_s"=>"Deaccessioned?",
       "objassoccult_ss"=>"Associated culture",
-      # "objobjectclasstree_ss"=>"Object class hierarchy",
+      "objobjectclasstree_ss"=>"Object class hierarchy",
       "objobjectclass_ss"=>"Object class",
       "restrictions_ss"=>"Restrictions",
       "objinscrtext_ss"=>"Inscription"
