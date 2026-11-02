@@ -1,0 +1,11 @@
+var map = L.map("map").setView([<%= latitude.to_f %>, <%= longitude.to_f %>], 10);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution:
+    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+}).addTo(map);
+
+for (const item in <%= mappable.to_f %>) {
+  
+}
+var marker = L.marker([<%= latitude.to_f %>, <%= longitude.to_f %>]).addTo(map);

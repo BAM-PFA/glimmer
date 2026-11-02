@@ -24,8 +24,8 @@ module ApplicationHelper
   end
 
   def format_requery_params(blacklight_q_params)
-    # puts "hello "*100
-    # puts blacklight_q_params
+    puts "hello "*100
+    puts blacklight_q_params
     solr_params = {}
     if blacklight_q_params.key?("search_field")
       if blacklight_q_params["search_field"] == "advanced"
@@ -64,8 +64,12 @@ module ApplicationHelper
       # puts solr_params
       blacklight_q_params['f']&.each do |k,v|
         if v.kind_of?(Array)
-          v = v.join(separator = " ")
-        end
+          if k.end_with?("_ss")
+            v = v.join(separator = '" "' )
+          end 
+        else
+            v = v.join(separator = " ")
+          end
         solr_params.merge!({k => "'#{v}'"})
       end
       solr_params.delete('f')
@@ -76,12 +80,12 @@ module ApplicationHelper
 
     endpoint_params = ""
     solr_params.each do |k,v|
-      endpoint_params+="#{k} : \"#{v}\""
+      endpoint_params+="#{k} : #{v} "
     end
     solr_url = Rails.application.config.blacklight_solr['url'].to_s
     url_string = solr_url+"/select?defType=edismax&df=text&q.op=AND&q=#{endpoint_params}"
     url_string = url_string.gsub("'","%22").gsub(" ","%20")
-    # puts url_string
+    puts url_string
     
     return url_string, solr_params
   end
@@ -97,16 +101,18 @@ module ApplicationHelper
 
 
     fields_to_export = JSON.parse(fields_to_export)
-    # puts fields_to_export
     headers = []
 
     if map.nil?
       first_row = fields_to_export.map { |value| "" }
-      first_row = first_row.unshift(solr_params)
-      # headers = fields_to_export
+      query_params_readable = solr_params.map { |k,v| 
+        "#{Rails.application.config.csv_output_fields[k]} : #{v}"
+      }
+      query_params_readable = query_params_readable.join("\n")
+      first_row = first_row.unshift(query_params_readable)
       headers = headers.unshift("Query parameters")
-      fields_to_export.each do |k,v|
-        headers << Rails.application.config.csv_output_fields[v]
+      fields_to_export.each do |item|
+        headers << Rails.application.config.csv_output_fields[item]
       end
     else
       # puts fields_to_export
@@ -128,12 +134,13 @@ module ApplicationHelper
     # it could be too low though, esp for large result sets
     results_per_page = 10000
     requery_url_string = "#{requery_url}&rows=#{results_per_page}"
-    # puts requery_url_string
+    puts requery_url_string
     response = get_single_solr_page(requery_url_string,0)
     
     begin
       total_items = JSON.parse(response.body)['response']['numFound'].to_i
     rescue
+      puts JSON.parse(response.body)['response']['numFound'].to_i
       path = 'public/error_'+SecureRandom.uuid+'.html'
       File.write(path, response.body+response.each_header.to_h.to_s)
       return path
@@ -156,6 +163,10 @@ module ApplicationHelper
       map_tsv_filepath = "public/mapper_#{Time.current.localtime.strftime("%Y-%m-%d_%H-%M-%S")}.tsv"
       # puts headers.to_s
       # puts fields_to_export.to_s
+
+      counter = 0
+      mappable = []
+
       CSV.open(map_tsv_filepath, "a", **{ :col_sep => "\t" }) do |csv|
         csv << headers
 
@@ -165,22 +176,32 @@ module ApplicationHelper
               start_row = page_queue.pop(true) rescue nil
               if start_row
                 response = get_single_solr_page(requery_url_string,start_row)
-                response['response']['docs'].each do |row|
+                JSON.parse(response.body)['response']['docs'].each do |row|
                   row_to_enter = []
-                  fields_to_export.each do |field,value|
-                    # puts field
-                    # puts row["#{field}"]
-                    if field == "objfcpgeoloc_p" &&  row[field].present?
-                      lat = row[field].split(",")[0].to_f
-                      long = row[field].split(",")[1].to_f
-                      row_to_enter << lat
-                      row_to_enter << long
-                    else
-                      row_to_enter << row[field]
+                  temp = {}
+
+                  if counter < 2000
+                    identifier = Rails.application.config.mapping_fields["identifier"][0]
+                    temp[row[identifier]] = {}
+
+                    Rails.application.config.mapping_fields.each do |field,value|
+                      # temp[Rails.application.config.mapping_fields["identifier"].collect {|k| k }]
+                      unless field == "identifier" 
+                        if row[field].present?
+                          temp[row[identifier]][value] = row[field]
+                        end
+                      end
+
+
+
                     end
+                    puts temp.class
+                    mappable << temp.to_h
+                  else
+                    break
                   end
-                  # puts row_to_enter
-                  csv << row_to_enter
+
+                  counter += 1
                 end
               end
             end
@@ -188,7 +209,8 @@ module ApplicationHelper
         end
         workers.each(&:join)
       end
-      return map_tsv_filepath
+
+      return mappable #map_tsv_filepath
     end
 
     if summary_field != nil
@@ -207,7 +229,8 @@ module ApplicationHelper
             start_row = page_queue.pop(true) rescue nil
             if start_row
               response = get_single_solr_page(requery_url_string,start_row)
-              response['response']['docs']&.each do |row|
+              # puts JSON.parse(response.body)['response']['docs']
+              JSON.parse(response.body)['response']['docs']&.each do |row|
                 if row[summary_field].nil?
                     row[summary_field] = ""
                   end
@@ -218,10 +241,6 @@ module ApplicationHelper
                 end
                 # puts values.to_s
                 fields_to_export.each do |column|
-                  # puts column
-                  # puts row[column].class
-                  # puts row[column].to_s
-
 
                   if row[column].is_a?(Array)
                     # puts row[column].join(separator = " > ")
@@ -261,7 +280,7 @@ module ApplicationHelper
             start_row = page_queue.pop(true) rescue nil
             if start_row
               response = get_single_solr_page(requery_url_string,start_row)
-              response['response']['docs'].each do |row|
+              JSON.parse(response.body)['response']['docs'].each do |row|
                 # account for the column for search params
                 row_to_enter = [""]
                 fields_to_export.each do |field|
@@ -277,6 +296,31 @@ module ApplicationHelper
     end
 
     return results_filepath
+  end
+
+  def make_map_data mappable
+    mappable_array = []
+    mappable.each do | item |
+      item.each do | objmusno_txt, metadata |
+        puts item
+        reformatted_item = {}
+        if metadata["Lat/long"].nil?
+          puts "NOT MAPPABLE"
+        else
+          reformatted_item["Latitude"] = metadata["Lat/long"].split(",").map(&:to_f)[0]
+          reformatted_item["Longitude"] = metadata["Lat/long"].split(",").map(&:to_f)[1]
+          reformatted_item["Museum number"] = objmusno_txt
+          reformatted_item["Object name"] = metadata["Object name"]
+          reformatted_item["Collection place"] = metadata["Collection place"]
+          reformatted_item["Culture hierarchy"] = metadata["Culture hierarchy"]&.join(" / ")
+
+          mappable_array << reformatted_item
+        end
+      end
+    end 
+    # limiting the number of items that can be mapped so it doesn't get overloaded?
+    puts mappable_array.length
+    return mappable_array#.slice(0,200)
   end
 
   def make_stats summary_field,fields_to_export,summary_database_path, download=false
@@ -378,26 +422,49 @@ module ApplicationHelper
   end
 
   def get_single_solr_page requery_url_string,start_row
+    require 'addressable/uri'
     requery_url_string = "#{requery_url_string}&start=#{start_row}"
+    requery_url_string = Addressable::URI.parse(requery_url_string).normalize.to_s
+
     requery_url = URI(requery_url_string)
-    # res = Net::HTTP.get_response(requery_url)
-    res = nil
+    # puts requery_url
+
+    ### IGNORE SSL CERT JUST FOR TESTING
+    res=nil
+
     Net::HTTP.start(requery_url.host, requery_url.port,
       :use_ssl => requery_url.scheme == 'https', 
       :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
       
       request = Net::HTTP::Get.new(requery_url.request_uri)
       res = http.request(request)
+      # puts res
       
       
-    end
-    if res.is_a?(Net::HTTPSuccess) 
-      response = JSON.parse(res.body)
-      return response
-    else
-      return ""
     end
   end
+
+  # def get_single_solr_page requery_url_string,start_row
+  #   requery_url_string = "#{requery_url_string}&start=#{start_row}"
+  #   requery_url = URI(requery_url_string)
+  #   # res = Net::HTTP.get_response(requery_url)
+  #   res = nil
+  #   Net::HTTP.start(requery_url.host, requery_url.port,
+  #     :use_ssl => requery_url.scheme == 'https', 
+  #     :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+      
+  #     request = Net::HTTP::Get.new(requery_url.request_uri)
+  #     res = http.request(request)
+      
+      
+  #   end
+  #   if res.is_a?(Net::HTTPSuccess) 
+  #     response = JSON.parse(res.body)
+  #     return response
+  #   else
+  #     return ""
+  #   end
+  # end
 
   def get_random_documents(query: '*', limit: 12, sort: 'random')
     params = {
